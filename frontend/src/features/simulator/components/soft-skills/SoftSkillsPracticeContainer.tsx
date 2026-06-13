@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react';
 import SoftSkillsTips from './SoftSkillsTips';
 import VideoInterviewRecorder from './VideoInterviewRecorder';

@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from 'react';
 import ModeSelector from './components/ModeSelector';
 import SoftSkillsPracticeContainer from './components/soft-skills/SoftSkillsPracticeContainer';
