@@ -1,11 +1,10 @@
 import PageShell from '@/src/components/layout/PageShell'
 import PageHeader from '@/src/components/layout/PageHeader'
-import QuestionCard from '@/src/features/simulator/components/QuestionCard'
-import MicrophoneCard from '@/src/features/simulator/components/MicrophoneCard'
-import SessionInfoCard from '@/src/features/simulator/components/SessionInfoCard'
-import PreviousAnswers from '@/src/features/simulator/components/PreviousAnswers'
+// Importamos tu nuevo orquestador (asegúrate de que la ruta coincida donde creaste index.tsx)
+import SimulatorMain from '@/src/features/simulator' 
 import { sessionData } from '@/src/features/simulator/data/mock-data'
 
+// Mantenemos tu barra de progreso intacta porque se ve genial
 function QuestionProgress() {
   const { currentQuestion, totalQuestions } = sessionData
   return (
@@ -37,17 +36,10 @@ export default function SimulatorPage() {
         subtitle="Sin límite de intentos — practica hasta sentirte seguro"
         right={<QuestionProgress />}
       />
-      <main className="flex-1 overflow-y-auto p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 max-w-5xl mx-auto">
-          <div className="flex flex-col gap-4">
-            <QuestionCard />
-            <MicrophoneCard />
-          </div>
-          <div className="flex flex-col gap-4">
-            <SessionInfoCard />
-            <PreviousAnswers />
-          </div>
-        </div>
+      
+      {/* Aquí inyectamos el nuevo rediseño, eliminando el grid viejo */}
+      <main className="flex-1 overflow-y-auto bg-slate-900">
+        <SimulatorMain />
       </main>
     </PageShell>
   )
