@@ -8,13 +8,17 @@ import {
   Check,
   CheckCircle2,
   ChevronDown,
+  ChevronUp,
   Clock3,
   DollarSign,
   Filter,
   GraduationCap,
   Heart,
+  Info,
   MapPin,
   Plus,
+  Briefcase,
+  Target,
   RotateCcw,
   Search,
   Sparkles,
@@ -42,6 +46,11 @@ type JobItem = {
   tags: string[]
   highlight: string
   requirement: string
+  description: string
+  functions: string[]
+  skills: string[]
+  matchFeedback: string
+  matchMissing: string
 }
 
 type AppliedFilters = {
@@ -78,6 +87,11 @@ const jobCatalog: JobItem[] = [
     tags: ['Python', 'Excel', 'SQL'],
     highlight: 'Compatible con tu horario',
     requirement: 'Desde 8vo semestre',
+    description: 'Únete a nuestro equipo de analítica para transformar datos financieros en decisiones estratégicas de impacto.',
+    functions: ['Análisis exploratorio de bases de datos relacionales.', 'Generación de dashboards gerenciales.', 'Automatización de reportes diarios.'],
+    skills: ['Python', 'SQL', 'Power BI', 'Excel Avanzado'],
+    matchFeedback: 'Tienes un gran fit porque dominas Python y SQL, que son el core tecnológico de este rol.',
+    matchMissing: 'Aumentarías al 100% si tuvieras proyectos demostrables en Power BI.',
   },
   {
     id: '2',
@@ -98,6 +112,11 @@ const jobCatalog: JobItem[] = [
     tags: ['Data', 'KPI', 'Excel'],
     highlight: 'Turno compatible',
     requirement: 'Experiencia en métricas',
+    description: 'Buscamos un perfil mixto entre tecnología y negocios para optimizar nuestros KPIs comerciales.',
+    functions: ['Levantamiento de requerimientos.', 'Seguimiento de KPIs de ventas.', 'Presentaciones a stakeholders.'],
+    skills: ['Excel Avanzado', 'Comunicación Efectiva', 'Metodologías Ágiles'],
+    matchFeedback: 'Tu experiencia previa en métricas de ventas se alinea perfectamente con las necesidades del área.',
+    matchMissing: 'Falta experiencia documentada trabajando con equipos bajo metodologías ágiles (Scrum).',
   },
   {
     id: '3',
@@ -118,6 +137,11 @@ const jobCatalog: JobItem[] = [
     tags: ['Python', 'Machine Learning', 'Numpy'],
     highlight: 'Buen fit para prácticas',
     requirement: 'Carreras afines',
+    description: 'Inicia tu carrera en Data Science aplicando modelos de Machine Learning a problemas reales de banca.',
+    functions: ['Limpieza y estructuración de datos.', 'Apoyo en entrenamiento de modelos predictivos.', 'Documentación de experimentos.'],
+    skills: ['Python', 'Scikit-Learn', 'Pandas', 'Estadística Básica'],
+    matchFeedback: 'Tu portafolio universitario muestra un buen manejo de Pandas y limpieza de datos.',
+    matchMissing: 'Podrías mejorar tu perfil si profundizas en modelos estadísticos y Scikit-Learn.',
   },
   {
     id: '4',
@@ -138,6 +162,11 @@ const jobCatalog: JobItem[] = [
     tags: ['Dashboard', 'Excel', 'Power BI'],
     highlight: 'Alta compatibilidad',
     requirement: 'Prácticas preprofesionales',
+    description: 'Aprende y apoya en la visualización de datos de seguros de vida y salud.',
+    functions: ['Actualización de tableros en Power BI.', 'Manejo de bases en Excel.', 'Extracción de datos básicos.'],
+    skills: ['Power BI', 'Excel', 'Trabajo en equipo'],
+    matchFeedback: 'Tu nivel de Excel es ideal para lo que se requiere en el día a día.',
+    matchMissing: 'No has mencionado conocimientos de bases de datos o extracción (SQL), lo cual sumaría mucho.',
   },
   {
     id: '5',
@@ -158,6 +187,11 @@ const jobCatalog: JobItem[] = [
     tags: ['SQL', 'Reportes', 'Excel'],
     highlight: 'Lista para aplicar',
     requirement: '1 año de experiencia',
+    description: 'Rol enfocado en la generación de reportes operativos y análisis de cadena de suministro.',
+    functions: ['Generación de reportes de inventario.', 'Optimización de consultas SQL.', 'Análisis de mermas.'],
+    skills: ['SQL Intermedio', 'Excel Avanzado', 'Análisis Lógico'],
+    matchFeedback: 'Cumples con los requisitos técnicos en SQL y herramientas ofimáticas.',
+    matchMissing: 'Tu perfil está un poco bajo en los años de experiencia en sector consumo masivo.',
   },
   {
     id: '6',
@@ -178,6 +212,11 @@ const jobCatalog: JobItem[] = [
     tags: ['React', 'TypeScript', 'UI'],
     highlight: 'Buen encaje técnico',
     requirement: 'Experiencia en React',
+    description: 'Desarrolla interfaces de usuario modernas para las aplicaciones internas de la compañía.',
+    functions: ['Creación de componentes UI en React.', 'Integración con APIs REST.', 'Mantenimiento de sistemas legacy.'],
+    skills: ['React', 'TypeScript', 'Tailwind CSS', 'Git'],
+    matchFeedback: 'Tienes los conocimientos base de React y desarrollo web.',
+    matchMissing: 'Para este nivel se busca más experiencia arquitectando con TypeScript y estado global.',
   },
 ]
 
@@ -213,6 +252,8 @@ export default function JobMatchPage() {
   const [matchedJobs, setMatchedJobs] = useState<JobItem[]>([])
   const [savedJobs, setSavedJobs] = useState<JobItem[]>([])
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [selectedJobDetail, setSelectedJobDetail] = useState<JobItem | null>(null)
+  const [expandedFeedbackId, setExpandedFeedbackId] = useState<string | null>(null)
 
   const filteredJobs = useMemo(() => {
     const query = appliedFilters.query.trim().toLowerCase()
@@ -616,27 +657,28 @@ export default function JobMatchPage() {
                       <p className="mb-4 text-base text-slate-500">{job.company}</p>
 
                       <div className="space-y-3 text-sm text-slate-500">
-                        <JobInfoRow label="Ubicación" value={job.location} />
-                        <JobInfoRow label="Modalidad" value={job.mode} />
-                        <JobInfoRow label="Nivel" value={job.level} />
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          <span className="rounded-full bg-slate-100 px-3 py-1">{job.location}</span>
+                          <span className="rounded-full bg-slate-100 px-3 py-1">{job.mode}</span>
+                          <span className="rounded-full bg-slate-100 px-3 py-1">{job.level}</span>
+                        </div>
                       </div>
 
-                      <div className="mt-6 flex flex-wrap gap-2">
-                        {job.tags.map((tag) => (
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {job.tags.slice(0, 3).map((tag) => (
                           <span key={tag} className="badge badge-soft badge-neutral px-3 py-2">
                             {tag}
                           </span>
                         ))}
                       </div>
 
-                      <div className="mt-6 rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-                        {job.highlight}
-                      </div>
-
-                      <div className="mt-4 flex flex-wrap gap-2 text-xs text-slate-500">
-                        <span className="rounded-full bg-slate-100 px-3 py-1">Edad {job.ageMin}-{job.ageMax}</span>
-                        <span className="rounded-full bg-slate-100 px-3 py-1">{job.requirement}</span>
-                      </div>
+                      <button
+                        onClick={() => setSelectedJobDetail(job)}
+                        className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-50/50 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+                      >
+                        <Info className="h-4 w-4" />
+                        Ver detalles del puesto
+                      </button>
 
                       <div className="mt-auto pt-6 border-t border-slate-100 flex items-center justify-between">
                         <div className="text-base font-semibold text-red-500">
@@ -762,6 +804,33 @@ export default function JobMatchPage() {
                             </button>
                           </div>
                         </div>
+
+                        {isMatched && (
+                          <div className="mt-2 pt-2 border-t border-emerald-200/50">
+                            <button 
+                              onClick={() => setExpandedFeedbackId(expandedFeedbackId === job.id ? null : job.id)}
+                              className="flex w-full items-center justify-between text-[11px] font-semibold text-emerald-700 hover:text-emerald-800"
+                            >
+                              <span className="flex items-center gap-1">
+                                <Target className="h-3.5 w-3.5" /> Análisis de Match
+                              </span>
+                              {expandedFeedbackId === job.id ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                            </button>
+                            
+                            {expandedFeedbackId === job.id && (
+                              <div className="mt-2 space-y-2 text-[11px] leading-relaxed">
+                                <div className="bg-white/60 p-2 rounded-lg text-emerald-800">
+                                  <strong className="block mb-0.5 text-emerald-900">¿Por qué este match?</strong>
+                                  {job.matchFeedback}
+                                </div>
+                                <div className="bg-amber-50/80 p-2 rounded-lg text-amber-800 border border-amber-100/50">
+                                  <strong className="block mb-0.5 text-amber-900">¿Qué te falta?</strong>
+                                  {job.matchMissing}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </article>
                     )
                   })}
@@ -825,9 +894,35 @@ export default function JobMatchPage() {
                   <div className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-700">
                     <span className="font-medium">Requisito:</span> {currentQuickJob.requirement}
                   </div>
-                  <div className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
-                    {currentQuickJob.highlight}
-                  </div>
+                </div>
+
+                <div className="mt-6 flex items-center justify-center gap-5">
+                  <button
+                    type="button"
+                    onClick={rejectCurrent}
+                    className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-rose-400 bg-white text-rose-500 transition hover:scale-105"
+                    aria-label="Rechazar empleo"
+                  >
+                    <X className="h-7 w-7" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={saveCurrent}
+                    className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-amber-400 bg-white text-amber-500 transition hover:scale-105"
+                    aria-label="Guardar empleo"
+                  >
+                    <Star className="h-7 w-7" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={matchCurrent}
+                    className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-emerald-400 bg-white text-emerald-500 transition hover:scale-105"
+                    aria-label="Hacer match"
+                  >
+                    <CheckCircle2 className="h-7 w-7" />
+                  </button>
                 </div>
               </div>
             ) : (
@@ -837,39 +932,138 @@ export default function JobMatchPage() {
               </div>
             )}
 
-            <div className="mt-6 flex items-center justify-center gap-5">
-              <button
-                type="button"
-                onClick={rejectCurrent}
-                className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-rose-400 bg-white text-rose-500 transition hover:scale-105"
-                aria-label="Rechazar empleo"
-              >
-                <X className="h-7 w-7" />
-              </button>
-
-              <button
-                type="button"
-                onClick={saveCurrent}
-                className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-amber-400 bg-white text-amber-500 transition hover:scale-105"
-                aria-label="Guardar empleo"
-              >
-                <Star className="h-7 w-7" />
-              </button>
-
-              <button
-                type="button"
-                onClick={matchCurrent}
-                className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-emerald-400 bg-white text-emerald-500 transition hover:scale-105"
-                aria-label="Hacer match"
-              >
-                <CheckCircle2 className="h-7 w-7" />
-              </button>
-            </div>
-
             <p className="mt-4 text-center text-sm text-slate-500">← saltar · ☆ guardar · ✓ aplicar →</p>
             <p className="mt-2 text-center text-xs text-slate-400">
               {filteredJobs.length === 0 ? '0 empleos' : `${quickIndex + 1} / ${filteredJobs.length}`}
             </p>
+          </div>
+        </div>
+      )}
+
+      {selectedJobDetail && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm"
+          onClick={() => setSelectedJobDetail(null)}
+        >
+          <div
+            className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white/80 px-6 py-4 backdrop-blur-md">
+              <div className="flex items-center gap-3">
+                <div className={`${selectedJobDetail.avatarColor} flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-sm`}>
+                  <span className="font-bold">{selectedJobDetail.initial}</span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-900">{selectedJobDetail.title}</h3>
+                  <p className="text-xs text-slate-500">{selectedJobDetail.company}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedJobDetail(null)}
+                className="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-6">
+              {/* Resumen de Match */}
+              <div className="rounded-2xl bg-linear-to-r from-blue-50 to-emerald-50 p-5 border border-blue-100">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm font-bold text-slate-800">Cálculo de Match: <span className="text-emerald-600">{selectedJobDetail.matchPercent}%</span></span>
+                </div>
+                <p className="text-sm text-slate-600 mb-3">{selectedJobDetail.matchFeedback}</p>
+                <p className="text-sm text-slate-600 border-t border-blue-200/50 pt-3"><strong className="text-amber-600">Para mejorar:</strong> {selectedJobDetail.matchMissing}</p>
+              </div>
+
+              {/* Descripción */}
+              <section>
+                <h4 className="flex items-center gap-2 font-semibold text-slate-900 mb-2">
+                  <Briefcase className="h-4 w-4 text-slate-400" /> Sobre el puesto
+                </h4>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  {selectedJobDetail.description}
+                </p>
+              </section>
+
+              {/* Funciones */}
+              <section>
+                <h4 className="flex items-center gap-2 font-semibold text-slate-900 mb-3">
+                  <CheckCircle2 className="h-4 w-4 text-slate-400" /> Funciones principales
+                </h4>
+                <ul className="space-y-2">
+                  {selectedJobDetail.functions.map((fn, idx) => (
+                    <li key={idx} className="flex items-start gap-2 text-sm text-slate-600">
+                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-400 flex-shrink-0" />
+                      <span>{fn}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+
+              {/* Habilidades */}
+              <section>
+                <h4 className="flex items-center gap-2 font-semibold text-slate-900 mb-3">
+                  <Sparkles className="h-4 w-4 text-slate-400" /> Habilidades requeridas
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {selectedJobDetail.skills.map((skill, idx) => (
+                    <span key={idx} className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-700">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </section>
+
+              {/* Requisitos Generales */}
+              <div className="grid grid-cols-2 gap-4 rounded-2xl bg-slate-50 p-4 text-sm">
+                <div>
+                  <span className="block text-xs text-slate-400 mb-1">Modalidad</span>
+                  <span className="font-medium text-slate-700">{selectedJobDetail.mode}</span>
+                </div>
+                <div>
+                  <span className="block text-xs text-slate-400 mb-1">Ubicación</span>
+                  <span className="font-medium text-slate-700">{selectedJobDetail.location}</span>
+                </div>
+                <div>
+                  <span className="block text-xs text-slate-400 mb-1">Nivel</span>
+                  <span className="font-medium text-slate-700">{selectedJobDetail.level}</span>
+                </div>
+                <div>
+                  <span className="block text-xs text-slate-400 mb-1">Salario</span>
+                  <span className="font-medium text-slate-700">S/ {selectedJobDetail.salaryMin} - {selectedJobDetail.salaryMax}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="sticky bottom-0 border-t border-slate-100 bg-white/90 px-6 py-4 backdrop-blur-md flex gap-3">
+              <button 
+                onClick={() => {
+                  if (!savedJobs.some((s) => s.id === selectedJobDetail.id)) {
+                    setSavedJobs((prev) => [...prev, selectedJobDetail])
+                    setMatchedJobs((prev) => prev.filter((m) => m.id !== selectedJobDetail.id))
+                  }
+                  setSelectedJobDetail(null)
+                }}
+                className="flex-1 rounded-xl border-2 border-amber-100 bg-amber-50 py-3 text-sm font-semibold text-amber-700 transition hover:bg-amber-100"
+              >
+                Guardar
+              </button>
+              <button 
+                onClick={() => {
+                  if (!matchedJobs.some((m) => m.id === selectedJobDetail.id)) {
+                    setMatchedJobs((prev) => [...prev, selectedJobDetail])
+                    setSavedJobs((prev) => prev.filter((s) => s.id !== selectedJobDetail.id))
+                  }
+                  setSelectedJobDetail(null)
+                }}
+                className="flex-1 rounded-xl bg-emerald-500 py-3 text-sm font-semibold text-white shadow-md shadow-emerald-500/20 transition hover:bg-emerald-600"
+              >
+                Hacer Match
+              </button>
+            </div>
           </div>
         </div>
       )}
