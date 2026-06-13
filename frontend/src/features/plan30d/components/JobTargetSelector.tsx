@@ -1,6 +1,6 @@
 'use client'
 
-import { Target } from 'lucide-react'
+import { Target, CalendarDays } from 'lucide-react'
 import type { JobTarget } from '../types'
 
 interface JobTargetSelectorProps {
@@ -30,7 +30,7 @@ export default function JobTargetSelector({
     <div className="space-y-3">
       {/* Title */}
       <div className="flex items-center gap-2 px-1">
-        <Target className="w-5 h-5 text-emerald-500" />
+        <Target className="w-5 h-5 text-navy" />
         <h3 className="text-base font-bold text-base-content">Objetivo laboral</h3>
       </div>
 
@@ -45,14 +45,14 @@ export default function JobTargetSelector({
             <button
               key={job.id}
               onClick={() => onSelectJob(job.id)}
-              className={`flex-shrink-0 w-[300px] snap-start text-left card bg-base-100 transition-all duration-200 cursor-pointer border-2 ${
+              className={`flex-shrink-0 w-[310px] snap-start text-left card bg-base-100 transition-all duration-200 cursor-pointer border-2 ${
                 isSelected
                   ? 'border-emerald-500 shadow-md scale-[1.01]'
                   : 'border-base-300 hover:border-base-400 hover:scale-[1.005] hover:shadow-sm'
               }`}
               aria-pressed={isSelected}
             >
-              <div className="card-body p-5 space-y-4">
+              <div className="card-body p-5 space-y-3">
                 {/* Header: Company Initials Circle & Names */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
@@ -92,6 +92,14 @@ export default function JobTargetSelector({
                   </div>
                 </div>
 
+                {/* Deadline and Urgency */}
+                <div className="flex items-center gap-1.5 text-xs text-base-content/60">
+                  <CalendarDays className="w-3.5 h-3.5 text-base-content/40 flex-shrink-0" />
+                  <span>
+                    Faltan <span className="font-semibold text-rose-600">{job.daysLeft} días</span> (Límite: {job.deadlineDate})
+                  </span>
+                </div>
+
                 {/* Badges Row */}
                 <div className="flex flex-wrap gap-1.5">
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${badgeClass}`}>
@@ -103,7 +111,7 @@ export default function JobTargetSelector({
                 </div>
 
                 {/* Skill Gaps Chips */}
-                <div className="space-y-1.5 pt-1 border-t border-base-200">
+                <div className="space-y-1.5 pt-2 border-t border-base-200">
                   <p className="text-[10px] text-base-content/40 font-semibold uppercase tracking-wider">
                     Brechas principales
                   </p>
