@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import PageShell from '@/src/components/layout/PageShell'
 import {
+  Bookmark,
   Cake,
   Check,
   CheckCircle2,
@@ -12,10 +13,12 @@ import {
   GraduationCap,
   Heart,
   MapPin,
+  Plus,
   RotateCcw,
   Search,
   Sparkles,
   Star,
+  Trash2,
   X,
 } from 'lucide-react'
 
@@ -377,8 +380,8 @@ export default function JobMatchPage() {
         </div>
       </section>
 
-      <main className="max-w-360 mx-auto px-6 pb-12">
-        <div className="grid grid-cols-1 xl:grid-cols-[360px_1fr] gap-8 items-start">
+      <main className="max-w-[1600px] mx-auto px-6 pb-12">
+        <div className="grid grid-cols-1 xl:grid-cols-[300px_1fr_340px] gap-6 items-start">
           <aside className="rounded-3xl border border-slate-200 bg-white shadow-sm">
             <div className="flex items-center gap-3 border-b border-slate-100 px-6 py-5">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
@@ -414,6 +417,7 @@ export default function JobMatchPage() {
                 transition-all duration-300
                 hover:scale-110 hover:bg-red-700
                 active:scale-95
+                xl:hidden
               "
               aria-label="Búsqueda rápida"
             >
@@ -629,7 +633,47 @@ export default function JobMatchPage() {
                         <div className="text-base font-semibold text-red-500">
                           S/ {job.salaryMin} - {job.salaryMax}
                         </div>
-                        <div className="text-sm text-slate-400">{job.status}</div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-slate-400 hidden sm:inline">{job.status}</span>
+                          {matchedJobs.some((m) => m.id === job.id) ? (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600">
+                              <CheckCircle2 className="h-3.5 w-3.5" /> Match
+                            </span>
+                          ) : savedJobs.some((s) => s.id === job.id) ? (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-600">
+                              <Bookmark className="h-3.5 w-3.5" /> Guardado
+                            </span>
+                          ) : (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (!savedJobs.some((s) => s.id === job.id)) {
+                                    setSavedJobs((prev) => [...prev, job])
+                                  }
+                                }}
+                                className="inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-600 transition hover:bg-amber-100 hover:scale-105 active:scale-95"
+                                title="Guardar empleo"
+                              >
+                                <Star className="h-3.5 w-3.5" />
+                                <span className="hidden sm:inline">Guardar</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (!matchedJobs.some((m) => m.id === job.id)) {
+                                    setMatchedJobs((prev) => [...prev, job])
+                                  }
+                                }}
+                                className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600 transition hover:bg-emerald-100 hover:scale-105 active:scale-95"
+                                title="Hacer match"
+                              >
+                                <Plus className="h-3.5 w-3.5" />
+                                <span className="hidden sm:inline">Match</span>
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </article>
@@ -637,61 +681,84 @@ export default function JobMatchPage() {
               </div>
             )}
           </section>
+
+          {/* ── Resumen de matches: sticky sidebar on xl, full-width below on smaller ── */}
+          <aside className="xl:sticky xl:top-6 xl:self-start order-last rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+            <div className="border-b border-slate-100 px-5 py-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                  <Heart className="h-5 w-5" />
+                </div>
+                <h2 className="text-lg font-bold text-slate-900">Mis Matches</h2>
+              </div>
+              <div className="flex gap-2 text-xs">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-700">
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  {matchedJobs.length}
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 font-semibold text-amber-700">
+                  <Star className="h-3.5 w-3.5" />
+                  {savedJobs.length}
+                </span>
+              </div>
+            </div>
+
+            <div className="px-4 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+              {selectedJobs.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
+                  <Heart className="mx-auto h-8 w-8 text-slate-300 mb-2" />
+                  <p className="font-semibold text-sm text-slate-700">Sin matches aún</p>
+                  <p className="mt-1 text-xs text-slate-500">Usa los botones de cada empleo para agregar.</p>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {selectedJobs.map((job) => {
+                    const isMatched = matchedJobs.some((m) => m.id === job.id)
+                    return (
+                      <article
+                        key={`summary-${job.id}`}
+                        className={`group/item rounded-2xl border p-3 transition-all duration-200 hover:shadow-md ${
+                          isMatched ? 'border-emerald-200 bg-emerald-50/60' : 'border-amber-200 bg-amber-50/60'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={`${job.avatarColor} flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-white`}>
+                            <span className="text-sm font-bold">{job.initial}</span>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-slate-900 truncate">{job.title}</p>
+                            <p className="text-xs text-slate-500 truncate">{job.company}</p>
+                          </div>
+                          <div className="flex items-center gap-1.5 flex-shrink-0">
+                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                              isMatched ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                            }`}>
+                              {job.matchPercent}%
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (isMatched) {
+                                  setMatchedJobs((prev) => prev.filter((m) => m.id !== job.id))
+                                } else {
+                                  setSavedJobs((prev) => prev.filter((s) => s.id !== job.id))
+                                }
+                              }}
+                              className="rounded-full p-1 text-slate-400 opacity-0 group-hover/item:opacity-100 transition hover:bg-rose-50 hover:text-rose-500"
+                              title="Quitar"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      </article>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          </aside>
         </div>
-
-        <section className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h2 className="text-xl md:text-2xl font-semibold text-slate-900">Resumen final de matches</h2>
-              <p className="text-sm text-slate-500">Aquí se consolidan tus empleos guardados y marcados como match.</p>
-            </div>
-            <div className="flex flex-wrap gap-2 text-sm">
-              <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 font-semibold text-emerald-700">
-                <CheckCircle2 className="h-4 w-4" />
-                Match: {matchedJobs.length}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1.5 font-semibold text-amber-700">
-                <Star className="h-4 w-4" />
-                Guardados: {savedJobs.length}
-              </span>
-            </div>
-          </div>
-
-          {selectedJobs.length === 0 ? (
-            <div className="mt-6 rounded-3xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
-              <p className="font-semibold text-slate-900">Todavía no has elegido empleos</p>
-              <p className="mt-2 text-sm text-slate-500">Abre la búsqueda rápida y empieza a marcar matches.</p>
-            </div>
-          ) : (
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {selectedJobs.map((job) => (
-                <article key={`${job.id}-${job.title}`} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className={`${job.avatarColor} flex h-12 w-12 items-center justify-center rounded-2xl text-white`}>
-                        <span className="font-bold">{job.initial}</span>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-slate-900">{job.title}</p>
-                        <p className="text-sm text-slate-500">{job.company}</p>
-                      </div>
-                    </div>
-                    <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-700 shadow-sm">
-                      {job.matchPercent}%
-                    </span>
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {job.tags.map((tag) => (
-                      <span key={tag} className="rounded-full bg-white px-3 py-1 text-xs text-slate-600 shadow-sm">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
-        </section>
       </main>
 
       {quickOpen && (
