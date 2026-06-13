@@ -11,11 +11,13 @@ import {
   BookOpen,
   Users,
   Activity,
+  UserCircle,
 } from 'lucide-react'
 import { studentProfile } from '@/src/features/dashboard/data/mock-data'
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
+  { href: '/mi-perfil', label: 'Mi Perfil', icon: UserCircle },
   { href: '/job-match', label: 'Job match', icon: Search },
   { href: '/cv-builder', label: 'CV Builder', icon: FileText },
   { href: '/simulator', label: 'Simulator', icon: Mic },
@@ -58,7 +60,7 @@ export default function Sidebar() {
       <div className="p-4 border-t border-white/10">
         <div className="flex items-center gap-3">
           <div className="avatar avatar-placeholder">
-            <div className="bg-white/20 text-white w-9 rounded-full">
+            <div className="bg-white/20 text-white w-9 rounded-full flex items-center justify-center">
               <span className="text-sm font-semibold">{studentProfile.avatarInitial}</span>
             </div>
           </div>
