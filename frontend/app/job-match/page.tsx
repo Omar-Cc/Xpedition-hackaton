@@ -303,6 +303,7 @@ export default function JobMatchPage() {
   function saveCurrent() {
     if (currentQuickJob && !savedJobs.some((job) => job.id === currentQuickJob.id)) {
       setSavedJobs((prev) => [...prev, currentQuickJob])
+      setMatchedJobs((prev) => prev.filter((job) => job.id !== currentQuickJob.id))
     }
     advanceQuick()
   }
@@ -310,6 +311,7 @@ export default function JobMatchPage() {
   function matchCurrent() {
     if (currentQuickJob && !matchedJobs.some((job) => job.id === currentQuickJob.id)) {
       setMatchedJobs((prev) => [...prev, currentQuickJob])
+      setSavedJobs((prev) => prev.filter((job) => job.id !== currentQuickJob.id))
     }
     advanceQuick()
   }
@@ -650,6 +652,7 @@ export default function JobMatchPage() {
                                 onClick={() => {
                                   if (!savedJobs.some((s) => s.id === job.id)) {
                                     setSavedJobs((prev) => [...prev, job])
+                                    setMatchedJobs((prev) => prev.filter((m) => m.id !== job.id))
                                   }
                                 }}
                                 className="inline-flex items-center gap-1 rounded-full border border-amber-300 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-600 transition hover:bg-amber-100 hover:scale-105 active:scale-95"
@@ -663,6 +666,7 @@ export default function JobMatchPage() {
                                 onClick={() => {
                                   if (!matchedJobs.some((m) => m.id === job.id)) {
                                     setMatchedJobs((prev) => [...prev, job])
+                                    setSavedJobs((prev) => prev.filter((s) => s.id !== job.id))
                                   }
                                 }}
                                 className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600 transition hover:bg-emerald-100 hover:scale-105 active:scale-95"
