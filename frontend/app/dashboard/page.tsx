@@ -2,10 +2,9 @@ import Sidebar from '@/src/components/layout/Sidebar'
 import TopBanner from '@/src/components/layout/TopBanner'
 import StatsGrid from '@/src/features/dashboard/components/StatsGrid'
 import QuickActions from '@/src/features/dashboard/components/QuickActions'
-import JobRecommendations from '@/src/features/dashboard/components/JobRecommendations'
+import NewsSection from '@/src/features/dashboard/components/NewsSection'
 import MentorshipCard from '@/src/features/dashboard/components/MentorshipCard'
 import WeeklyProgress from '@/src/features/dashboard/components/WeeklyProgress'
-import StreakCard from '@/src/features/dashboard/components/StreakCard'
 
 export default function DashboardPage() {
   return (
@@ -20,12 +19,11 @@ export default function DashboardPage() {
             <div className="lg:col-span-2 flex flex-col gap-6">
               <StatsGrid />
               <QuickActions />
-              <JobRecommendations />
+              <NewsSection />
             </div>
             <div className="flex flex-col gap-4">
               <MentorshipCard />
               <WeeklyProgress />
-              <StreakCard />
             </div>
           </div>
         </main>

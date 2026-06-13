@@ -46,3 +46,10 @@ export interface ProgressItem {
   total: number
   colorClass: string
 }
+
+export interface NewsItem {
+  id: string
+  title: string
+  imageUrl: string
+  link: string
+}

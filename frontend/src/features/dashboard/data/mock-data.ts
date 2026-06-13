@@ -2,17 +2,16 @@ import { Mic, FileText, Search, Calendar } from 'lucide-react'
 import type { StudentProfile, StatItem, QuickAction, JobMatch, Mentor, ProgressItem } from '../types'
 
 export const studentProfile: StudentProfile = {
-  name: 'Carlos Ramírez',
-  career: 'Ing. Sistemas · 8vo sem.',
+  name: 'Anibal Alejandro',
+  career: 'Estudiante',
   completionPercent: 72,
-  avatarInitial: 'C',
+  avatarInitial: 'A',
 }
 
 export const stats: StatItem[] = [
-  { label: 'Postulaciones activas', value: '3/3', colorClass: 'text-base-content' },
+  { label: 'Postulaciones activas', value: '3', colorClass: 'text-base-content' },
   { label: 'Entrevistas simuladas', value: '12', colorClass: 'text-info' },
-  { label: 'Racha actual', value: '7 días 🔥', colorClass: 'text-warning' },
-  { label: 'Match más alto', value: '87%', colorClass: 'text-success' },
+  { label: 'Talleres inscritos', value: '2', colorClass: 'text-warning' },
 ]
 
 export const quickActions: QuickAction[] = [
@@ -98,7 +97,29 @@ export const mentor: Mentor = {
 }
 
 export const progressItems: ProgressItem[] = [
-  { label: 'Entrevistas simuladas', current: 3, total: 5, colorClass: 'progress-info' },
-  { label: 'Tareas del plan', current: 5, total: 7, colorClass: 'progress-success' },
-  { label: 'Match promedio', current: 77, total: 100, colorClass: 'progress-warning' },
+  { label: 'Calidad del CV (IA)', current: 85, total: 100, colorClass: 'progress-primary' },
+  { label: 'Talleres y cursos completados', current: 4, total: 5, colorClass: 'progress-info' },
+  { label: 'Asistencia a eventos de UTP', current: 2, total: 3, colorClass: 'progress-secondary' },
+  { label: 'Desafíos del Plan 30 Días', current: 5, total: 7, colorClass: 'progress-success' },
+]
+
+export const newsItems = [
+  {
+    id: '1',
+    title: 'Feria Laboral UTP: ¡Postula a las mejores ofertas!',
+    imageUrl: '/image.png',
+    link: 'https://portal.utp.edu.pe',
+  },
+  {
+    id: '2',
+    title: 'Concurso Startup UTP: Inspírate y da el siguiente paso',
+    imageUrl: '/image 2png',
+    link: 'https://portal.utp.edu.pe',
+  },
+  {
+    id: '3',
+    title: 'Competencia E-SPORTS UTP: Vive la experiencia gamer',
+    imageUrl: '/image 3.png',
+    link: 'https://portal.utp.edu.pe',
+  }
 ]
