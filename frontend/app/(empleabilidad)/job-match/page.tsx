@@ -318,7 +318,8 @@ export default function JobMatchPage() {
 
   return (
     <PageShell>
-      <section className="max-w-360 mx-auto px-6 pt-6 pb-8">
+      <div className="flex-1 overflow-y-auto">
+        <section className="max-w-360 mx-auto px-6 pt-6 pb-8">
         <div className="rounded-3xl bg-linear-to-r from-indigo-50 via-pink-50 to-yellow-50 border border-white/70 shadow-sm p-8">
           <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
@@ -866,6 +867,7 @@ export default function JobMatchPage() {
           </div>
         </div>
       )}
+      </div>
     </PageShell>
   )
 }

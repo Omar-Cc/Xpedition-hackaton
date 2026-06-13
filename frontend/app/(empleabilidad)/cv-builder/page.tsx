@@ -76,8 +76,8 @@ export default function CVBuilderPage() {
         subtitle="Genera tu currículum optimizado en LaTeX y envíalo directamente a reclutadores."
       />
 
-      <main className="flex-1 p-6 relative">
-        <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6 max-w-[1400px] mx-auto h-[calc(100vh-140px)]">
+      <main className="flex flex-col flex-1 p-6 relative min-h-0 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6 max-w-[1400px] mx-auto h-full w-full">
           
           {/* PANEL LATERAL */}
           <div className="flex flex-col h-full overflow-hidden">
