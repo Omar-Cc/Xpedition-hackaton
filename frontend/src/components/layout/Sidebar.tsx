@@ -16,13 +16,13 @@ import {
 import { studentProfile } from '@/src/features/dashboard/data/mock-data'
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: Home },
+  { href: '/dashboard', label: 'Inicio', icon: Home },
   { href: '/mi-perfil', label: 'Mi Perfil', icon: UserCircle },
   { href: '/job-match', label: 'Job match', icon: Search },
-  { href: '/cv-builder', label: 'CV Builder', icon: FileText },
-  { href: '/simulator', label: 'Simulator', icon: Mic },
-  { href: '/plan-30d', label: 'Mi plan 30d', icon: Calendar },
-  { href: '/cursos', label: 'Mis cursos', icon: BookOpen },
+  { href: '/cv-builder', label: 'Creador de CV', icon: FileText },
+  { href: '/simulator', label: 'Simulador de entrevistas', icon: Mic },
+  { href: '/plan-30d', label: 'Planificación', icon: Calendar },
+  { href: '/cursos', label: 'Aprende +', icon: BookOpen },
   { href: '/mentoria', label: 'Mentoría', icon: Users },
   { href: '/seguimiento', label: 'Seguimiento', icon: Activity },
 ]
