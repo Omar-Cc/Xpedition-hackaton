@@ -313,8 +313,8 @@ export default function JobMatchPage() {
 
   return (
     <PageShell>
-      <section className="max-w-[1440px] mx-auto px-6 pt-6 pb-8">
-        <div className="rounded-3xl bg-gradient-to-r from-indigo-50 via-pink-50 to-yellow-50 border border-white/70 shadow-sm p-8">
+      <section className="max-w-360 mx-auto px-6 pt-6 pb-8">
+        <div className="rounded-3xl bg-linear-to-r from-indigo-50 via-pink-50 to-yellow-50 border border-white/70 shadow-sm p-8">
           <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700 shadow-sm">
@@ -373,22 +373,11 @@ export default function JobMatchPage() {
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={openQuickSearch}
-              className="group flex h-36 w-36 items-center justify-center rounded-full bg-red-600 text-white shadow-2xl transition hover:scale-105 hover:bg-red-700"
-              aria-label="Abrir búsqueda rápida"
-            >
-              <div className="flex flex-col items-center gap-3">
-                <Search className="h-14 w-14 transition-transform duration-300 group-hover:scale-110" />
-                <span className="text-sm font-semibold">Búsqueda rápida</span>
-              </div>
-            </button>
           </div>
         </div>
       </section>
 
-      <main className="max-w-[1440px] mx-auto px-6 pb-12">
+      <main className="max-w-360 mx-auto px-6 pb-12">
         <div className="grid grid-cols-1 xl:grid-cols-[360px_1fr] gap-8 items-start">
           <aside className="rounded-3xl border border-slate-200 bg-white shadow-sm">
             <div className="flex items-center gap-3 border-b border-slate-100 px-6 py-5">
@@ -414,6 +403,22 @@ export default function JobMatchPage() {
                   className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
                 />
               </section>
+            <button
+              onClick={openQuickSearch}
+              className="
+                fixed bottom-6 right-6 z-50
+                flex items-center justify-center
+                h-14 w-14 rounded-full
+                bg-red-600 text-white
+                shadow-lg
+                transition-all duration-300
+                hover:scale-110 hover:bg-red-700
+                active:scale-95
+              "
+              aria-label="Búsqueda rápida"
+            >
+              <Search className="h-6 w-6" />
+            </button>
 
               <section className="rounded-2xl bg-slate-50 p-4">
                 <div className="mb-3 flex items-center gap-2">
@@ -575,7 +580,7 @@ export default function JobMatchPage() {
                     className="group h-full rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/60"
                     style={{ animationDelay: `${index * 90}ms` }}
                   >
-                    <div className="animate-cardIn flex h-full min-h-[420px] flex-col p-6 md:p-7">
+                    <div className="animate-cardIn flex h-full min-h-105 flex-col p-6 md:p-7">
                       <div className="mb-6 flex items-start justify-between gap-4">
                         <div className="flex items-center gap-4">
                           <div className={`${job.avatarColor} flex h-16 w-16 items-center justify-center rounded-2xl text-white shadow-sm transition-transform duration-300 group-hover:scale-110`}>
@@ -695,7 +700,7 @@ export default function JobMatchPage() {
           onClick={() => setQuickOpen(false)}
         >
           <div
-            className="w-full max-w-md rounded-[2rem] bg-slate-100 px-4 py-4 shadow-2xl"
+            className="w-full max-w-md rounded-4xl bg-slate-100 px-4 py-4 shadow-2xl"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-center justify-between px-2 pb-2">
@@ -714,7 +719,7 @@ export default function JobMatchPage() {
             </div>
 
             {currentQuickJob ? (
-              <div className="rounded-[2rem] bg-white p-5 shadow-sm">
+              <div className="rounded-4xl bg-white p-5 shadow-sm">
                 <div className="mb-4 flex items-start justify-between">
                   <div className={`${currentQuickJob.avatarColor} flex h-16 w-16 items-center justify-center rounded-2xl text-white shadow-sm`}>
                     <span className="text-xl font-bold">{currentQuickJob.initial}</span>
@@ -748,7 +753,7 @@ export default function JobMatchPage() {
                 </div>
               </div>
             ) : (
-              <div className="rounded-[2rem] bg-white p-8 text-center">
+              <div className="rounded-4xl bg-white p-8 text-center">
                 <p className="text-lg font-semibold text-slate-900">No hay resultados para mostrar</p>
                 <p className="mt-2 text-sm text-slate-500">Ajusta los filtros y vuelve a abrir la búsqueda rápida.</p>
               </div>
