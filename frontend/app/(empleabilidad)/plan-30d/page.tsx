@@ -44,7 +44,7 @@ export default function Plan30dPage() {
         subtitle={`Objetivo: ${selectedJob.position} · ${daysRemaining} días restantes`}
         left={
           <div
-            className="radial-progress text-white flex-shrink-0 text-xs"
+            className="radial-progress text-white shrink-0 text-xs"
             style={
               {
                 '--value': String(Math.round(((30 - daysRemaining) / 30) * 100)),
@@ -81,7 +81,7 @@ export default function Plan30dPage() {
                 {Array.from({ length: 7 }).map((_, i) => (
                   <Check
                     key={i}
-                    className="text-emerald-400 w-3.5 h-3.5 stroke-[3]"
+                    className="text-emerald-400 w-3.5 h-3.5 stroke-3"
                     aria-hidden="true"
                   />
                 ))}

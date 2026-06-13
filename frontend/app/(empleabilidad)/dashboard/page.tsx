@@ -19,7 +19,6 @@ export default function DashboardPage() {
 
         <main className="flex-1 overflow-y-auto p-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            {/* Columna Principal */}
             <div className="lg:col-span-2 flex flex-col gap-6">
               <StatsGrid />
               <QuickActions />
@@ -27,7 +26,6 @@ export default function DashboardPage() {
               <NewsSection />
             </div>
             
-            {/* Columna Lateral (Right Sidebar) */}
             <div className="flex flex-col gap-5">
               <TodayTaskCard />
               <CVHealthCard />
