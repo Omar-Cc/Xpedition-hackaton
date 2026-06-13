@@ -19,7 +19,7 @@ export default function ExportPanel({ isDownloadingPdf, isDownloadingDocx, onDow
           className="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium disabled:opacity-70"
         >
           {isDownloadingPdf ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
-          {isDownloadingPdf ? 'Generando PDF...' : 'Descargar PDF (LaTeX)'}
+          {isDownloadingPdf ? 'Generando PDF...' : 'Descargar PDF'}
         </button>
         <button 
           onClick={onDownloadDocx}
@@ -27,7 +27,7 @@ export default function ExportPanel({ isDownloadingPdf, isDownloadingDocx, onDow
           className="w-full flex items-center justify-center gap-2 py-2.5 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors text-sm font-medium disabled:opacity-70"
         >
           {isDownloadingDocx ? <Loader2 size={16} className="animate-spin" /> : <FileText size={16} />}
-          {isDownloadingDocx ? 'Procesando Word...' : 'Descargar DOCX'}
+          {isDownloadingDocx ? 'Procesando Word...' : 'Descargar Word'}
         </button>
         <div className="pt-2 border-t border-slate-600">
           <button 
