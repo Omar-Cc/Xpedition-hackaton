@@ -7,8 +7,11 @@ import type {
   WeekImpact,
   NextAction,
   CalendarEvent,
-  CalendarEventType,
   CompanyChip,
+  QuickWin,
+  SimulationRecommendation,
+  MentorRecommendation,
+  CourseRecommendation,
 } from '../types'
 
 export const daysRemaining = 23
@@ -24,6 +27,8 @@ export const jobTargets: JobTarget[] = [
     difficulty: 'Media',
     badge: 'Recomendado',
     mainGaps: ['Python avanzado', 'SQL avanzado', 'Storytelling'],
+    daysLeft: 12,
+    deadlineDate: '25 de Junio',
   },
   {
     id: 'bcp-bi',
@@ -35,6 +40,8 @@ export const jobTargets: JobTarget[] = [
     difficulty: 'Alta',
     badge: 'Retador',
     mainGaps: ['Power BI avanzado', 'ETL básico', 'Data Warehouse'],
+    daysLeft: 4,
+    deadlineDate: '17 de Junio',
   },
   {
     id: 'interbank-dt',
@@ -46,6 +53,8 @@ export const jobTargets: JobTarget[] = [
     difficulty: 'Baja',
     badge: 'Alternativa',
     mainGaps: ['Excel avanzado', 'SQL intermedio'],
+    daysLeft: 19,
+    deadlineDate: '2 de Julio',
   },
 ]
 
@@ -130,7 +139,7 @@ export const skillGapsByJob: Record<string, SkillGapLevel[]> = {
 
 export const todayTaskByJob: Record<string, TodayTaskData> = {
   'scotiabank-da': {
-    date: 'MIÉRCOLES 11',
+    date: 'HOY',
     category: 'técnica',
     title: 'Practica manipulación de datos con pandas',
     duration: '45 min',
@@ -141,10 +150,10 @@ export const todayTaskByJob: Record<string, TodayTaskData> = {
       { id: 'c2', label: 'Ver tutorial de manipulación de datos', done: false },
       { id: 'c3', label: 'Resolver mini caso práctico', done: false },
     ],
-    tomorrowPreview: 'Jueves: VLOOKUP & tablas dinámicas en Excel — 40 min',
+    tomorrowPreview: 'Mañana: VLOOKUP & tablas dinámicas en Excel — 40 min',
   },
   'bcp-bi': {
-    date: 'MIÉRCOLES 11',
+    date: 'HOY',
     category: 'técnica',
     title: 'Crea tu primer dashboard en Power BI',
     duration: '60 min',
@@ -155,10 +164,10 @@ export const todayTaskByJob: Record<string, TodayTaskData> = {
       { id: 'c2', label: 'Crear 3 visualizaciones básicas', done: false },
       { id: 'c3', label: 'Publicar dashboard en Power BI Service', done: false },
     ],
-    tomorrowPreview: 'Jueves: Modelado de datos con DAX — 50 min',
+    tomorrowPreview: 'Mañana: Modelado de datos con DAX — 50 min',
   },
   'interbank-dt': {
-    date: 'MIÉRCOLES 11',
+    date: 'HOY',
     category: 'técnica',
     title: 'Domina tablas dinámicas en Excel',
     duration: '35 min',
@@ -169,7 +178,7 @@ export const todayTaskByJob: Record<string, TodayTaskData> = {
       { id: 'c2', label: 'Agregar campos calculados', done: false },
       { id: 'c3', label: 'Exportar reporte resumen', done: false },
     ],
-    tomorrowPreview: 'Jueves: Fórmulas avanzadas BUSCARV e INDICE — 30 min',
+    tomorrowPreview: 'Mañana: Fórmulas avanzadas BUSCARV e INDICE — 30 min',
   },
 }
 
@@ -231,9 +240,116 @@ export const nextActionByJob: Record<string, NextAction> = {
 }
 
 export const calendarEvents: CalendarEvent[] = [
-  { id: 'e1', title: 'Práctica pandas', time: 'Hoy, 3:00 PM', type: 'tarea' },
-  { id: 'e2', title: 'Entrevista práctica', time: 'Vie 13, 10:00 AM', type: 'entrevista' },
-  { id: 'e3', title: 'Mentoría con Juan P.', time: 'Mié 18, 4:00 PM', type: 'mentoría' },
-  { id: 'e4', title: 'Deadline: Postulación SCO', time: 'Dom 22, 11:59 PM', type: 'fecha límite' },
-  { id: 'e5', title: 'Simulación técnica', time: 'Mié 25, 2:00 PM', type: 'recordatorio' },
+  { id: 'e1', title: 'Práctica pandas', time: 'Hoy, 3:00 PM', type: 'task' },
+  { id: 'e2', title: 'Entrevista práctica', time: 'Vie 13, 10:00 AM', type: 'interview' },
+  { id: 'e3', title: 'Mentoría con Juan P.', time: 'Mié 18, 4:00 PM', type: 'mentorship' },
+  { id: 'e4', title: 'Deadline: Postulación SCO', time: 'Dom 22, 11:59 PM', type: 'deadline' },
+  { id: 'e5', title: 'Simulación técnica', time: 'Mié 25, 2:00 PM', type: 'reminder' },
 ]
+
+// ── New Mock Data for the Redesigned "Mi Plan" ──────────────────────────
+
+export const quickWinsByJob: Record<string, QuickWin[]> = {
+  'scotiabank-da': [
+    { id: 'qw1', label: 'Agregar keywords "Pandas" y "Limpieza de datos" a tu perfil', points: 3, done: false },
+    { id: 'qw2', label: 'Resolver el mini-ejercicio de SQL JOINs en el simulador', points: 4, done: false },
+    { id: 'qw3', label: 'Subir tu último proyecto académico sobre Análisis Financiero como portafolio', points: 5, done: false },
+  ],
+  'bcp-bi': [
+    { id: 'qw1', label: 'Alinear tu sección de experiencia con Power BI y modelado DAX', points: 4, done: false },
+    { id: 'qw2', label: 'Ver el video de 5 minutos sobre Storytelling Financiero', points: 3, done: false },
+    { id: 'qw3', label: 'Actualizar tu promedio ponderado en el perfil UTP', points: 2, done: false },
+  ],
+  'interbank-dt': [
+    { id: 'qw1', label: 'Añadir certificado de Excel Intermedio en tu CV', points: 5, done: false },
+    { id: 'qw2', label: 'Practicar la pregunta de entrevista "Háblame de ti"', points: 3, done: false },
+    { id: 'qw3', label: 'Registrar tu asistencia al webinar de Data Analytics de Interbank', points: 2, done: false },
+  ],
+}
+
+export const simulationsByJob: Record<string, SimulationRecommendation> = {
+  'scotiabank-da': {
+    title: 'Entrevista técnica para Junior Data Analyst',
+    topicList: 'Python (Pandas), SQL Joins, Visualización de Datos',
+    duration: '20 min',
+  },
+  'bcp-bi': {
+    title: 'Entrevista de Business Intelligence',
+    topicList: 'Power BI DAX, Modelamiento dimensional, Flujos ETL',
+    duration: '25 min',
+  },
+  'interbank-dt': {
+    title: 'Fit cultural y técnico para Data Trainee',
+    topicList: 'Preguntas conductuales, Excel avanzado, Consultas SQL',
+    duration: '15 min',
+  },
+}
+
+export const mentorshipsByJob: Record<string, MentorRecommendation> = {
+  'scotiabank-da': {
+    name: 'Ana Torres',
+    position: 'Analista de Datos Senior',
+    company: 'Scotiabank',
+    achievement: 'Ana consiguió prácticas preprofesionales en Scotiabank y hoy lidera el equipo de Business Analytics.',
+    avatarInitial: 'A',
+  },
+  'bcp-bi': {
+    name: 'Diego Flores',
+    position: 'Consultor de Business Intelligence',
+    company: 'BCP',
+    achievement: 'Diego es egresado UTP y tiene más de 3 años asesorando a practicantes BI en el BCP.',
+    avatarInitial: 'D',
+  },
+  'interbank-dt': {
+    name: 'Milagros Soto',
+    position: 'Data Scientist',
+    company: 'Interbank',
+    achievement: 'Milagros ingresó como Data Trainee y hoy lidera los modelos de riesgo financiero analítico.',
+    avatarInitial: 'M',
+  },
+}
+
+export const coursesByJob: Record<string, CourseRecommendation[]> = {
+  'scotiabank-da': [
+    {
+      title: 'Programación Avanzada con Python',
+      source: 'UTP+Class',
+      description: 'Curso matriculado en tu ciclo actual (semana 12).',
+      benefit: 'Acredita tu nivel avanzado frente a Scotiabank.',
+    },
+    {
+      title: 'Taller de Querys y Subconsultas Complejas en SQL',
+      source: 'UTP+Portal',
+      description: 'Taller extracurricular programado por la facultad para este jueves.',
+      benefit: 'Cierra tu brecha actual de SQL avanzado rápidamente.',
+    },
+  ],
+  'bcp-bi': [
+    {
+      title: 'Herramientas de Inteligencia de Negocios',
+      source: 'UTP+Class',
+      description: 'Curso de tu plan de estudios de Ingeniería (Ciclo pasado, nota: 17).',
+      benefit: 'Valida tu capacidad para diseñar Dashboards e ETLs.',
+    },
+    {
+      title: 'Taller de Modelamiento de Data Warehouse',
+      source: 'UTP+Portal',
+      description: 'Seminario de la bolsa de trabajo disponible en tu portal.',
+      benefit: 'Suma puntaje en la evaluación técnica de bases de datos de BCP.',
+    },
+  ],
+  'interbank-dt': [
+    {
+      title: 'Estadística Aplicada para los Negocios',
+      source: 'UTP+Class',
+      description: 'Curso aprobado con nota destacada (18).',
+      benefit: 'Demuestra bases analíticas sólidas al reclutador.',
+    },
+    {
+      title: 'Webinar: Liderazgo y Transformación Digital Financiera',
+      source: 'UTP+Portal',
+      description: 'Charla magistral online organizada por Interbank esta semana.',
+      benefit: 'Potencia tu fit cultural y entendimiento del negocio bancario.',
+    },
+  ],
+}

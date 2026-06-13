@@ -56,13 +56,15 @@ function LevelBar({ currentLevel, requiredLevel }: { currentLevel: SkillLevel; r
 
 export default function SkillGapsCard({ skills }: SkillGapsCardProps) {
   return (
-    <div className="card bg-base-100 shadow-sm">
+    <div className="card bg-base-100 shadow-sm border border-base-200 rounded-2xl">
       <div className="card-body p-4">
+        {/* Header */}
         <div className="flex items-center gap-2 mb-3">
           <BarChart3 className="w-4 h-4 text-base-content/50" />
-          <h3 className="text-sm font-semibold">Brechas de habilidad</h3>
+          <h3 className="text-sm font-semibold">Brechas frente al puesto</h3>
         </div>
 
+        {/* Content */}
         <div className="flex flex-col gap-4">
           {skills.map((s) => {
             const hasGap = levelIndex[s.currentLevel] < levelIndex[s.requiredLevel]
