@@ -7,6 +7,7 @@ import {
   Cake,
   Check,
   CheckCircle2,
+  ChevronDown,
   Clock3,
   DollarSign,
   Filter,
@@ -211,6 +212,7 @@ export default function JobMatchPage() {
   const [quickIndex, setQuickIndex] = useState(0)
   const [matchedJobs, setMatchedJobs] = useState<JobItem[]>([])
   const [savedJobs, setSavedJobs] = useState<JobItem[]>([])
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   const filteredJobs = useMemo(() => {
     const query = appliedFilters.query.trim().toLowerCase()
@@ -386,17 +388,22 @@ export default function JobMatchPage() {
       <main className="max-w-[1600px] mx-auto px-6 pb-12">
         <div className="grid grid-cols-1 xl:grid-cols-[300px_1fr_340px] gap-6 items-start">
           <aside className="rounded-3xl border border-slate-200 bg-white shadow-sm">
-            <div className="flex items-center gap-3 border-b border-slate-100 px-6 py-5">
+            <button
+              type="button"
+              onClick={() => setFiltersOpen(!filtersOpen)}
+              className="flex w-full items-center gap-3 px-6 py-5 xl:cursor-default"
+            >
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
                 <Filter className="h-5 w-5" />
               </div>
-              <div>
+              <div className="text-left flex-1">
                 <h2 className="text-lg font-bold text-slate-900">Filtros de búsqueda</h2>
                 <p className="text-sm text-slate-500">Refina resultados rápido</p>
               </div>
-            </div>
+              <ChevronDown className={`h-5 w-5 text-slate-400 transition-transform duration-300 xl:hidden ${filtersOpen ? 'rotate-180' : ''}`} />
+            </button>
 
-            <div className="space-y-5 px-6 py-6">
+            <div className={`space-y-5 px-6 overflow-hidden transition-all duration-300 xl:!max-h-none xl:!opacity-100 xl:!py-6 ${filtersOpen ? 'max-h-[2000px] opacity-100 py-6' : 'max-h-0 opacity-0 py-0'}`}>
               <section className="rounded-2xl bg-slate-50 p-4">
                 <div className="mb-3 flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-slate-500" />
@@ -420,7 +427,6 @@ export default function JobMatchPage() {
                 transition-all duration-300
                 hover:scale-110 hover:bg-red-700
                 active:scale-95
-                xl:hidden
               "
               aria-label="Búsqueda rápida"
             >
