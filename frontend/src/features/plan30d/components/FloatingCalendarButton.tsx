@@ -6,11 +6,11 @@ import { calendarEvents } from '../data/mock-data'
 import type { CalendarEvent } from '../types'
 
 const typeColorMap: Record<CalendarEvent['type'], string> = {
-  task: 'bg-emerald-500',
-  interview: 'bg-blue-500',
-  mentorship: 'bg-purple-500',
-  deadline: 'bg-rose-500',
-  reminder: 'bg-amber-500',
+  'tarea': 'bg-emerald-500',
+  'entrevista': 'bg-blue-500',
+  'mentoría': 'bg-purple-500',
+  'fecha límite': 'bg-rose-500',
+  'recordatorio': 'bg-amber-500',
 }
 
 const currentMonth = new Intl.DateTimeFormat('es', { month: 'long', year: 'numeric' }).format(new Date())

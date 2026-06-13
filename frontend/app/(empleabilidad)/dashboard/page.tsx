@@ -1,0 +1,23 @@
+import StatsGrid from '@/src/features/dashboard/components/StatsGrid'
+import QuickActions from '@/src/features/dashboard/components/QuickActions'
+import NewsSection from '@/src/features/dashboard/components/NewsSection'
+import MentorshipCard from '@/src/features/dashboard/components/MentorshipCard'
+import WeeklyProgress from '@/src/features/dashboard/components/WeeklyProgress'
+
+export default function DashboardPage() {
+  return (
+    <main className="flex-1 overflow-y-auto p-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+        <div className="lg:col-span-2 flex flex-col gap-6">
+          <StatsGrid />
+          <QuickActions />
+          <NewsSection />
+        </div>
+        <div className="flex flex-col gap-4">
+          <MentorshipCard />
+          <WeeklyProgress />
+        </div>
+      </div>
+    </main>
+  )
+}
