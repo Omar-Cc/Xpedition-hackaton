@@ -24,15 +24,18 @@ import {
   Edit3, 
   Sparkles,
   Inbox,
-  TrendingUp,
   Award,
   Video,
   AlertTriangle,
   Star,
-  Users,
-  ExternalLink,
   Heart
 } from 'lucide-react'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "Mentorías",
+  description: "Conéctate con mentores y compañeros estudiantes de la UTP que ya están realizando prácticas profesionales.",
+}
 
 type JobItem = {
   id: string

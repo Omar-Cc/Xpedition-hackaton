@@ -4,6 +4,12 @@ import NewsSection from '@/src/features/dashboard/components/NewsSection'
 import MentorshipCard from '@/src/features/dashboard/components/MentorshipCard'
 import WeeklyProgress from '@/src/features/dashboard/components/WeeklyProgress'
 import InterviewFeedbackCard from '@/src/features/dashboard/components/InterviewFeedbackCard'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "Inicio",
+  description: "Panel principal de control de tu progreso de empleabilidad en EmpléaUTP.",
+}
 
 export default function DashboardPage() {
   return (

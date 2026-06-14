@@ -1,10 +1,10 @@
 import LoginForm from "../../src/components/auth/LoginForm";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Search } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 export const metadata = {
-  title: "Iniciar Sesión | UTP + emplea",
+  title: "Iniciar Sesión | UTP+ Empléa",
   description: "Ingresa a tu cuenta para continuar",
 };
 

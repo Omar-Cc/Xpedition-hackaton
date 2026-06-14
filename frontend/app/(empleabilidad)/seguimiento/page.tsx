@@ -5,6 +5,12 @@ import PrepareCard from '@/src/features/seguimiento/components/PrepareCard'
 import GeneralProgress from '@/src/features/seguimiento/components/GeneralProgress'
 import InterviewDetailsPanel from '@/src/features/seguimiento/components/InterviewDetailsPanel'
 import { activeCompanies } from '@/src/features/seguimiento/data/mock-data'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "Seguimiento",
+  description: "Monitorea el estado de tus postulaciones activas y prepárate para tus siguientes entrevistas.",
+}
 
 function ConflictCard() {
   return (

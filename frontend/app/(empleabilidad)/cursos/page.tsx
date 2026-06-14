@@ -5,6 +5,12 @@ import CourseStatsGrid from '@/src/features/cursos/components/CourseStatsGrid'
 import CourseMatchTable from '@/src/features/cursos/components/CourseMatchTable'
 import TopCoursesPanel from '@/src/features/cursos/components/TopCoursesPanel'
 import { targetJob } from '@/src/features/cursos/data/mock-data'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: "Cursos y Capacitación",
+  description: "Compara tu avance de cursos académicos frente a los requisitos reales de las ofertas laborales.",
+}
 
 export default function CursosPage() {
   return (
