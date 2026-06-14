@@ -19,7 +19,7 @@ export default function CourseMatchTable() {
           <span>Estado</span>
         </div>
         {courseMatches.map((m) => (
-          <div key={m.requirement} className="grid grid-cols-[1fr_auto_1fr_auto_auto] items-center px-5 py-3.5 border-b border-base-200 last:border-0 hover:bg-base-50 transition-colors group">
+          <div key={m.requirement} className="grid grid-cols-[1fr_auto_1fr_auto_auto] items-center px-5 py-3.5 border-b border-base-200 last:border-0 hover:bg-base-200 transition-colors group">
             <span className="text-sm">{m.requirement}</span>
             <ChevronRight className="w-4 h-4 text-base-content/30 mx-1" />
             <span className={`text-sm ${m.status === 'gap' ? 'text-warning font-medium underline cursor-pointer' : ''}`}>

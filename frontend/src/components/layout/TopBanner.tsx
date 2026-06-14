@@ -1,23 +1,55 @@
-import { Bell, Moon, Sun, ExternalLink, ChevronDown } from 'lucide-react'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { Bell, Moon, Sun, ExternalLink, ChevronDown, Menu } from 'lucide-react'
 import { studentProfile } from '@/src/features/dashboard/data/mock-data'
 import Link from 'next/link'
 
-export default function TopBanner() {
+interface TopBannerProps {
+  onMenuClick?: () => void
+}
+
+export default function TopBanner({ onMenuClick }: TopBannerProps) {
   const firstName = studentProfile.name.split(' ')[0]
   const fullName = studentProfile.name
   const pct = studentProfile.completionPercent
 
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
+    const initialTheme = savedTheme || (document.documentElement.getAttribute('data-theme') as 'light' | 'dark') || 'light'
+    setTheme(initialTheme)
+    document.documentElement.setAttribute('data-theme', initialTheme)
+  }, [])
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light'
+    setTheme(nextTheme)
+    document.documentElement.setAttribute('data-theme', nextTheme)
+    localStorage.setItem('theme', nextTheme)
+  }
+
   return (
-    <div className="bg-white text-base-content px-6 py-4 flex items-center justify-between gap-4 shadow-sm border-b border-base-200">
+    <div className="bg-base-100 text-base-content px-4 md:px-6 py-4 flex items-center justify-between gap-4 shadow-sm border-b border-base-200">
       {/* Lado izquierdo: Progreso y Bienvenida */}
-      <div className="flex items-center gap-4 flex-1 min-w-0">
+      <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
+        {/* Hamburger Menu on Mobile */}
+        <button
+          onClick={onMenuClick}
+          className="btn btn-ghost btn-circle btn-sm text-base-content/70 hover:bg-base-200 lg:hidden flex-shrink-0"
+          aria-label="Abrir menú"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
         <div
           className="radial-progress text-primary flex-shrink-0"
           style={
             {
               '--value': String(pct),
-              '--size': '3.5rem',
-              '--thickness': '4px',
+              '--size': '3rem',
+              '--thickness': '3px',
             } as React.CSSProperties
           }
           aria-valuenow={pct}
@@ -26,7 +58,7 @@ export default function TopBanner() {
           role="progressbar"
           aria-label={`Perfil completado al ${pct}%`}
         >
-          <span className="text-sm font-bold text-base-content">{pct}%</span>
+          <span className="text-xs font-bold text-base-content">{pct}%</span>
         </div>
 
         <div className="min-w-0 hidden md:block">
@@ -45,18 +77,18 @@ export default function TopBanner() {
       </div>
 
       {/* Lado derecho: Botones, Tema, Notificaciones y Perfil */}
-      <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="flex items-center gap-1.5 md:gap-2 flex-shrink-0">
         <Link 
           href="https://portal.utp.edu.pe" 
           target="_blank" 
-          className="btn btn-sm btn-ghost text-base-content/70 hover:text-primary hover:bg-primary/10 font-medium px-2"
+          className="btn btn-sm btn-ghost text-base-content/70 hover:text-primary hover:bg-primary/10 font-medium px-2 hidden sm:inline-flex"
         >
           Portal UTP <ExternalLink className="w-3.5 h-3.5 ml-1" />
         </Link>
         <Link 
           href="https://class.utp.edu.pe" 
           target="_blank" 
-          className="btn btn-sm btn-ghost text-base-content/70 hover:text-primary hover:bg-primary/10 font-medium px-2"
+          className="btn btn-sm btn-ghost text-base-content/70 hover:text-primary hover:bg-primary/10 font-medium px-2 hidden sm:inline-flex"
         >
           Class <ExternalLink className="w-3.5 h-3.5 ml-1" />
         </Link>
@@ -65,7 +97,12 @@ export default function TopBanner() {
 
         {/* Toggle Dark Mode */}
         <label className="swap swap-rotate btn btn-ghost btn-circle btn-sm text-base-content/70 hover:bg-base-200">
-          <input type="checkbox" className="theme-controller" value="dark" />
+          <input 
+            type="checkbox" 
+            className="theme-controller" 
+            checked={theme === 'dark'}
+            onChange={toggleTheme}
+          />
           <Sun className="swap-off w-5 h-5" />
           <Moon className="swap-on w-5 h-5" />
         </label>

@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { CheckCircle2 } from 'lucide-react'
+import { CalendarDays, CheckCircle2 } from 'lucide-react'
 import PageShell from '@/src/components/layout/PageShell'
 import PageMain from '@/src/components/layout/PageMain'
+import PageHeader from '@/src/components/layout/PageHeader'
 import JobTargetSelector from '@/src/features/plan30d/components/JobTargetSelector'
 import PlanConfigBar from '@/src/features/plan30d/components/PlanConfigBar'
 import SkillGapsCard from '@/src/features/plan30d/components/SkillGapsCard'
@@ -17,15 +18,10 @@ import type { PlanDuration, AcademicLoad, PlanIntensity, DayStatusType, TaskItem
 import {
   jobTargets,
   defaultSelectedJobId,
-  weekDays,
-  monthDays,
   skillGapsByJob,
-  todayTaskByJob,
-  weekImpactByJob,
   quickWinsByJob,
   simulationsByJob,
   mentorshipsByJob,
-  calendarEvents,
   initialTasksByJob,
 } from '@/src/features/plan30d/data/mock-data'
 
@@ -314,19 +310,23 @@ export default function PlanPage() {
   return (
     <PageShell>
       <PageMain className="space-y-8 relative">
-        
-        {/* LOCAL HEADER */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-navy text-white p-6 rounded-2xl shadow-sm border border-white/5">
-          <div className="space-y-1">
-            <h1 className="text-xl font-bold tracking-tight md:text-2xl transition-all duration-200">
-              {getLocalHeaderTitle()}
-            </h1>
-            <p className="text-xs text-white/60 font-medium">
-              Flujo de Planificación · Paso {step} de 2
-            </p>
-          </div>
-        </div>
-
+        <PageHeader
+          title={getLocalHeaderTitle()}
+          subtitle={`Objetivo activo: ${selectedJob.position} en ${selectedJob.company}`}
+          right={
+            <div className="flex items-center gap-2.5 bg-white/10 px-4 py-2.5 rounded-xl border border-white/5 w-fit">
+              <CalendarDays className="w-5 h-5 text-emerald-400" />
+              <div className="flex flex-col text-left">
+                <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest leading-none">
+                  Límite de postulación
+                </span>
+                <span className="text-xs font-bold text-white mt-0.5 leading-none">
+                  Faltan {selectedJob.daysLeft} días ({selectedJob.deadlineDate})
+                </span>
+              </div>
+            </div>
+          }
+        />
         {/* PASO 1: SELECCIONAR OBJETIVO LABORAL */}
         {step === 1 && (
           <section className="space-y-6 animate-cardIn">

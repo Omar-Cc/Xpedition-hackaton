@@ -74,14 +74,15 @@ export default function CVBuilderPage() {
       <PageHeader
         title="Constructor de CV"
         subtitle="Genera tu currículum optimizado en LaTeX y envíalo directamente a reclutadores."
+        maxWidthClassName="max-w-[1400px]"
       />
 
-      <main className="flex flex-col flex-1 p-6 relative min-h-0 overflow-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6 max-w-[1400px] mx-auto h-full w-full">
+      <main className="flex flex-col flex-1 p-3 md:p-6 md:pt-2 pt-2 relative min-h-0 overflow-y-auto lg:overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6 max-w-[1400px] mx-auto h-auto lg:h-full w-full">
           
           {/* PANEL LATERAL */}
-          <div className="flex flex-col h-full overflow-hidden">
-            <div className="flex-1 overflow-y-auto flex flex-col gap-5 pr-2 pb-2">
+          <div className="flex flex-col h-auto lg:h-full lg:overflow-hidden">
+            <div className="flex-1 lg:overflow-y-auto flex flex-col gap-5 lg:pr-2 lg:pb-2">
               <TemplateSelector 
                 activeTemplate={activeTemplate} 
                 onSelect={setActiveTemplate} 
@@ -96,15 +97,14 @@ export default function CVBuilderPage() {
                 atsScore={atsScore} 
                 atsSummary={atsSummary} 
               />
+              <ExportPanel 
+                isDownloadingPdf={isDownloadingPdf}
+                isDownloadingDocx={isDownloadingDocx}
+                onDownloadPdf={handleDownloadPdf}
+                onDownloadDocx={handleDownloadDocx}
+                onOpenMailModal={() => setShowMailModal(true)}
+              />
             </div>
-
-            <ExportPanel 
-              isDownloadingPdf={isDownloadingPdf}
-              isDownloadingDocx={isDownloadingDocx}
-              onDownloadPdf={handleDownloadPdf}
-              onDownloadDocx={handleDownloadDocx}
-              onOpenMailModal={() => setShowMailModal(true)}
-            />
           </div>
 
           {/* ÁREA PRINCIPAL */}

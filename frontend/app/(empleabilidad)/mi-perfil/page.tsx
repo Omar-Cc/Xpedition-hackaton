@@ -59,9 +59,10 @@ export default function MiPerfilPage() {
       <PageHeader
         title="Mi Perfil Profesional"
         subtitle="Personaliza tu información y destaca tus habilidades ante los reclutadores"
+        maxWidthClassName="max-w-6xl"
       />
 
-      <main className="flex-1 overflow-y-auto p-6">
+      <main className="flex-1 overflow-y-auto p-6 pt-2">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6 max-w-6xl mx-auto">
           
           {/* COLUMNA PRINCIPAL */}

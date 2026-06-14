@@ -6,12 +6,12 @@ interface Props {
 
 export default function CVPreview({ activeTemplate }: Props) {
   return (
-    <div className="bg-slate-100 rounded-xl p-6 overflow-y-auto flex justify-center border border-slate-200 h-full w-full">
+    <div className="bg-slate-100 dark:bg-base-200 rounded-xl p-3 md:p-6 overflow-y-auto flex justify-center border border-slate-200 dark:border-base-300 h-full w-full">
       <div 
-        className={`w-full max-w-[794px] bg-white shadow-2xl origin-top transition-all h-fit ${activeTemplate === 'classic' ? 'font-serif' : 'font-sans'}`} 
+        className={`cv-sheet w-full max-w-[794px] bg-white shadow-2xl origin-top transition-all h-fit ${activeTemplate === 'classic' ? 'font-serif' : 'font-sans'}`} 
         style={{ minHeight: '1123px' }}
       >
-        <div className="p-10 md:p-14">
+        <div className="p-4 sm:p-8 md:p-14">
           <header className={`mb-6 ${activeTemplate === 'classic' ? 'text-center border-b-[1px] border-black pb-6' : 'border-b-2 border-slate-800 pb-4'}`}>
             <h1 className={`font-bold text-slate-900 tracking-tight ${activeTemplate === 'classic' ? 'text-4xl mb-2' : 'text-3xl mb-1'}`}>Eberth Gianfranco Rojas Barbaran</h1>
             <p className={`text-slate-600 font-medium ${activeTemplate === 'classic' ? 'text-base mb-4' : 'text-sm mb-3'}`}>Pre-Analyst / Data Engineering & Business Intelligence</p>
