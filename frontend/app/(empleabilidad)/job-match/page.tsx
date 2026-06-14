@@ -76,7 +76,7 @@ const jobCatalog: JobItem[] = [
     id: '1',
     initial: 'S',
     avatarColor: 'bg-red-500',
-    matchPercent: 97,
+    matchPercent: 84,
     title: 'Junior Data Analyst',
     company: 'Scotiabank Perú',
     status: 'Postulación abierta',
@@ -104,7 +104,7 @@ const jobCatalog: JobItem[] = [
     id: '2',
     initial: 'B',
     avatarColor: 'bg-blue-600',
-    matchPercent: 88,
+    matchPercent: 81,
     title: 'Practicante de Sistemas',
     company: 'Banco de Crédito BCP',
     status: 'Urgente',
@@ -132,7 +132,7 @@ const jobCatalog: JobItem[] = [
     id: '3',
     initial: 'N',
     avatarColor: 'bg-emerald-600',
-    matchPercent: 92,
+    matchPercent: 77,
     title: 'Junior Frontend Developer',
     company: 'NTT Data',
     status: 'Postulación abierta',
@@ -160,7 +160,7 @@ const jobCatalog: JobItem[] = [
     id: '4',
     initial: 'B',
     avatarColor: 'bg-pink-600',
-    matchPercent: 82,
+    matchPercent: 85,
     title: 'Practicante de Desarrollo Web',
     company: 'Belcorp',
     status: 'Postulación abierta',
@@ -188,7 +188,7 @@ const jobCatalog: JobItem[] = [
     id: '5',
     initial: 'I',
     avatarColor: 'bg-slate-800',
-    matchPercent: 94,
+    matchPercent: 84,
     title: 'Junior Backend Developer',
     company: 'IBM Perú',
     status: 'Postulación abierta',
@@ -216,7 +216,7 @@ const jobCatalog: JobItem[] = [
     id: '6',
     initial: 'B',
     avatarColor: 'bg-indigo-600',
-    matchPercent: 90,
+    matchPercent: 77,
     title: 'UX/UI Designer',
     company: 'BBVA Perú',
     status: 'Urgente',
@@ -244,7 +244,7 @@ const jobCatalog: JobItem[] = [
     id: '7',
     initial: 'I',
     avatarColor: 'bg-amber-600',
-    matchPercent: 85,
+    matchPercent: 74,
     title: 'Practicante de Data Analytics',
     company: 'Interbank',
     status: 'Postulación abierta',
@@ -272,7 +272,7 @@ const jobCatalog: JobItem[] = [
     id: '8',
     initial: 'G',
     avatarColor: 'bg-teal-600',
-    matchPercent: 91,
+    matchPercent: 82,
     title: 'Junior Software Developer',
     company: 'Globant',
     status: 'Postulación abierta',
@@ -300,7 +300,7 @@ const jobCatalog: JobItem[] = [
     id: '9',
     initial: 'A',
     avatarColor: 'bg-emerald-700',
-    matchPercent: 86,
+    matchPercent: 80,
     title: 'Practicante de Marketing Digital',
     company: 'Alicorp',
     status: 'Postulación abierta',
@@ -328,7 +328,7 @@ const jobCatalog: JobItem[] = [
     id: '10',
     initial: 'E',
     avatarColor: 'bg-yellow-600',
-    matchPercent: 89,
+    matchPercent: 77,
     title: 'Business Analyst',
     company: 'EY Perú',
     status: 'Postulación abierta',
@@ -356,7 +356,7 @@ const jobCatalog: JobItem[] = [
     id: '11',
     initial: 'T',
     avatarColor: 'bg-violet-700',
-    matchPercent: 93,
+    matchPercent: 79,
     title: 'QA Tester',
     company: 'Tata Consultancy Services',
     status: 'Urgente',
@@ -384,7 +384,7 @@ const jobCatalog: JobItem[] = [
     id: '12',
     initial: 'M',
     avatarColor: 'bg-neutral-800',
-    matchPercent: 95,
+    matchPercent: 75,
     title: 'Junior Data Scientist',
     company: 'McKinsey & Company',
     status: 'Postulación abierta',
@@ -412,7 +412,7 @@ const jobCatalog: JobItem[] = [
     id: '13',
     initial: 'R',
     avatarColor: 'bg-red-600',
-    matchPercent: 84,
+    matchPercent: 85,
     title: 'Product Analyst',
     company: 'Rappi',
     status: 'Postulación abierta',
@@ -440,7 +440,7 @@ const jobCatalog: JobItem[] = [
     id: '14',
     initial: 'F',
     avatarColor: 'bg-orange-600',
-    matchPercent: 91,
+    matchPercent: 79,
     title: 'DevOps Engineer',
     company: 'Falabella Tecnología',
     status: 'Postulación abierta',
@@ -468,7 +468,7 @@ const jobCatalog: JobItem[] = [
     id: '15',
     initial: 'M',
     avatarColor: 'bg-blue-800',
-    matchPercent: 96,
+    matchPercent: 73,
     title: 'Machine Learning Engineer',
     company: 'Microsoft Perú',
     status: 'Urgente',
@@ -496,7 +496,7 @@ const jobCatalog: JobItem[] = [
     id: '16',
     initial: 'T',
     avatarColor: 'bg-teal-700',
-    matchPercent: 81,
+    matchPercent: 79,
     title: 'Soporte Técnico',
     company: 'Teleperformance',
     status: 'Postulación abierta',
@@ -524,7 +524,7 @@ const jobCatalog: JobItem[] = [
     id: '17',
     initial: 'R',
     avatarColor: 'bg-purple-600',
-    matchPercent: 87,
+    matchPercent: 83,
     title: 'Analista Funcional',
     company: 'Rimac Seguros',
     status: 'Postulación abierta',
@@ -552,7 +552,7 @@ const jobCatalog: JobItem[] = [
     id: '18',
     initial: 'M',
     avatarColor: 'bg-rose-500',
-    matchPercent: 78,
+    matchPercent: 74,
     title: 'Community Manager',
     company: 'McCann Lima',
     status: 'Postulación abierta',
@@ -580,7 +580,7 @@ const jobCatalog: JobItem[] = [
     id: '19',
     initial: 'C',
     avatarColor: 'bg-sky-600',
-    matchPercent: 80,
+    matchPercent: 74,
     title: 'Diseñador Gráfico',
     company: 'Circus Grey',
     status: 'Postulación abierta',
@@ -608,7 +608,7 @@ const jobCatalog: JobItem[] = [
     id: '20',
     initial: 'E',
     avatarColor: 'bg-blue-600',
-    matchPercent: 89,
+    matchPercent: 76,
     title: 'Practicante de Ciberseguridad',
     company: 'Entel Perú',
     status: 'Postulación abierta',
@@ -636,7 +636,7 @@ const jobCatalog: JobItem[] = [
     id: '21',
     initial: 'O',
     avatarColor: 'bg-red-700',
-    matchPercent: 91,
+    matchPercent: 70,
     title: 'Junior Cloud Administrator',
     company: 'Oracle Perú',
     status: 'Postulación abierta',
@@ -664,7 +664,7 @@ const jobCatalog: JobItem[] = [
     id: '22',
     initial: 'S',
     avatarColor: 'bg-red-500',
-    matchPercent: 88,
+    matchPercent: 72,
     title: 'Scrum Master Junior',
     company: 'Scotiabank',
     status: 'Postulación abierta',
@@ -692,7 +692,7 @@ const jobCatalog: JobItem[] = [
     id: '23',
     initial: 'T',
     avatarColor: 'bg-cyan-700',
-    matchPercent: 90,
+    matchPercent: 74,
     title: 'Junior Database Administrator',
     company: 'Telefónica',
     status: 'Postulación abierta',
@@ -720,7 +720,7 @@ const jobCatalog: JobItem[] = [
     id: '24',
     initial: 'N',
     avatarColor: 'bg-emerald-800',
-    matchPercent: 83,
+    matchPercent: 71,
     title: 'Junior SEO Specialist',
     company: 'Neo Consulting',
     status: 'Postulación abierta',
@@ -748,7 +748,7 @@ const jobCatalog: JobItem[] = [
     id: '25',
     initial: 'P',
     avatarColor: 'bg-amber-700',
-    matchPercent: 87,
+    matchPercent: 75,
     title: 'Practicante IT Auditor',
     company: 'PwC Perú',
     status: 'Postulación abierta',
@@ -776,7 +776,7 @@ const jobCatalog: JobItem[] = [
     id: '26',
     initial: 'C',
     avatarColor: 'bg-orange-600',
-    matchPercent: 91,
+    matchPercent: 78,
     title: 'Junior Mobile Developer',
     company: 'Cabify',
     status: 'Postulación abierta',
@@ -804,7 +804,7 @@ const jobCatalog: JobItem[] = [
     id: '27',
     initial: 'Y',
     avatarColor: 'bg-yellow-500',
-    matchPercent: 94,
+    matchPercent: 84,
     title: 'Practicante DevOps',
     company: 'Yape',
     status: 'Postulación abierta',
@@ -832,7 +832,7 @@ const jobCatalog: JobItem[] = [
     id: '28',
     initial: 'C',
     avatarColor: 'bg-red-600',
-    matchPercent: 82,
+    matchPercent: 81,
     title: 'Soporte de Infraestructura',
     company: 'Claro Perú',
     status: 'Postulación abierta',
@@ -860,7 +860,7 @@ const jobCatalog: JobItem[] = [
     id: '29',
     initial: 'R',
     avatarColor: 'bg-purple-800',
-    matchPercent: 86,
+    matchPercent: 84,
     title: 'Junior Product Owner',
     company: 'Ripley',
     status: 'Postulación abierta',
@@ -888,7 +888,7 @@ const jobCatalog: JobItem[] = [
     id: '30',
     initial: 'C',
     avatarColor: 'bg-emerald-600',
-    matchPercent: 89,
+    matchPercent: 78,
     title: 'BI Developer Junior',
     company: 'Cencosud',
     status: 'Postulación abierta',
@@ -970,6 +970,11 @@ export default function JobMatchPage() {
   const [activeTab, setActiveTab] = useState<'explorar' | 'matches'>('explorar')
   
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null)
+  
+  const [removedJobs, setRemovedJobs] = useState<string[]>([])
+  const [lastRemovedJob, setLastRemovedJob] = useState<string | null>(null)
+  const [removedUndoTimer, setRemovedUndoTimer] = useState<NodeJS.Timeout | null>(null)
+  const [matchesDrawerOpen, setMatchesDrawerOpen] = useState(false)
 
   const filterCounts = useMemo(() => {
     const query = filters.query.trim().toLowerCase()
@@ -1031,9 +1036,9 @@ export default function JobMatchPage() {
         (ageMax === null || job.ageMin <= ageMax)
       const matchesSource = filters.sources.length === 0 || filters.sources.includes(job.source)
 
-      return matchesQuery && matchesAddress && matchesMode && matchesLevel && matchesSalary && matchesAge && matchesSource
+      return matchesQuery && matchesAddress && matchesMode && matchesLevel && matchesSalary && matchesAge && matchesSource && !removedJobs.includes(job.id)
     }).sort((a, b) => b.matchPercent - a.matchPercent)
-  }, [filters])
+  }, [filters, removedJobs])
 
   const activeJobsList = useMemo(() => {
     return activeTab === 'explorar' ? filteredJobs : matchedJobs
@@ -1046,6 +1051,24 @@ export default function JobMatchPage() {
     }
     return activeJobsList[0] || null
   }, [selectedJobId, activeJobsList])
+
+  const getMatchColorStroke = (percent: number) => {
+    if (percent >= 80) return 'stroke-emerald-500 dark:stroke-emerald-400'
+    if (percent >= 75) return 'stroke-amber-500 dark:stroke-amber-400'
+    return 'stroke-orange-500 dark:stroke-orange-400'
+  }
+
+  const getMatchColorText = (percent: number) => {
+    if (percent >= 80) return 'text-emerald-500'
+    if (percent >= 75) return 'text-amber-500'
+    return 'text-orange-500'
+  }
+  
+  const getMatchColorBg = (percent: number) => {
+    if (percent >= 80) return 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 border-emerald-100/60 dark:border-emerald-900/30'
+    if (percent >= 75) return 'bg-amber-50 dark:bg-amber-950/30 text-amber-600 border-amber-100/60 dark:border-amber-900/30'
+    return 'bg-orange-50 dark:bg-orange-950/30 text-orange-600 border-orange-100/60 dark:border-orange-900/30'
+  }
 
   const currentQuickJob = filteredJobs[quickIndex] ?? null
   const selectedJobs = useMemo(() => matchedJobs, [matchedJobs])
@@ -1169,14 +1192,9 @@ export default function JobMatchPage() {
   return (
     <PageShell>
       <PageHeader
-        title="Encuentra empleos que sí encajen contigo"
-        subtitle="Filtra por modalidad, sueldo, nivel y dirección. Usa la búsqueda rápida interactiva o explora las vacantes detalladas con análisis de match en tiempo real."
+        title="Job match"
+        subtitle="Encuentra empleos que encajen contigo."
         maxWidthClassName="max-w-[1600px]"
-        right={
-          <span className="inline-flex items-center gap-2 rounded-full bg-base-300 px-4 py-2 text-xs font-bold text-base-content border border-base-content/5 shadow-sm">
-            🏆 UX-UI PREMIUM DESIGN
-          </span>
-        }
       />
 
       <div className="flex-1 overflow-y-auto bg-transparent">
@@ -1230,40 +1248,7 @@ export default function JobMatchPage() {
               </div>
             </div>
 
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-base-200 pt-4 text-sm">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-base-content/60 font-bold text-xs uppercase tracking-wider">Búsquedas populares:</span>
-                {['Data', 'Developer', 'Designer', 'Practicante'].map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() => {
-                      setFilters({ ...filters, query: item })
-                      setCurrentPage(1)
-                    }}
-                    className="rounded-full border border-base-200 bg-base-200 hover:bg-base-300 px-4 py-1 text-xs font-semibold text-base-content/85 shadow-sm transition cursor-pointer"
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-base-content/60 font-bold text-xs uppercase tracking-wider">Ubicaciones populares:</span>
-                {['San Isidro', 'Miraflores', 'Surco', 'Arequipa', 'Remoto'].map((loc) => (
-                  <button
-                    key={loc}
-                    type="button"
-                    onClick={() => {
-                      setFilters({ ...filters, address: loc })
-                      setCurrentPage(1)
-                    }}
-                    className="rounded-full border border-base-200 bg-base-200 hover:bg-base-300 px-4 py-1 text-xs font-semibold text-base-content/85 shadow-sm transition cursor-pointer"
-                  >
-                    {loc}
-                  </button>
-                ))}
-              </div>
-            </div>
+
           </div>
         {showDisclaimer && (
           <div className="mb-6 rounded-2xl bg-amber-100 border border-amber-200 p-4 sm:p-5 flex items-start gap-4 shadow-sm relative animate-fadeIn">
@@ -1297,13 +1282,18 @@ export default function JobMatchPage() {
                     </div>
                     <h2 className="text-sm font-extrabold text-base-content uppercase tracking-wider">Filtros</h2>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setFiltersOpen(false)}
-                    className="rounded-full p-2 text-base-content/40 xl:hidden hover:bg-base-200 cursor-pointer"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button onClick={clearFilters} className="text-xs font-bold text-primary hover:text-primary/80 transition-colors hidden xl:block cursor-pointer">
+                      Limpiar
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFiltersOpen(false)}
+                      className="rounded-full p-2 text-base-content/40 xl:hidden hover:bg-base-200 cursor-pointer"
+                    >
+                      <X className="h-5 w-5" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="space-y-5 px-5 py-6">
@@ -1491,53 +1481,14 @@ export default function JobMatchPage() {
 
             {/* ── Main content area ── */}
             <div className="flex-1">
-              {/* Tab Navigation */}
-              <div className="mb-6 flex border-b border-base-200">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveTab('explorar')
-                    setSelectedJobId(null)
-                    setCurrentPage(1)
-                  }}
-                  className={`pb-4 px-6 text-sm font-bold border-b-2 transition relative flex items-center gap-2 cursor-pointer ${
-                    activeTab === 'explorar'
-                      ? 'border-primary text-primary'
-                      : 'border-transparent text-base-content/60 hover:text-base-content'
-                  }`}
-                >
-                  <span>Explorar Vacantes</span>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
-                    activeTab === 'explorar'
-                      ? 'bg-primary/10 text-primary'
-                      : 'bg-base-200 text-base-content/60'
-                  }`}>
-                    {filteredJobs.length}
+              {/* Tab Navigation replaced with title */}
+              <div className="mb-6 pb-4 border-b border-base-200 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-lg font-bold text-base-content">Explorar Vacantes</h2>
+                  <span className="text-xs px-2.5 py-1 rounded-full font-extrabold bg-primary/10 text-primary">
+                    {filteredJobs.length} encontradas
                   </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveTab('matches')
-                    setSelectedJobId(null)
-                    setCurrentPage(1)
-                  }}
-                  className={`pb-4 px-6 text-sm font-bold border-b-2 transition relative flex items-center gap-2 cursor-pointer ${
-                    activeTab === 'matches'
-                      ? 'border-primary text-primary'
-                      : 'border-transparent text-base-content/60 hover:text-base-content'
-                  }`}
-                >
-                  <Heart className={`h-4 w-4 ${activeTab === 'matches' ? 'fill-primary text-primary' : 'text-base-content/40'}`} />
-                  <span>Mis Matches</span>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
-                    activeTab === 'matches'
-                      ? 'bg-primary/10 text-primary'
-                      : 'bg-base-200 text-base-content/60'
-                  }`}>
-                    {matchedJobs.length}
-                  </span>
-                </button>
+                </div>
               </div>
 
               {/* Empty state when no jobs found */}
@@ -1568,8 +1519,9 @@ export default function JobMatchPage() {
                 /* Split Screen Layout (Cards on Left, Details on Right) */
                 <div className="lg:grid lg:grid-cols-[1.1fr_1.3fr] gap-6 items-start">
                   {/* Left Pane: Job list */}
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 gap-4">
+                  <div className="flex flex-col h-[calc(100vh-200px)]">
+                    <div className="flex-1 overflow-y-auto pr-3 space-y-4 pb-10 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-base-300 [&::-webkit-scrollbar-thumb]:rounded-full">
+                      <div className="grid grid-cols-1 gap-4">
                       {paginatedJobs.map((job, index) => {
                         const isMatched = matchedJobs.some((m) => m.id === job.id)
                         const isSelected = selectedJob?.id === job.id
@@ -1608,9 +1560,26 @@ export default function JobMatchPage() {
                                 </div>
 
                                 <div className="flex items-center gap-2 flex-shrink-0">
-                                  <span className="inline-flex items-center rounded-full bg-emerald-50 dark:bg-emerald-950/30 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-100/60 dark:border-emerald-900/30">
+                                  <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold border ${getMatchColorBg(job.matchPercent)}`}>
                                     {job.matchPercent}% match
                                   </span>
+                                  {activeTab === 'explorar' && (
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        setRemovedJobs((prev) => [...prev, job.id])
+                                        setLastRemovedJob(job.id)
+                                        if (removedUndoTimer) clearTimeout(removedUndoTimer)
+                                        const timer = setTimeout(() => setLastRemovedJob(null), 5000)
+                                        setRemovedUndoTimer(timer)
+                                      }}
+                                      className="rounded-full p-1.5 transition-all text-base-content/40 hover:bg-base-200 hover:text-base-content cursor-pointer"
+                                      title="Quitar"
+                                    >
+                                      <X className="h-4.5 w-4.5" />
+                                    </button>
+                                  )}
                                   <button
                                     type="button"
                                     onClick={(e) => {
@@ -1731,11 +1700,12 @@ export default function JobMatchPage() {
                       </div>
                     )}
                   </div>
+                </div>
 
-                  {/* Right Pane: Sticky detailed panel */}
-                  <div className="sticky top-6 hidden lg:block">
+                {/* Right Pane: Sticky detailed panel */}
+                  <div className="sticky top-6 hidden lg:block h-[calc(100vh-48px)]">
                     {selectedJob ? (
-                      <div className="border border-base-200 rounded-3xl bg-base-100 p-6 shadow-sm max-h-[calc(100vh-180px)] overflow-y-auto flex flex-col [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-base-300 [&::-webkit-scrollbar-thumb]:rounded-full animate-fadeIn">
+                      <div className="border border-base-200 rounded-3xl bg-base-100 p-6 shadow-sm h-full overflow-y-auto flex flex-col [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-base-300 [&::-webkit-scrollbar-thumb]:rounded-full animate-fadeIn">
                         {/* Header details */}
                         <div className="flex items-start justify-between border-b border-base-200 pb-5 mb-5">
                           <div className="flex items-center gap-4">
@@ -1790,7 +1760,7 @@ export default function JobMatchPage() {
                             <div className="relative flex items-center justify-center h-12 w-12 flex-shrink-0">
                               <svg className="w-full h-full transform -rotate-90">
                                 <circle cx="24" cy="24" r="20" className="stroke-base-200" strokeWidth="4.5" fill="transparent" />
-                                <circle cx="24" cy="24" r="20" className="stroke-emerald-500 dark:stroke-emerald-400" strokeWidth="4.5" fill="transparent" 
+                                <circle cx="24" cy="24" r="20" className={getMatchColorStroke(selectedJob.matchPercent)} strokeWidth="4.5" fill="transparent" 
                                   strokeDasharray={2 * Math.PI * 20}
                                   strokeDashoffset={2 * Math.PI * 20 * (1 - selectedJob.matchPercent / 100)}
                                   strokeLinecap="round"
@@ -1800,7 +1770,7 @@ export default function JobMatchPage() {
                             </div>
                             <div>
                               <h4 className="text-xs font-bold text-base-content flex items-center gap-1">
-                                <Sparkles className="h-3.5 w-3.5 text-emerald-500 fill-emerald-500/10" /> Compatibilidad de Perfil
+                                <Sparkles className={`h-3.5 w-3.5 ${getMatchColorText(selectedJob.matchPercent)}`} /> Compatibilidad de Perfil
                               </h4>
                               <p className="text-[10px] text-base-content/60 mt-0.5">
                                 Comparación automatizada con las habilidades de tu perfil de egreso.
@@ -2242,6 +2212,96 @@ export default function JobMatchPage() {
               >
                 Postular
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mis Matches Floating Bubble (Global) */}
+      <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3">
+        <button
+          onClick={() => setMatchesDrawerOpen(true)}
+          className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-xl hover:scale-105 transition-all hover:shadow-primary/30 cursor-pointer"
+        >
+          <Heart className="h-6 w-6 fill-white/20" />
+          {matchedJobs.length > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-black text-white ring-2 ring-base-100 animate-bounce">
+              {matchedJobs.length}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {/* Removed Job Bubble */}
+      {lastRemovedJob && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-slideUp">
+          <div className="flex items-center gap-4 rounded-2xl bg-base-800 text-white px-5 py-3 shadow-2xl border border-white/10 backdrop-blur-md">
+            <span className="text-sm font-medium">Anuncio eliminado</span>
+            <button
+              onClick={() => {
+                setRemovedJobs(prev => prev.filter(id => id !== lastRemovedJob))
+                setLastRemovedJob(null)
+                if (removedUndoTimer) clearTimeout(removedUndoTimer)
+              }}
+              className="text-sm font-bold text-primary hover:text-primary/80 transition cursor-pointer"
+            >
+              Deshacer
+            </button>
+            <button onClick={() => setLastRemovedJob(null)} className="p-1 hover:bg-white/10 rounded-full transition cursor-pointer">
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Mis Matches Drawer */}
+      {matchesDrawerOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end bg-base-content/20 backdrop-blur-sm animate-fadeIn">
+          <div className="w-full max-w-md bg-base-100 shadow-2xl h-full flex flex-col animate-slideLeft">
+            <div className="flex items-center justify-between p-6 border-b border-base-200">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500">
+                  <Heart className="h-5 w-5 fill-rose-500/20" />
+                </div>
+                <h2 className="text-xl font-extrabold text-base-content">Mis Matches</h2>
+              </div>
+              <button onClick={() => setMatchesDrawerOpen(false)} className="rounded-full p-2 hover:bg-base-200 text-base-content/50 transition cursor-pointer">
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              {matchedJobs.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-center opacity-60">
+                  <Heart className="h-16 w-16 text-base-300 mb-4" />
+                  <p className="text-sm font-medium">Aún no tienes matches guardados.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {matchedJobs.map(job => (
+                    <div key={job.id} className="relative rounded-2xl border border-base-200 p-4 bg-base-100 shadow-sm flex items-start gap-4">
+                      <div className={`${job.avatarColor} flex h-12 w-12 items-center justify-center rounded-xl text-white font-bold flex-shrink-0`}>
+                        {job.initial}
+                      </div>
+                      <div className="flex-1 pr-8">
+                        <h4 className="text-sm font-bold text-base-content">{job.title}</h4>
+                        <p className="text-xs text-base-content/60">{job.company}</p>
+                        <div className="mt-2 flex items-center gap-2">
+                          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-bold border ${getMatchColorBg(job.matchPercent)}`}>
+                            {job.matchPercent}% match
+                          </span>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => setMatchedJobs(prev => prev.filter(m => m.id !== job.id))}
+                        className="absolute top-4 right-4 p-1.5 text-base-content/30 hover:text-rose-500 hover:bg-rose-50 rounded-full transition cursor-pointer"
+                        title="Quitar"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
