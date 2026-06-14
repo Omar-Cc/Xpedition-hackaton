@@ -13,14 +13,14 @@ export default function CVPreview({ activeTemplate }: Props) {
       >
         <div className="p-4 sm:p-8 md:p-14">
           <header className={`mb-6 ${activeTemplate === 'classic' ? 'text-center border-b-[1px] border-black pb-6' : 'border-b-2 border-slate-800 pb-4'}`}>
-            <h1 className={`font-bold text-slate-900 tracking-tight ${activeTemplate === 'classic' ? 'text-4xl mb-2' : 'text-3xl mb-1'}`}>Eberth Gianfranco Rojas Barbaran</h1>
+            <h1 className={`font-bold text-slate-900 tracking-tight ${activeTemplate === 'classic' ? 'text-4xl mb-2' : 'text-3xl mb-1'}`}>Anibal Alejandro Jahuar Chirinos</h1>
             <p className={`text-slate-600 font-medium ${activeTemplate === 'classic' ? 'text-base mb-4' : 'text-sm mb-3'}`}>Pre-Analyst / Data Engineering & Business Intelligence</p>
             <div className={`flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500 ${activeTemplate === 'classic' ? 'justify-center' : ''}`}>
               <span>Lima, Perú</span>
               <span>•</span>
-              <span>github.com/eberth</span>
+              <span>github.com/anibal</span>
               <span>•</span>
-              <span>linkedin.com/in/eberth</span>
+              <span>linkedin.com/in/anibal</span>
             </div>
           </header>
 

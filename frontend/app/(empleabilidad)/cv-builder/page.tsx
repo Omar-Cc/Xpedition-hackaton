@@ -70,7 +70,7 @@ class DocxDownloadStrategy implements DownloadStrategy {
             alignment: AlignmentType.CENTER,
             children: [
               new TextRun({
-                text: "Eberth Gianfranco Rojas Barbaran",
+                text: "Anibal Alejandro Jahuar Chirinos",
                 bold: true,
                 size: 28, // 14pt
               }),
@@ -90,7 +90,7 @@ class DocxDownloadStrategy implements DownloadStrategy {
             alignment: AlignmentType.CENTER,
             children: [
               new TextRun({
-                text: "Lima, Perú | github.com/eberth | linkedin.com/in/eberth",
+                text: "Lima, Perú | github.com/anibal | linkedin.com/in/anibal",
                 size: 18, // 9pt
               }),
             ],
@@ -255,7 +255,7 @@ export default function CVBuilderPage() {
 
     try {
       const strategy = DownloadStrategyFactory.getStrategy(format)
-      await strategy.execute('.cv-sheet', 'cv-eberth-rojas')
+      await strategy.execute('.cv-sheet', 'cv-anibal-jahuar')
       showToast(`CV descargado correctamente en ${format.toUpperCase()}`)
     } catch (error) {
       console.error('Error al descargar:', error)

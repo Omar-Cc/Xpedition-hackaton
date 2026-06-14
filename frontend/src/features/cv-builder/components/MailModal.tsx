@@ -32,7 +32,7 @@ export default function MailModal({ isOpen, isSending, onClose, onSend }: Props)
           </div>
           <div>
             <label className="block text-xs font-medium text-slate-600 mb-1">Asunto</label>
-            <input type="text" defaultValue="Postulación - Eberth Rojas (Data Engineering)" className="w-full p-2.5 rounded-lg border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
+            <input type="text" defaultValue="Postulación - Anibal Jahuar (Data Engineering)" className="w-full p-2.5 rounded-lg border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
           <div>
             <label className="block text-xs font-medium text-slate-600 mb-1">Mensaje Breve (Opcional)</label>
