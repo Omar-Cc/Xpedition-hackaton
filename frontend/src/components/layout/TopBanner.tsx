@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bell, Moon, Sun, ExternalLink, ChevronDown, Menu } from "lucide-react";
+import { Bell, Moon, Sun, ExternalLink, ChevronDown, Menu, LogOut, User } from "lucide-react";
 import { studentProfile } from "@/src/features/dashboard/data/mock-data";
 import Link from "next/link";
 import UtpEmpleaLogo from "./UtpEmpleaLogo";
@@ -127,18 +127,42 @@ export default function TopBanner({ onMenuClick }: Readonly<TopBannerProps>) {
 
         <div className="w-px h-6 bg-base-300 mx-1 hidden md:block"></div>
 
-        {/* Info del Perfil */}
-        <div className="hidden md:flex items-center gap-3 cursor-pointer hover:bg-base-100 p-1.5 rounded-xl transition-colors">
-          <div className="text-right hidden lg:block">
-            <p className="text-sm font-semibold text-base-content leading-tight">
-              Hola, {fullName}
-            </p>
-            <p className="text-xs text-primary leading-tight font-medium mt-0.5">
-              {studentProfile.career}
-            </p>
+        {/* Info del Perfil con Dropdown de Cerrar Sesión */}
+        <div className="dropdown dropdown-end hidden md:inline-block">
+          <div 
+            tabIndex={0} 
+            role="button" 
+            className="flex items-center gap-3 cursor-pointer hover:bg-base-200/50 p-1.5 rounded-xl transition-colors"
+          >
+            <div className="text-right hidden lg:block">
+              <p className="text-sm font-semibold text-base-content leading-tight">
+                Hola, {fullName}
+              </p>
+              <p className="text-xs text-primary leading-tight font-medium mt-0.5">
+                {studentProfile.career}
+              </p>
+            </div>
+            <StudentAvatar fullName={fullName} />
+            <ChevronDown className="w-4 h-4 text-base-content/50" />
           </div>
-          <StudentAvatar fullName={fullName} />
-          <ChevronDown className="w-4 h-4 text-base-content/50" />
+          <ul 
+            tabIndex={0} 
+            className="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200 mt-2 z-[100]"
+          >
+            <li>
+              <Link href="/mi-perfil" className="text-sm py-2 px-3 hover:bg-base-200 rounded-lg flex items-center gap-2">
+                <User className="w-4 h-4 text-base-content/60" />
+                Mi Perfil
+              </Link>
+            </li>
+            <div className="h-px bg-base-200 my-1"></div>
+            <li>
+              <Link href="/login" className="text-sm py-2 px-3 text-red-600 hover:bg-red-50 hover:text-red-700 rounded-lg flex items-center gap-2 font-medium">
+                <LogOut className="w-4 h-4" />
+                Cerrar sesión
+              </Link>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
