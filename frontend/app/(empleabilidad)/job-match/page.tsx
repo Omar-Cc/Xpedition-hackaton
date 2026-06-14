@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import PageShell from '@/src/components/layout/PageShell'
+import PageHeader from '@/src/components/layout/PageHeader'
 import {
   Bookmark,
   Cake,
@@ -362,6 +363,7 @@ export default function JobMatchPage() {
   const [quickIndex, setQuickIndex] = useState(0)
   const [matchedJobs, setMatchedJobs] = useState<JobItem[]>([])
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [matchesOpen, setMatchesOpen] = useState(false)
   const [selectedJobDetail, setSelectedJobDetail] = useState<JobItem | null>(null)
   const [expandedFeedbackId, setExpandedFeedbackId] = useState<string | null>(null)
   
@@ -473,82 +475,81 @@ export default function JobMatchPage() {
 
   return (
     <PageShell>
-      <div className="flex-1 overflow-y-auto">
-        <section className="max-w-360 mx-auto px-6 pt-6 pb-8">
-        <div className="rounded-3xl bg-linear-to-r from-indigo-50 via-pink-50 to-yellow-50 border border-white/70 shadow-sm p-8">
-          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
-            <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-blue-700 shadow-sm">
-                🏆 BEST JOBS PLACE
-              </span>
-              <h1 className="mt-4 text-2xl md:text-3xl font-bold text-slate-900">
-                Encuentra empleos que sí encajen contigo
-              </h1>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-                Filtra por ubicación, modalidad, sueldo, nivel y edad. También puedes abrir la búsqueda rápida
-                tipo Tinder para guardar, rechazar o hacer match con un clic.
-              </p>
+      <PageHeader
+        title="Encuentra empleos que sí encajen contigo"
+        subtitle="Filtra por ubicación, modalidad, sueldo, nivel y edad. También puedes abrir la búsqueda rápida tipo Tinder para guardar, rechazar o hacer match con un clic."
+        maxWidthClassName="max-w-[1600px]"
+        right={
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-bold text-white border border-white/5 shadow-sm">
+            🏆 BEST JOBS PLACE
+          </span>
+        }
+      />
 
-              <div className="mt-6 grid gap-3 lg:grid-cols-[1fr_1fr_auto]">
-                <label className="relative">
+      <div className="flex-1 overflow-y-auto">
+        <main className="max-w-[1600px] mx-auto px-6 pb-12 pt-2">
+          {/* Card de Filtros de Búsqueda Rápida */}
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 mb-6 shadow-sm">
+            <div className="grid gap-4 md:grid-cols-[1fr_1fr_auto] items-end">
+              <label className="relative flex flex-col gap-1.5 flex-1">
+                <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Puesto o empresa</span>
+                <div className="relative">
                   <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <input
                     aria-label="Puesto o empresa"
                     placeholder="Puesto, empresa o palabra clave"
                     value={draftFilters.query}
                     onChange={(e) => setDraftFilters({ ...draftFilters, query: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-200 bg-white/90 py-4 pl-11 pr-4 text-sm shadow-sm outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
+                    className="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 py-3.5 pl-11 pr-4 text-sm text-slate-800 dark:text-slate-100 outline-none transition focus:border-blue-400 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/30"
                   />
-                </label>
-                <label className="relative">
+                </div>
+              </label>
+              <label className="relative flex flex-col gap-1.5 flex-1">
+                <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Ubicación</span>
+                <div className="relative">
                   <MapPin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <input
                     aria-label="Ubicación"
                     placeholder="Ubicación"
                     value={draftFilters.location}
                     onChange={(e) => setDraftFilters({ ...draftFilters, location: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-200 bg-white/90 py-4 pl-11 pr-4 text-sm shadow-sm outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
+                    className="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 py-3.5 pl-11 pr-4 text-sm text-slate-800 dark:text-slate-100 outline-none transition focus:border-blue-400 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/30"
                   />
-                </label>
-                <div className="flex flex-col gap-3">
-                  <button
-                    type="button"
-                    onClick={applyFilters}
-                    className="inline-flex h-full items-center justify-center gap-2 rounded-2xl bg-red-600 px-6 py-4 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-red-700"
-                  >
-                    Buscar Ahora
-                  </button>
-                  <button
-                    type="button"
-                    onClick={openQuickSearch}
-                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-800 px-6 py-4 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-700 lg:hidden"
-                  >
-                    <Sparkles className="h-4 w-4 text-yellow-400" />
-                    Búsqueda rápida
-                  </button>
                 </div>
-              </div>
-
-              <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
-                <span className="text-slate-500">Búsquedas populares:</span>
-                {['Data', 'Developer', 'Ingeniero', 'Senior'].map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() => setDraftFilters({ ...draftFilters, query: item })}
-                    className="rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-sm transition hover:border-blue-200 hover:text-blue-700"
-                  >
-                    {item}
-                  </button>
-                ))}
+              </label>
+              <div className="flex gap-3 w-full md:w-auto">
+                <button
+                  type="button"
+                  onClick={applyFilters}
+                  className="flex-1 md:flex-initial inline-flex h-[48px] items-center justify-center gap-2 rounded-2xl bg-red-600 px-6 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-red-700"
+                >
+                  Buscar Ahora
+                </button>
+                <button
+                  type="button"
+                  onClick={openQuickSearch}
+                  className="inline-flex h-[48px] items-center justify-center gap-2 rounded-2xl bg-slate-800 dark:bg-slate-700 px-6 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-700 dark:hover:bg-slate-600 xl:hidden"
+                >
+                  <Sparkles className="h-4 w-4 text-yellow-400" />
+                  Búsqueda rápida
+                </button>
               </div>
             </div>
 
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+              <span className="text-slate-500 dark:text-slate-400">Búsquedas populares:</span>
+              {['Data', 'Developer', 'Ingeniero', 'Senior'].map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => setDraftFilters({ ...draftFilters, query: item })}
+                  className="rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 px-4 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm transition"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-
-      <main className="max-w-[1600px] mx-auto px-6 pb-12">
         {showDisclaimer && (
           <div className="mb-6 rounded-2xl bg-amber-50 border border-amber-200 p-4 sm:p-5 flex items-start gap-4 shadow-sm relative animate-fadeIn">
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600">
@@ -699,14 +700,24 @@ export default function JobMatchPage() {
             </div>
           </aside>
 
-          {/* Floating Filter Button for Mobile */}
-          <button
-            onClick={() => setFiltersOpen(true)}
-            className="fixed bottom-[100px] right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg shadow-blue-500/30 transition-transform hover:scale-110 active:scale-95 xl:hidden"
-            aria-label="Filtros"
-          >
-            <Filter className="h-6 w-6" />
-          </button>
+          {/* Mobile Floating Actions menu */}
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 bg-slate-900/90 dark:bg-slate-800/95 backdrop-blur-md px-6 py-3 rounded-full shadow-lg border border-slate-700/50 xl:hidden">
+            <button
+              onClick={() => setFiltersOpen(true)}
+              className="flex items-center gap-2 text-white text-sm font-semibold hover:text-blue-400 transition"
+            >
+              <Filter className="h-4 w-4 text-slate-400" />
+              Filtros
+            </button>
+            <div className="h-4 w-[1px] bg-slate-700" />
+            <button
+              onClick={() => setMatchesOpen(true)}
+              className="flex items-center gap-2 text-white text-sm font-semibold hover:text-emerald-400 transition"
+            >
+              <Heart className="h-4 w-4 text-emerald-400 fill-emerald-400" />
+              Matches ({matchedJobs.length})
+            </button>
+          </div>
           {/* ── Cartas de Trabajo: Centro en Desktop, Abajo en Móvil ── */}
           <section className="order-2 xl:order-2 rounded-3xl border border-slate-200 bg-slate-50/80 p-4 md:p-6 shadow-sm">
             <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -726,7 +737,7 @@ export default function JobMatchPage() {
               </div>
             ) : (
               <>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 auto-rows-fr">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-1 min-[1500px]:grid-cols-2 gap-4 md:gap-6 auto-rows-fr">
                   {paginatedJobs.map((job, index) => (
                     <article
                       key={job.id}
@@ -734,37 +745,37 @@ export default function JobMatchPage() {
                       style={{ animationDelay: `${index * 90}ms` }}
                     >
                       <div className="animate-cardIn flex h-full flex-col p-4 md:p-6">
-                        <div className="mb-6 flex items-start justify-between gap-4">
-                          <div className="flex items-center gap-4">
-                            <div className={`${job.avatarColor} flex h-16 w-16 items-center justify-center rounded-2xl text-white shadow-sm transition-transform duration-300 group-hover:scale-110`}>
-                              <span className="text-lg font-bold">{job.initial}</span>
+                        <div className="mb-4 flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                          <div className="flex items-center gap-3">
+                            <div className={`${job.avatarColor} flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl sm:rounded-2xl text-white shadow-sm transition-transform duration-300 group-hover:scale-105 flex-shrink-0`}>
+                              <span className="text-base sm:text-lg font-bold">{job.initial}</span>
                             </div>
                             <div>
-                              <span className="inline-flex items-center rounded-full bg-red-500 px-3 py-1 text-xs font-semibold text-white">
+                              <span className="inline-flex items-center rounded-full bg-red-500 px-2.5 py-0.5 text-[10px] sm:text-xs font-semibold text-white">
                                 Urgente
                               </span>
                             </div>
                           </div>
-                          <span className="inline-flex items-center rounded-full bg-emerald-400/15 px-4 py-1.5 text-sm font-semibold text-emerald-600">
+                          <span className="inline-flex items-center rounded-full bg-emerald-400/15 px-3 py-1 text-xs sm:text-sm font-semibold text-emerald-600 self-start sm:self-auto">
                             {job.matchPercent}% match
                           </span>
                         </div>
 
-                        <h3 className="mb-2 text-xl font-semibold leading-snug text-slate-900 transition-colors group-hover:text-blue-700">
+                        <h3 className="mb-1.5 text-lg sm:text-xl font-semibold leading-snug text-slate-900 transition-colors group-hover:text-blue-700">
                           {job.title}
                         </h3>
-                        <p className="mb-4 flex items-center gap-2 text-base text-slate-500">
+                        <p className="mb-3 flex items-center gap-2 text-sm sm:text-base text-slate-500">
                           {job.company}
                           <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium border border-slate-200">
                             {job.source}
                           </span>
                         </p>
 
-                        <div className="space-y-3 text-sm text-slate-500">
+                        <div className="space-y-3 text-xs sm:text-sm text-slate-500">
                           <div className="flex flex-wrap gap-2 mt-2">
-                            <span className="rounded-full bg-slate-100 px-3 py-1">{job.location}</span>
-                            <span className="rounded-full bg-slate-100 px-3 py-1">{job.mode}</span>
-                            <span className="rounded-full bg-slate-100 px-3 py-1">{job.level}</span>
+                            <span className="rounded-full bg-slate-100 px-2.5 py-0.5">{job.location}</span>
+                            <span className="rounded-full bg-slate-100 px-2.5 py-0.5">{job.mode}</span>
+                            <span className="rounded-full bg-slate-100 px-2.5 py-0.5">{job.level}</span>
                           </div>
                         </div>
 
@@ -843,24 +854,38 @@ export default function JobMatchPage() {
             )}
           </section>
 
-          {/* ── Resumen de matches: Arriba en móvil, lateral derecho en desktop ── */}
-          <aside className="order-1 xl:order-3 xl:sticky xl:top-6 xl:self-start rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-            <div className="border-b border-slate-100 px-5 py-4">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
-                  <Heart className="h-5 w-5" />
+          {/* ── Resumen de matches: Modal en móvil, lateral derecho en desktop ── */}
+          <aside className={`
+            ${matchesOpen ? 'fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-slate-900/45 sm:p-4 backdrop-blur-sm xl:static xl:inset-auto xl:z-auto xl:flex xl:items-start xl:justify-start xl:bg-transparent xl:p-0 xl:backdrop-blur-none' : 'hidden xl:block xl:order-3 xl:sticky xl:top-6 xl:self-start'}
+          `}
+            onClick={() => setMatchesOpen(false)}
+          >
+            <div className={`w-full rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl xl:max-w-none xl:rounded-3xl xl:border xl:border-slate-200 xl:shadow-sm overflow-hidden ${matchesOpen ? 'max-h-[85vh] overflow-y-auto animate-slideUp sm:animate-none' : ''}`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-white/90 backdrop-blur-md">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                    <Heart className="h-5 w-5 fill-emerald-500 text-emerald-500" />
+                  </div>
+                  <h2 className="text-lg font-bold text-slate-900">Mis Matches</h2>
                 </div>
-                <h2 className="text-lg font-bold text-slate-900">Mis Matches</h2>
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    {matchedJobs.length}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setMatchesOpen(false)}
+                    className="rounded-full p-2 text-slate-400 xl:hidden hover:bg-slate-100"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
-              <div className="flex gap-2 text-xs">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 font-semibold text-emerald-700">
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                  {matchedJobs.length}
-                </span>
-              </div>
-            </div>
 
-            <div className="px-4 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
+              <div className="px-4 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
               {selectedJobs.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
                   <Heart className="mx-auto h-8 w-8 text-slate-300 mb-2" />
@@ -930,9 +955,10 @@ export default function JobMatchPage() {
                 </div>
               )}
             </div>
-          </aside>
-        </div>
-      </main>
+          </div>
+        </aside>
+      </div>
+    </main>
 
       {quickOpen && (
         <div
@@ -1096,7 +1122,7 @@ export default function JobMatchPage() {
                   <span className="font-bold">{selectedJobDetail.initial}</span>
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900 flex items-center gap-2">
+                  <h3 className="font-bold text-slate-900 flex flex-wrap items-center gap-2 text-sm sm:text-base">
                     {selectedJobDetail.title}
                     <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium border border-slate-200">
                       {selectedJobDetail.source}

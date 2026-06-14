@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { CalendarDays, CheckCircle2, ArrowRight } from 'lucide-react'
 import PageShell from '@/src/components/layout/PageShell'
+import PageHeader from '@/src/components/layout/PageHeader'
 import JobTargetSelector from '@/src/features/plan30d/components/JobTargetSelector'
 import PlanConfigBar from '@/src/features/plan30d/components/PlanConfigBar'
 import WeekCalendar from '@/src/features/plan30d/components/WeekCalendar'
@@ -128,34 +129,27 @@ export default function PlanPage() {
 
   return (
     <PageShell>
-      {/* Local page wrapper */}
-      <main className="flex-1 overflow-y-auto p-6 bg-bg-soft relative">
-        <div className="max-w-7xl mx-auto space-y-8">
-          
-          {/* LOCAL HEADER: Dynamic title & urgency indicator */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-navy text-white p-6 rounded-2xl shadow-sm border border-white/5">
-            <div className="space-y-1">
-              <h1 className="text-xl font-bold tracking-tight md:text-2xl transition-all duration-200">
-                {getLocalHeaderTitle()}
-              </h1>
-              <p className="text-xs text-white/60 font-medium">
-                Objetivo activo: {selectedJob.position} en {selectedJob.company}
-              </p>
-            </div>
-            
-            {/* Dynamic visual badge for deadline urgency */}
-            <div className="flex items-center gap-2.5 bg-white/10 px-4 py-2.5 rounded-xl border border-white/5 w-fit">
-              <CalendarDays className="w-5 h-5 text-emerald-400" />
-              <div className="flex flex-col">
-                <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest leading-none">
-                  Límite de postulación
-                </span>
-                <span className="text-xs font-bold text-white mt-0.5 leading-none">
-                  Faltan {selectedJob.daysLeft} días ({selectedJob.deadlineDate})
-                </span>
-              </div>
+      <PageHeader
+        title={getLocalHeaderTitle()}
+        subtitle={`Objetivo activo: ${selectedJob.position} en ${selectedJob.company}`}
+        right={
+          <div className="flex items-center gap-2.5 bg-white/10 px-4 py-2.5 rounded-xl border border-white/5 w-fit">
+            <CalendarDays className="w-5 h-5 text-emerald-400" />
+            <div className="flex flex-col text-left">
+              <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest leading-none">
+                Límite de postulación
+              </span>
+              <span className="text-xs font-bold text-white mt-0.5 leading-none">
+                Faltan {selectedJob.daysLeft} días ({selectedJob.deadlineDate})
+              </span>
             </div>
           </div>
+        }
+      />
+      {/* Local page wrapper */}
+      <main className="flex-1 overflow-y-auto p-6 bg-bg-soft relative pt-2">
+        <div className="max-w-7xl mx-auto space-y-8">
+
 
           {/* SECTION 1: OBJETIVO LABORAL */}
           <section className="space-y-3">

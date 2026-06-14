@@ -38,7 +38,7 @@ export default function SimulatorPage() {
       />
       
       {/* Aquí inyectamos el nuevo rediseño, eliminando el grid viejo */}
-      <main className="flex-1 overflow-y-auto bg-bg-soft p-6">
+      <main className="flex-1 overflow-y-auto bg-bg-soft p-6 pt-2">
         <SimulatorMain />
       </main>
     </PageShell>

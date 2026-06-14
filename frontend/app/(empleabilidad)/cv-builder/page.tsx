@@ -74,9 +74,10 @@ export default function CVBuilderPage() {
       <PageHeader
         title="Constructor de CV"
         subtitle="Genera tu currículum optimizado en LaTeX y envíalo directamente a reclutadores."
+        maxWidthClassName="max-w-[1400px]"
       />
 
-      <main className="flex flex-col flex-1 p-3 md:p-6 relative min-h-0 overflow-y-auto lg:overflow-hidden">
+      <main className="flex flex-col flex-1 p-3 md:p-6 md:pt-2 pt-2 relative min-h-0 overflow-y-auto lg:overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6 max-w-[1400px] mx-auto h-auto lg:h-full w-full">
           
           {/* PANEL LATERAL */}

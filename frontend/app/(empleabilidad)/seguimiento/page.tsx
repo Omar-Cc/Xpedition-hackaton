@@ -29,6 +29,7 @@ export default function SeguimientoPage() {
       <PageHeader
         title="Seguimiento de postulaciones"
         subtitle="3/3 postulaciones activas — pausa una para agregar una nueva empresa"
+        maxWidthClassName="max-w-6xl"
         right={
           <div className="flex items-center gap-2">
             {activeCompanies.map((c) => (
@@ -44,7 +45,7 @@ export default function SeguimientoPage() {
           </div>
         }
       />
-      <main className="flex-1 overflow-y-auto p-6">
+      <main className="flex-1 overflow-y-auto p-6 pt-2">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           <ApplicationStepper />
           <div className="flex flex-col gap-4">
