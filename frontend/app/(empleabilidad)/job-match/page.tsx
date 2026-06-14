@@ -53,22 +53,24 @@ type JobItem = {
   matchFeedback: string
   matchMissing: string
   source: string
+  contractType: string
+  postedDate: string
 }
 
 type AppliedFilters = {
   query: string
-  location: string
+  address: string
   modes: string[]
   salaryMin: string
   salaryMax: string
   levels: string[]
   ageMin: string
   ageMax: string
+  sources: string[]
 }
 
 const workModes = ['Full Time', 'Part Time', 'Remoto', 'Híbrido', 'Presencial']
 const levels = ['Practicante', 'Pasantía', 'Junior', 'Semi Senior', 'Senior']
-
 const jobCatalog: JobItem[] = [
   {
     id: '1',
@@ -79,7 +81,7 @@ const jobCatalog: JobItem[] = [
     company: 'Scotiabank Perú',
     status: 'Postulación abierta',
     statusColor: 'success',
-    location: 'Lima, Perú',
+    location: 'San Isidro, Lima',
     mode: 'Remoto',
     salaryMin: 1800,
     salaryMax: 2600,
@@ -95,252 +97,833 @@ const jobCatalog: JobItem[] = [
     matchFeedback: 'Tienes un gran fit porque dominas Python y SQL, que son el core tecnológico de este rol.',
     matchMissing: 'Aumentarías al 100% si tuvieras proyectos demostrables en Power BI.',
     source: 'LinkedIn',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 2 días',
   },
   {
     id: '2',
     initial: 'B',
     avatarColor: 'bg-blue-600',
-    matchPercent: 89,
-    title: 'Business Analyst',
-    company: 'BCP',
-    status: 'Cierra en 3 días',
+    matchPercent: 88,
+    title: 'Practicante de Sistemas',
+    company: 'Banco de Crédito BCP',
+    status: 'Urgente',
     statusColor: 'warning',
-    location: 'San Isidro, Lima',
+    location: 'La Molina, Lima',
     mode: 'Híbrido',
-    salaryMin: 2200,
-    salaryMax: 3200,
-    level: 'Semi Senior',
-    ageMin: 20,
-    ageMax: 32,
-    tags: ['Data', 'KPI', 'Excel'],
-    highlight: 'Turno compatible',
-    requirement: 'Experiencia en métricas',
-    description: 'Buscamos un perfil mixto entre tecnología y negocios para optimizar nuestros KPIs comerciales.',
-    functions: ['Levantamiento de requerimientos.', 'Seguimiento de KPIs de ventas.', 'Presentaciones a stakeholders.'],
-    skills: ['Excel Avanzado', 'Comunicación Efectiva', 'Metodologías Ágiles'],
-    matchFeedback: 'Tu experiencia previa en métricas de ventas se alinea perfectamente con las necesidades del área.',
-    matchMissing: 'Falta experiencia documentada trabajando con equipos bajo metodologías ágiles (Scrum).',
-    source: 'Computrabajo',
+    salaryMin: 1200,
+    salaryMax: 1500,
+    level: 'Practicante',
+    ageMin: 18,
+    ageMax: 25,
+    tags: ['SQL', 'Java', 'Scrum'],
+    highlight: 'Líder en banca peruana',
+    requirement: 'Estudiantes de 7mo a 9no ciclo',
+    description: 'Apoya en el soporte, mantenimiento y automatización de procesos internos dentro de nuestras células de TI.',
+    functions: ['Apoyo en el desarrollo de microservicios en Java.', 'Consultas y mantenimiento de base de datos SQL.', 'Participación en rituales ágiles Scrum.'],
+    skills: ['SQL', 'Java', 'Scrum', 'Git'],
+    matchFeedback: 'Tu conocimiento básico de SQL e interés en Scrum encaja perfecto con el equipo.',
+    matchMissing: 'Te sumaría mucho conocer sobre testing unitario en Java.',
+    source: 'Bumeran',
+    contractType: 'Prácticas',
+    postedDate: 'Hoy',
   },
   {
     id: '3',
-    initial: 'I',
-    avatarColor: 'bg-yellow-500',
-    matchPercent: 84,
-    title: 'Data Science Intern',
-    company: 'Interbank',
+    initial: 'N',
+    avatarColor: 'bg-emerald-600',
+    matchPercent: 92,
+    title: 'Junior Frontend Developer',
+    company: 'NTT Data',
     status: 'Postulación abierta',
     statusColor: 'success',
-    location: 'Surco, Lima',
-    mode: 'Presencial',
-    salaryMin: 1200,
-    salaryMax: 1700,
-    level: 'Pasantía',
-    ageMin: 18,
-    ageMax: 24,
-    tags: ['Python', 'Machine Learning', 'Numpy'],
-    highlight: 'Buen fit para prácticas',
-    requirement: 'Carreras afines',
-    description: 'Inicia tu carrera en Data Science aplicando modelos de Machine Learning a problemas reales de banca.',
-    functions: ['Limpieza y estructuración de datos.', 'Apoyo en entrenamiento de modelos predictivos.', 'Documentación de experimentos.'],
-    skills: ['Python', 'Scikit-Learn', 'Pandas', 'Estadística Básica'],
-    matchFeedback: 'Tu portafolio universitario muestra un buen manejo de Pandas y limpieza de datos.',
-    matchMissing: 'Podrías mejorar tu perfil si profundizas en modelos estadísticos y Scikit-Learn.',
-    source: 'Indeed',
+    location: 'Remoto',
+    mode: 'Remoto',
+    salaryMin: 2500,
+    salaryMax: 3500,
+    level: 'Junior',
+    ageMin: 20,
+    ageMax: 30,
+    tags: ['React', 'TypeScript', 'CSS'],
+    highlight: 'Oportunidad internacional',
+    requirement: '6 meses de experiencia',
+    description: 'Buscamos un programador frontend con pasión por crear interfaces de usuario hermosas, rápidas y accesibles.',
+    functions: ['Maquetación de vistas en React con Tailwind CSS.', 'Consumo de APIs RESTful usando TypeScript.', 'Resolución de bugs de interfaz reportados por QA.'],
+    skills: ['React', 'TypeScript', 'CSS', 'TailwindCSS'],
+    matchFeedback: 'Tu portafolio demuestra buen manejo de React y lógica frontend.',
+    matchMissing: 'Aprender sobre pruebas con Jest elevaría tu match al máximo.',
+    source: 'Computrabajo',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 3 días',
   },
   {
     id: '4',
-    initial: 'R',
-    avatarColor: 'bg-rose-500',
-    matchPercent: 81,
-    title: 'Analytics Intern',
-    company: 'Rimac',
+    initial: 'B',
+    avatarColor: 'bg-pink-600',
+    matchPercent: 82,
+    title: 'Practicante de Desarrollo Web',
+    company: 'Belcorp',
     status: 'Postulación abierta',
     statusColor: 'success',
-    location: 'Miraflores, Lima',
-    mode: 'Full Time',
-    salaryMin: 1300,
-    salaryMax: 1800,
+    location: 'San Isidro, Lima',
+    mode: 'Híbrido',
+    salaryMin: 1100,
+    salaryMax: 1400,
     level: 'Practicante',
     ageMin: 18,
-    ageMax: 23,
-    tags: ['Dashboard', 'Excel', 'Power BI'],
-    highlight: 'Alta compatibilidad',
-    requirement: 'Prácticas preprofesionales',
-    description: 'Aprende y apoya en la visualización de datos de seguros de vida y salud.',
-    functions: ['Actualización de tableros en Power BI.', 'Manejo de bases en Excel.', 'Extracción de datos básicos.'],
-    skills: ['Power BI', 'Excel', 'Trabajo en equipo'],
-    matchFeedback: 'Tu nivel de Excel es ideal para lo que se requiere en el día a día.',
-    matchMissing: 'No has mencionado conocimientos de bases de datos o extracción (SQL), lo cual sumaría mucho.',
-    source: 'LinkedIn',
+    ageMax: 26,
+    tags: ['HTML', 'JavaScript', 'CSS'],
+    highlight: 'Buen clima laboral',
+    requirement: 'Conocimientos de Javascript',
+    description: 'Participa en el mantenimiento y desarrollo de módulos para nuestras plataformas e-commerce de belleza.',
+    functions: ['Apoyo en el desarrollo de componentes dinámicos en JavaScript.', 'Asegurar la visualización responsive en dispositivos móviles.', 'Apoyo en pruebas de integración.'],
+    skills: ['HTML5', 'CSS3', 'JavaScript', 'Bootstrap'],
+    matchFeedback: 'Tu nivel de HTML/CSS es excelente y tienes buena base de algoritmia.',
+    matchMissing: 'Sería ideal que conozcas los fundamentos de algún framework moderno.',
+    source: 'UTP Bolsa Laboral',
+    contractType: 'Prácticas',
+    postedDate: 'Hace 1 día',
   },
   {
     id: '5',
-    initial: 'A',
-    avatarColor: 'bg-orange-500',
-    matchPercent: 54,
-    title: 'Data Analyst Jr.',
-    company: 'Alicorp',
-    status: 'Cierra en 1 día',
-    statusColor: 'error',
-    location: 'Ate, Lima',
+    initial: 'I',
+    avatarColor: 'bg-slate-800',
+    matchPercent: 94,
+    title: 'Junior Backend Developer',
+    company: 'IBM Perú',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'La Molina, Lima',
     mode: 'Presencial',
+    salaryMin: 3000,
+    salaryMax: 4200,
+    level: 'Junior',
+    ageMin: 21,
+    ageMax: 32,
+    tags: ['Node.js', 'Express', 'MongoDB'],
+    highlight: 'Tecnología de vanguardia',
+    requirement: '1 año de experiencia',
+    description: 'Únete a nuestro equipo para diseñar e implementar la lógica de servidor de nuestras soluciones empresariales Cloud.',
+    functions: ['Diseño y optimización de APIs REST en Node.js.', 'Modelado de bases de datos relacionales y no relacionales.', 'Implementación de medidas de seguridad en el backend.'],
+    skills: ['Node.js', 'Express', 'MongoDB', 'Docker'],
+    matchFeedback: 'Tu lógica de bases de datos y desarrollo backend con Node.js es robusta.',
+    matchMissing: 'Aprender Docker te ayudará a estandarizar mejor tus despliegues.',
+    source: 'LinkedIn',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 4 días',
+  },
+  {
+    id: '6',
+    initial: 'B',
+    avatarColor: 'bg-indigo-600',
+    matchPercent: 90,
+    title: 'UX/UI Designer',
+    company: 'BBVA Perú',
+    status: 'Urgente',
+    statusColor: 'warning',
+    location: 'San Isidro, Lima',
+    mode: 'Híbrido',
+    salaryMin: 2800,
+    salaryMax: 4000,
+    level: 'Junior',
+    ageMin: 20,
+    ageMax: 30,
+    tags: ['Figma', 'Prototipado', 'UX'],
+    highlight: 'Foco en accesibilidad',
+    requirement: 'Portafolio indispensable',
+    description: 'Diseña experiencias intuitivas y atractivas para millones de clientes bancarios móviles en el país.',
+    functions: ['Creación de flujos de usuario y wireframes interactivos.', 'Diseño de interfaces basadas en el sistema de diseño global.', 'Ejecución de pruebas de usabilidad rápidas.'],
+    skills: ['Figma', 'UX Research', 'UI Design', 'Design Systems'],
+    matchFeedback: 'Tienes un portafolio sólido y manejas Figma a nivel intermedio-avanzado.',
+    matchMissing: 'Profundizar en investigación cualitativa (UX Research) mejoraría tu perfil.',
+    source: 'Bumeran',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 2 días',
+  },
+  {
+    id: '7',
+    initial: 'I',
+    avatarColor: 'bg-amber-600',
+    matchPercent: 85,
+    title: 'Practicante de Data Analytics',
+    company: 'Interbank',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Remoto',
+    mode: 'Remoto',
+    salaryMin: 1200,
+    salaryMax: 1500,
+    level: 'Practicante',
+    ageMin: 19,
+    ageMax: 26,
+    tags: ['Excel', 'SQL', 'Power BI'],
+    highlight: 'Flexibilidad horaria',
+    requirement: 'Excel Avanzado',
+    description: 'Apoya en la recopilación y procesamiento de datos comerciales para generar valor y reportes analíticos.',
+    functions: ['Limpieza y estructuración de bases de datos comerciales.', 'Actualización de tableros de control en Power BI.', 'Generación de reportes periódicos en Excel.'],
+    skills: ['Excel', 'SQL', 'Power BI', 'ETL'],
+    matchFeedback: 'Manejas Excel de manera avanzada y entiendes las bases del análisis de datos.',
+    matchMissing: 'Aprender sobre almacenamiento y queries complejas en SQL te dará ventaja.',
+    source: 'Computrabajo',
+    contractType: 'Prácticas',
+    postedDate: 'Hace 5 días',
+  },
+  {
+    id: '8',
+    initial: 'G',
+    avatarColor: 'bg-teal-600',
+    matchPercent: 91,
+    title: 'Junior Software Developer',
+    company: 'Globant',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Miraflores, Lima',
+    mode: 'Remoto',
+    salaryMin: 2800,
+    salaryMax: 3800,
+    level: 'Junior',
+    ageMin: 20,
+    ageMax: 29,
+    tags: ['Python', 'React', 'Git'],
+    highlight: 'Línea de carrera global',
+    requirement: 'Graduados de Sistemas o afines',
+    description: 'Desarrolla código limpio y participa en proyectos de escala internacional en un ecosistema ágil y colaborativo.',
+    functions: ['Desarrollo de módulos utilizando Python o Javascript.', 'Integración y control de versiones a través de Git.', 'Participar en revisiones de código en equipo.'],
+    skills: ['Python', 'React', 'Git', 'Agile'],
+    matchFeedback: 'Buen dominio de algoritmia y entendimiento claro del control de versiones.',
+    matchMissing: 'Te vendría bien conocer de arquitectura cloud (AWS o GCP).',
+    source: 'UTP Bolsa Laboral',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 1 semana',
+  },
+  {
+    id: '9',
+    initial: 'A',
+    avatarColor: 'bg-emerald-700',
+    matchPercent: 86,
+    title: 'Practicante de Marketing Digital',
+    company: 'Alicorp',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Callao, Lima',
+    mode: 'Híbrido',
+    salaryMin: 1100,
+    salaryMax: 1300,
+    level: 'Practicante',
+    ageMin: 18,
+    ageMax: 25,
+    tags: ['SEO', 'Copywriting', 'Google Ads'],
+    highlight: 'Consumo masivo líder',
+    requirement: 'Inglés intermedio',
+    description: 'Apoya en la implementación y seguimiento de campañas digitales para nuestras principales marcas.',
+    functions: ['Redacción de copies para redes sociales y blogs.', 'Apoyo en el monitoreo de métricas SEO en Google Analytics.', 'Coordinación con agencias de diseño.'],
+    skills: ['SEO', 'Redes Sociales', 'Google Analytics', 'Canva'],
+    matchFeedback: 'Excelente redacción y comprensión de las tendencias digitales del mercado.',
+    matchMissing: 'Tener una certificación de Google Ads te haría destacar aún más.',
+    source: 'LinkedIn',
+    contractType: 'Prácticas',
+    postedDate: 'Hace 3 días',
+  },
+  {
+    id: '10',
+    initial: 'E',
+    avatarColor: 'bg-yellow-600',
+    matchPercent: 89,
+    title: 'Business Analyst',
+    company: 'EY Perú',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'San Isidro, Lima',
+    mode: 'Híbrido',
+    salaryMin: 3200,
+    salaryMax: 4500,
+    level: 'Junior',
+    ageMin: 22,
+    ageMax: 32,
+    tags: ['Procesos', 'BPMN', 'Excel'],
+    highlight: 'Prestigio internacional',
+    requirement: 'Egresados de Ing. Industrial o Sistemas',
+    description: 'Analiza, documenta y optimiza procesos de negocio de nuestros principales clientes corporativos.',
+    functions: ['Modelado de procesos en Bizagi (BPMN).', 'Levantamiento de requerimientos funcionales con usuarios clave.', 'Análisis financiero y operativo básico.'],
+    skills: ['BPMN', 'Bizagi', 'Excel Avanzado', 'Análisis de datos'],
+    matchFeedback: 'Gran capacidad de análisis y excelente comunicación interpersonal.',
+    matchMissing: 'Conocer sobre metodologías ágiles a fondo sumaría mucho valor.',
+    source: 'Bumeran',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 6 días',
+  },
+  {
+    id: '11',
+    initial: 'T',
+    avatarColor: 'bg-violet-700',
+    matchPercent: 93,
+    title: 'QA Tester',
+    company: 'Tata Consultancy Services',
+    status: 'Urgente',
+    statusColor: 'warning',
+    location: 'Remoto',
+    mode: 'Remoto',
+    salaryMin: 2400,
+    salaryMax: 3300,
+    level: 'Junior',
+    ageMin: 19,
+    ageMax: 29,
+    tags: ['Selenium', 'Jira', 'QA Manual'],
+    highlight: 'Proyecto de larga duración',
+    requirement: 'Fundamentos de testing',
+    description: 'Asegura la calidad de nuestras aplicaciones móviles y web ejecutando casos de prueba y reportando incidentes.',
+    functions: ['Diseño y ejecución de casos de prueba manuales y automatizados.', 'Registro y seguimiento de bugs en Jira.', 'Elaboración de informes de conformidad de software.'],
+    skills: ['Selenium', 'Jira', 'SQL Básico', 'ISTQB'],
+    matchFeedback: 'Muy detallista y con buena lógica para encontrar casos de borde erróneos.',
+    matchMissing: 'Aprender a automatizar APIs con Postman aumentaría tu potencial.',
+    source: 'Computrabajo',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 1 día',
+  },
+  {
+    id: '12',
+    initial: 'M',
+    avatarColor: 'bg-neutral-800',
+    matchPercent: 95,
+    title: 'Junior Data Scientist',
+    company: 'McKinsey & Company',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Miraflores, Lima',
+    mode: 'Híbrido',
+    salaryMin: 4000,
+    salaryMax: 5500,
+    level: 'Junior',
+    ageMin: 22,
+    ageMax: 32,
+    tags: ['Python', 'Machine Learning', 'SQL'],
+    highlight: 'Consultoría estratégica top',
+    requirement: 'Conocimiento intermedio de Python',
+    description: 'Desarrolla modelos predictivos estadísticos para resolver problemáticas de negocio complejas.',
+    functions: ['Entrenamiento e implementación de algoritmos supervisados.', 'Extracción y procesamiento de datos a gran escala.', 'Presentación de resultados a stakeholders.'],
+    skills: ['Python', 'SQL', 'Scikit-learn', 'Pandas'],
+    matchFeedback: 'Excelente base matemática y sólido conocimiento en machine learning.',
+    matchMissing: 'Mejorar el uso de Spark/Hadoop para big data aumentaría tu fit.',
+    source: 'UTP Bolsa Laboral',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 2 días',
+  },
+  {
+    id: '13',
+    initial: 'R',
+    avatarColor: 'bg-red-600',
+    matchPercent: 84,
+    title: 'Product Analyst',
+    company: 'Rappi',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Remoto',
+    mode: 'Remoto',
+    salaryMin: 3000,
+    salaryMax: 4300,
+    level: 'Junior',
+    ageMin: 21,
+    ageMax: 30,
+    tags: ['Product Management', 'SQL', 'Amplitude'],
+    highlight: 'Crecimiento acelerado',
+    requirement: 'Orientado a datos',
+    description: 'Monitorea métricas de uso y comportamiento para proponer mejoras en la UX del aplicativo Rappi.',
+    functions: ['Análisis de embudos de conversión (funnels) con Amplitude.', 'Generación de queries SQL para entender retención de usuarios.', 'Coordinación directa con ingenieros de producto.'],
+    skills: ['SQL', 'Amplitude', 'Analytics', 'A/B Testing'],
+    matchFeedback: 'Muy orientado al producto y con destreza analítica sobresaliente.',
+    matchMissing: 'Experiencia previa con prototipado en Figma te ayudaría a iterar.',
+    source: 'LinkedIn',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 4 días',
+  },
+  {
+    id: '14',
+    initial: 'F',
+    avatarColor: 'bg-orange-600',
+    matchPercent: 91,
+    title: 'DevOps Engineer',
+    company: 'Falabella Tecnología',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'San Isidro, Lima',
+    mode: 'Híbrido',
+    salaryMin: 3800,
+    salaryMax: 5000,
+    level: 'Junior',
+    ageMin: 21,
+    ageMax: 31,
+    tags: ['CI/CD', 'AWS', 'Docker'],
+    highlight: 'Cultura devops moderna',
+    requirement: 'Conocimientos de Linux',
+    description: 'Automatiza pipelines de despliegue y gestiona la infraestructura en la nube para garantizar alta disponibilidad.',
+    functions: ['Mantenimiento de pipelines en Jenkins o GitHub Actions.', 'Orquestación básica con Docker e infraestructura AWS.', 'Monitoreo de logs y estabilidad de servidores.'],
+    skills: ['AWS', 'Docker', 'Jenkins', 'Bash Scripting'],
+    matchFeedback: 'Excelente base de scripting en Bash and conocimientos sólidos en AWS.',
+    matchMissing: 'Saber sobre Kubernetes te impulsaría a un nivel superior.',
+    source: 'Bumeran',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 3 días',
+  },
+  {
+    id: '15',
+    initial: 'M',
+    avatarColor: 'bg-blue-800',
+    matchPercent: 96,
+    title: 'Machine Learning Engineer',
+    company: 'Microsoft Perú',
+    status: 'Urgente',
+    statusColor: 'warning',
+    location: 'Remoto',
+    mode: 'Remoto',
+    salaryMin: 4500,
+    salaryMax: 6000,
+    level: 'Junior',
+    ageMin: 22,
+    ageMax: 34,
+    tags: ['TensorFlow', 'PyTorch', 'Python'],
+    highlight: 'IA a nivel global',
+    requirement: 'Proyectos demostrables de ML',
+    description: 'Diseña, construye y pon en producción modelos de aprendizaje profundo e inteligencia artificial avanzada.',
+    functions: ['Desarrollo e implementación de arquitecturas de ML en Azure.', 'Monitoreo y ajuste de hiperparámetros en modelos de Deep Learning.', 'Optimización de inferencia de modelos.'],
+    skills: ['Python', 'TensorFlow', 'Azure', 'MLOps'],
+    matchFeedback: 'Tus proyectos personales demuestran un gran dominio de redes neuronales.',
+    matchMissing: 'Un mayor dominio en contenedores Docker y MLOps elevaría tu fit.',
+    source: 'Computrabajo',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 5 días',
+  },
+  {
+    id: '16',
+    initial: 'T',
+    avatarColor: 'bg-teal-700',
+    matchPercent: 81,
+    title: 'Soporte Técnico',
+    company: 'Teleperformance',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Santiago de Surco, Lima',
+    mode: 'Presencial',
+    salaryMin: 1400,
+    salaryMax: 1800,
+    level: 'Junior',
+    ageMin: 18,
+    ageMax: 28,
+    tags: ['Redes', 'Windows Server', 'Helpdesk'],
+    highlight: 'Contratación inmediata',
+    requirement: 'Estudios técnicos en computación',
+    description: 'Brinda soporte técnico de hardware y software a los usuarios de la red corporativa de la compañía.',
+    functions: ['Configuración y mantenimiento de computadoras de oficina.', 'Resolución de problemas de red local y VPN.', 'Atención y registro de tickets en sistema interno.'],
+    skills: ['Redes', 'Windows', 'Hardware', 'Servicio al Cliente'],
+    matchFeedback: 'Tienes gran disposición de servicio y buena base técnica de hardware.',
+    matchMissing: 'Aprender sobre Linux a nivel de administrador enriquecería tu perfil.',
+    source: 'UTP Bolsa Laboral',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 1 semana',
+  },
+  {
+    id: '17',
+    initial: 'R',
+    avatarColor: 'bg-purple-600',
+    matchPercent: 87,
+    title: 'Analista Funcional',
+    company: 'Rimac Seguros',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'San Isidro, Lima',
+    mode: 'Híbrido',
+    salaryMin: 3000,
+    salaryMax: 4000,
+    level: 'Junior',
+    ageMin: 22,
+    ageMax: 31,
+    tags: ['Requerimientos', 'Scrum', 'UML'],
+    highlight: 'Sector seguros sólido',
+    requirement: 'Habilidades de comunicación',
+    description: 'Traduce los requerimientos de las áreas de negocio a especificaciones técnicas legibles para desarrollo.',
+    functions: ['Elaboración de historias de usuario detalladas.', 'Modelado de diagramas de casos de uso UML.', 'Coordinación de pruebas de aceptación de usuario (UAT).'],
+    skills: ['UML', 'User Stories', 'Scrum', 'SQL Básico'],
+    matchFeedback: 'Tu capacidad de documentación es muy estructurada y limpia.',
+    matchMissing: 'Aumentarías tu match entendiendo sobre arquitectura básica de APIs.',
+    source: 'LinkedIn',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 2 días',
+  },
+  {
+    id: '18',
+    initial: 'M',
+    avatarColor: 'bg-rose-500',
+    matchPercent: 78,
+    title: 'Community Manager',
+    company: 'McCann Lima',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Miraflores, Lima',
+    mode: 'Presencial',
+    salaryMin: 1200,
+    salaryMax: 1600,
+    level: 'Junior',
+    ageMin: 18,
+    ageMax: 26,
+    tags: ['Copywriting', 'Redes Sociales', 'Analytics'],
+    highlight: 'Agencia de primer nivel',
+    requirement: 'Creatividad orientada a marca',
+    description: 'Gestiona la presencia digital e interactúa con las audiencias de importantes marcas de consumo.',
+    functions: ['Creación y publicación de contenidos semanales.', 'Respuesta inmediata a dudas y comentarios de usuarios.', 'Monitoreo de engagement e informes mensuales.'],
+    skills: ['Social Media', 'Copywriting', 'Metrics', 'Diseño Básico'],
+    matchFeedback: 'Gran empatía en comunicación escrita y excelente ortografía.',
+    matchMissing: 'Tener una certificación de video básica con Premiere sumará puntos.',
+    source: 'Bumeran',
+    contractType: 'Tiempo Parcial',
+    postedDate: 'Hace 4 días',
+  },
+  {
+    id: '19',
+    initial: 'C',
+    avatarColor: 'bg-sky-600',
+    matchPercent: 80,
+    title: 'Diseñador Gráfico',
+    company: 'Circus Grey',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Barranco, Lima',
+    mode: 'Híbrido',
+    salaryMin: 1500,
+    salaryMax: 2000,
+    level: 'Junior',
+    ageMin: 19,
+    ageMax: 28,
+    tags: ['Photoshop', 'Illustrator', 'Indesign'],
+    highlight: 'Proyectos retadores',
+    requirement: 'Portafolio digital',
+    description: 'Desarrolla piezas gráficas publicitarias innovadoras para campañas impresas y digitales.',
+    functions: ['Diseño de banners web y creatividades para redes.', 'Adaptación tipográfica y maquetación de folletos.', 'Participar en lluvia de ideas de campañas creativas.'],
+    skills: ['Photoshop', 'Illustrator', 'Branding', 'Creatividad'],
+    matchFeedback: 'Tu portafolio refleja un estilo dinámico y un excelente uso del color.',
+    matchMissing: 'Saber animación básica en After Effects es sumamente deseable.',
+    source: 'Computrabajo',
+    contractType: 'Tiempo Parcial',
+    postedDate: 'Hace 3 días',
+  },
+  {
+    id: '20',
+    initial: 'E',
+    avatarColor: 'bg-blue-600',
+    matchPercent: 89,
+    title: 'Practicante de Ciberseguridad',
+    company: 'Entel Perú',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'San Borja, Lima',
+    mode: 'Híbrido',
+    salaryMin: 1250,
+    salaryMax: 1550,
+    level: 'Practicante',
+    ageMin: 18,
+    ageMax: 25,
+    tags: ['Redes', 'Ethical Hacking', 'Linux'],
+    highlight: 'Telecomunicaciones top',
+    requirement: 'Conocimientos de TCP/IP',
+    description: 'Apoya en el monitoreo de incidentes de seguridad y evaluación de vulnerabilidades en sistemas internos.',
+    functions: ['Análisis de logs de seguridad en firewalls e IPS.', 'Apoyo en escaneos de vulnerabilidades periódicos.', 'Participar en la concientización de seguridad de usuarios.'],
+    skills: ['Redes', 'Linux', 'Security', 'Wireshark'],
+    matchFeedback: 'Tu sólida base en redes e interés en pentesting se alinea con el equipo.',
+    matchMissing: 'Aprender sobre herramientas SIEM te daría mucho valor.',
+    source: 'UTP Bolsa Laboral',
+    contractType: 'Prácticas',
+    postedDate: 'Hace 6 días',
+  },
+  {
+    id: '21',
+    initial: 'O',
+    avatarColor: 'bg-red-700',
+    matchPercent: 91,
+    title: 'Junior Cloud Administrator',
+    company: 'Oracle Perú',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Remoto',
+    mode: 'Remoto',
+    salaryMin: 3200,
+    salaryMax: 4400,
+    level: 'Junior',
+    ageMin: 21,
+    ageMax: 30,
+    tags: ['Cloud', 'Linux', 'OCI'],
+    highlight: 'Formación constante',
+    requirement: 'Graduados universitarios',
+    description: 'Apoya en la administración y soporte de infraestructura en la nube para nuestros clientes corporativos.',
+    functions: ['Aprovisionamiento de recursos de cómputo en la nube.', 'Soporte y diagnóstico de incidencias Cloud.', 'Monitoreo preventivo del rendimiento de bases de datos.'],
+    skills: ['Cloud Computing', 'Linux', 'Databases', 'Networking'],
+    matchFeedback: 'Excelente comprensión conceptual del modelo Cloud y de sistemas Linux.',
+    matchMissing: 'Contar con una certificación OCI Cloud Associate potenciará tu perfil.',
+    source: 'LinkedIn',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 2 días',
+  },
+  {
+    id: '22',
+    initial: 'S',
+    avatarColor: 'bg-red-500',
+    matchPercent: 88,
+    title: 'Scrum Master Junior',
+    company: 'Scotiabank',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'San Isidro, Lima',
+    mode: 'Híbrido',
+    salaryMin: 3000,
+    salaryMax: 4000,
+    level: 'Junior',
+    ageMin: 21,
+    ageMax: 30,
+    tags: ['Agile', 'Scrum', 'Facilitación'],
+    highlight: 'Banca ágil líder',
+    requirement: 'Certificación Scrum básica',
+    description: 'Facilita la aplicación del marco Scrum en nuestras células de desarrollo digital bancario.',
+    functions: ['Facilitación de eventos ágiles diarias, planning, retrospectivas.', 'Identificación y apoyo en la remoción de impedimentos.', 'Promoción de la autoorganización del equipo.'],
+    skills: ['Scrum', 'Agile Coach', 'Jira', 'Liderazgo Servicial'],
+    matchFeedback: 'Tu estilo de comunicación y empatía es idóneo para guiar equipos ágiles.',
+    matchMissing: 'Requerimos un entendimiento más técnico de los flujos de código git.',
+    source: 'Bumeran',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 5 días',
+  },
+  {
+    id: '23',
+    initial: 'T',
+    avatarColor: 'bg-cyan-700',
+    matchPercent: 90,
+    title: 'Junior Database Administrator',
+    company: 'Telefónica',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Cercado de Lima',
+    mode: 'Presencial',
+    salaryMin: 2600,
+    salaryMax: 3600,
+    level: 'Junior',
+    ageMin: 20,
+    ageMax: 29,
+    tags: ['SQL', 'Oracle DBA', 'Backups'],
+    highlight: 'Infraestructura robusta',
+    requirement: 'Sólida base en bases de datos',
+    description: 'Monitorea el correcto funcionamiento, indexación, y planes de respaldo de nuestras bases de datos.',
+    functions: ['Monitoreo de queries pesadas y optimización de índices.', 'Ejecución y verificación de planes de copias de seguridad.', 'Otorgamiento de privilegios y accesos a analistas.'],
+    skills: ['SQL', 'Oracle', 'SQL Server', 'Backups'],
+    matchFeedback: 'Excelente lógica para optimizar consultas de bases de datos.',
+    matchMissing: 'Aprender sobre automatización en servidores Unix (Bash) te ayudará.',
+    source: 'Computrabajo',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 1 semana',
+  },
+  {
+    id: '24',
+    initial: 'N',
+    avatarColor: 'bg-emerald-800',
+    matchPercent: 83,
+    title: 'Junior SEO Specialist',
+    company: 'Neo Consulting',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'San Borja, Lima',
+    mode: 'Remoto',
     salaryMin: 2000,
     salaryMax: 2800,
     level: 'Junior',
     ageMin: 20,
-    ageMax: 29,
-    tags: ['SQL', 'Reportes', 'Excel'],
-    highlight: 'Lista para aplicar',
-    requirement: '1 año de experiencia',
-    description: 'Rol enfocado en la generación de reportes operativos y análisis de cadena de suministro.',
-    functions: ['Generación de reportes de inventario.', 'Optimización de consultas SQL.', 'Análisis de mermas.'],
-    skills: ['SQL Intermedio', 'Excel Avanzado', 'Análisis Lógico'],
-    matchFeedback: 'Cumples con los requisitos técnicos en SQL y herramientas ofimáticas.',
-    matchMissing: 'Tu perfil está un poco bajo en los años de experiencia en sector consumo masivo.',
-    source: 'Bumeran',
+    ageMax: 28,
+    tags: ['SEO', 'Search Console', 'Keywords'],
+    highlight: 'Consultora de analítica top',
+    requirement: 'Experiencia práctica en SEO',
+    description: 'Optimiza la estructura interna y el contenido de los sitios web de nuestros clientes para incrementar tráfico orgánico.',
+    functions: ['Estudio exhaustivo de palabras clave (keyword research).', 'Optimización on-page: meta tags, headers y optimización móvil.', 'Seguimiento de indexación y errores en Search Console.'],
+    skills: ['SEO', 'Google Analytics', 'Ahrefs', 'Search Console'],
+    matchFeedback: 'Gran comprensión de la intención de búsqueda y estructuración web.',
+    matchMissing: 'Un entendimiento de HTML/CSS técnico mejoraría tu interacción con desarrolladores.',
+    source: 'UTP Bolsa Laboral',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 3 días',
   },
   {
-    id: '6',
-    initial: 'G',
-    avatarColor: 'bg-emerald-500',
-    matchPercent: 45,
-    title: 'Frontend Developer',
-    company: 'Gloria',
+    id: '25',
+    initial: 'P',
+    avatarColor: 'bg-amber-700',
+    matchPercent: 87,
+    title: 'Practicante IT Auditor',
+    company: 'PwC Perú',
     status: 'Postulación abierta',
     statusColor: 'success',
-    location: 'Lima, Perú',
-    mode: 'Remoto',
-    salaryMin: 2600,
-    salaryMax: 3800,
-    level: 'Semi Senior',
-    ageMin: 22,
-    ageMax: 33,
-    tags: ['React', 'TypeScript', 'UI'],
-    highlight: 'Buen encaje técnico',
-    requirement: 'Experiencia en React',
-    description: 'Desarrolla interfaces de usuario modernas para las aplicaciones internas de la compañía.',
-    functions: ['Creación de componentes UI en React.', 'Integración con APIs REST.', 'Mantenimiento de sistemas legacy.'],
-    skills: ['React', 'TypeScript', 'Tailwind CSS', 'Git'],
-    matchFeedback: 'Tienes los conocimientos base de React y desarrollo web.',
-    matchMissing: 'Para este nivel se busca más experiencia arquitectando con TypeScript y estado global.',
-    source: 'LinkedIn',
-  },
-  {
-    id: '7',
-    initial: 'E',
-    avatarColor: 'bg-violet-500',
-    matchPercent: 92,
-    title: 'Marketing Trainee',
-    company: 'Entel',
-    status: 'Urgente',
-    statusColor: 'error',
     location: 'San Isidro, Lima',
     mode: 'Híbrido',
-    salaryMin: 1500,
-    salaryMax: 2000,
-    level: 'Pasantía',
-    ageMin: 20,
-    ageMax: 26,
-    tags: ['Marketing Digital', 'RRSS', 'Analytics'],
-    highlight: 'Ideal para recién egresados',
-    requirement: 'Inglés intermedio',
-    description: 'Buscamos talento joven para apoyar en campañas digitales y análisis de conversión de usuarios.',
-    functions: ['Monitoreo de campañas en RRSS.', 'Reportes de pauta digital.', 'Apoyo en creación de contenido.'],
-    skills: ['Google Analytics', 'Facebook Ads', 'Creatividad'],
-    matchFeedback: 'Tu portafolio de manejo de redes encaja muy bien con el rol de trainee.',
-    matchMissing: 'Sería ideal contar con alguna certificación en Google Ads.',
-    source: 'Bumeran',
+    salaryMin: 1200,
+    salaryMax: 1500,
+    level: 'Practicante',
+    ageMin: 18,
+    ageMax: 25,
+    tags: ['Auditoría', 'Controles TI', 'COBIT'],
+    highlight: 'Excelente aprendizaje corporativo',
+    requirement: 'Estudiantes de ciclos finales',
+    description: 'Apoya en la auditoría de seguridad física y lógica de sistemas TI de clientes externos importantes.',
+    functions: ['Revisión preliminar de políticas de accesos y perfiles.', 'Documentación de controles de IT general (ITGC).', 'Coordinación de requerimientos con auditados.'],
+    skills: ['Audit', 'COBIT', 'Excel', 'Sistemas de Información'],
+    matchFeedback: 'Muy metódico, ordenado y excelente ética profesional.',
+    matchMissing: 'Nociones generales de seguridad en redes sumará puntos.',
+    source: 'LinkedIn',
+    contractType: 'Prácticas',
+    postedDate: 'Hace 1 día',
   },
   {
-    id: '8',
-    initial: 'N',
-    avatarColor: 'bg-indigo-500',
-    matchPercent: 88,
-    title: 'Backend Developer',
-    company: 'Niubiz',
+    id: '26',
+    initial: 'C',
+    avatarColor: 'bg-orange-600',
+    matchPercent: 91,
+    title: 'Junior Mobile Developer',
+    company: 'Cabify',
     status: 'Postulación abierta',
     statusColor: 'success',
-    location: 'Lima, Perú',
-    mode: 'Remoto',
-    salaryMin: 3500,
-    salaryMax: 5000,
-    level: 'Senior',
-    ageMin: 25,
-    ageMax: 40,
-    tags: ['Node.js', 'AWS', 'API'],
-    highlight: 'Gran oportunidad de crecimiento',
-    requirement: '3+ años de experiencia',
-    description: 'Desarrollo de servicios transaccionales de alto rendimiento y baja latencia.',
-    functions: ['Diseño de arquitecturas cloud.', 'Mantenimiento de microservicios en Node.', 'Optimización de base de datos.'],
-    skills: ['Node.js', 'AWS Lambda', 'PostgreSQL', 'Docker'],
-    matchFeedback: 'Tienes experiencia en Node.js y despliegues en la nube, justo lo que se necesita.',
-    matchMissing: 'Falta un poco de exposición demostrable a arquitecturas serverless complejas.',
-    source: 'LinkedIn',
+    location: 'Santiago de Surco, Lima',
+    mode: 'Híbrido',
+    salaryMin: 3000,
+    salaryMax: 4200,
+    level: 'Junior',
+    ageMin: 20,
+    ageMax: 29,
+    tags: ['Flutter', 'Android', 'Dart'],
+    highlight: 'Movilidad inteligente',
+    requirement: '6 meses de experiencia móvil',
+    description: 'Únete a nuestro equipo para mantener y optimizar los flujos móviles de nuestra app de transporte de pasajeros.',
+    functions: ['Maquetación de vistas e interfaces multiplataforma en Flutter.', 'Consumo e integración de APIs del mapa en tiempo real.', 'Corrección de fallos reportados en producción.'],
+    skills: ['Flutter', 'Dart', 'Git', 'Mobile Architecture'],
+    matchFeedback: 'Tus proyectos personales en Flutter demuestran buena base de arquitectura móvil.',
+    matchMissing: 'Aprender sobre animaciones nativas en iOS aportaría al equipo.',
+    source: 'Bumeran',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 4 días',
   },
   {
-    id: '9',
-    initial: 'P',
-    avatarColor: 'bg-sky-500',
-    matchPercent: 62,
-    title: 'Product Owner Junior',
-    company: 'Pacífico Seguros',
-    status: 'Cierra pronto',
-    statusColor: 'warning',
-    location: 'San Isidro, Lima',
+    id: '27',
+    initial: 'Y',
+    avatarColor: 'bg-yellow-500',
+    matchPercent: 94,
+    title: 'Practicante DevOps',
+    company: 'Yape',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Remoto',
+    mode: 'Remoto',
+    salaryMin: 1300,
+    salaryMax: 1600,
+    level: 'Practicante',
+    ageMin: 18,
+    ageMax: 26,
+    tags: ['Docker', 'Pipelines', 'Linux'],
+    highlight: 'La billetera digital del Perú',
+    requirement: 'Interés genuino en DevOps',
+    description: 'Apoya en la automatización del despliegue y mantenimiento de microservicios utilizados por millones de usuarios.',
+    functions: ['Apoyo en el mantenimiento de contenedores Docker de desarrollo.', 'Colaboración en la configuración de flujos Git.', 'Monitoreo de métricas del sistema.'],
+    skills: ['Docker', 'Git', 'Linux', 'CI/CD Básico'],
+    matchFeedback: 'Tu nivel de curiosidad técnica y tus fundamentos de Linux son excelentes.',
+    matchMissing: 'Aprender lo básico de la nube de AWS acelerará tu inclusión.',
+    source: 'Computrabajo',
+    contractType: 'Prácticas',
+    postedDate: 'Hace 2 días',
+  },
+  {
+    id: '28',
+    initial: 'C',
+    avatarColor: 'bg-red-600',
+    matchPercent: 82,
+    title: 'Soporte de Infraestructura',
+    company: 'Claro Perú',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'La Victoria, Lima',
     mode: 'Presencial',
-    salaryMin: 3000,
+    salaryMin: 2000,
+    salaryMax: 2700,
+    level: 'Junior',
+    ageMin: 20,
+    ageMax: 29,
+    tags: ['Servidores', 'Networking', 'VMware'],
+    highlight: 'Infraestructura masiva',
+    requirement: 'Estudios de redes y telecomunicaciones',
+    description: 'Realiza el mantenimiento preventivo y configuración de servidores y equipos de red del centro de datos corporativo.',
+    functions: ['Instalación física de servidores y cableado estructurado.', 'Monitoreo preventivo del clúster de virtualización VMware.', 'Atención a incidentes y reemplazo de hardware.'],
+    skills: ['Networking', 'VMware', 'Linux Server', 'Cisco CCNA'],
+    matchFeedback: 'Excelente disposición al trabajo en sitio y entendimiento de cableado/redes.',
+    matchMissing: 'Obtener la certificación CCNA te daría un gran respaldo formal.',
+    source: 'UTP Bolsa Laboral',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 5 días',
+  },
+  {
+    id: '29',
+    initial: 'R',
+    avatarColor: 'bg-purple-800',
+    matchPercent: 86,
+    title: 'Junior Product Owner',
+    company: 'Ripley',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'San Isidro, Lima',
+    mode: 'Híbrido',
+    salaryMin: 3200,
     salaryMax: 4500,
     level: 'Junior',
     ageMin: 22,
-    ageMax: 30,
-    tags: ['Scrum', 'Producto', 'Agile'],
-    highlight: 'Rol de liderazgo',
-    requirement: 'Certificación Scrum',
-    description: 'Lidera la célula de transformación digital para productos de salud.',
-    functions: ['Gestión del Product Backlog.', 'Definición de historias de usuario.', 'Alineación con stakeholders.'],
-    skills: ['Scrum', 'Comunicación asertiva', 'Jira'],
-    matchFeedback: 'Tu certificación de Scrum Master valida tus conocimientos metodológicos.',
-    matchMissing: 'No tienes experiencia directa liderando la definición de un producto digital desde cero.',
-    source: 'Computrabajo',
+    ageMax: 32,
+    tags: ['Agile', 'Product Backlog', 'User Stories'],
+    highlight: 'E-commerce retail líder',
+    requirement: 'Habilidades de priorización',
+    description: 'Gestiona la cola de trabajo del equipo técnico para el desarrollo de nuevas funcionalidades en el carrito de compras.',
+    functions: ['Priorización del backlog en base a métricas comerciales.', 'Definición de criterios de aceptación para el equipo de desarrollo.', 'Alineamiento periódico de expectativas con stakeholders.'],
+    skills: ['Product Backlog', 'Agile', 'UX Mindset', 'SQL Básico'],
+    matchFeedback: 'Excelente entendimiento de negocio y buena visión de cara a la experiencia de usuario.',
+    matchMissing: 'Aprender a medir conversión con Google Analytics elevaría tu fit.',
+    source: 'LinkedIn',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 3 días',
   },
   {
-    id: '10',
-    initial: 'B',
-    avatarColor: 'bg-teal-500',
-    matchPercent: 38,
-    title: 'UX/UI Designer',
-    company: 'BBVA',
+    id: '30',
+    initial: 'C',
+    avatarColor: 'bg-emerald-600',
+    matchPercent: 89,
+    title: 'BI Developer Junior',
+    company: 'Cencosud',
     status: 'Postulación abierta',
     statusColor: 'success',
-    location: 'Lima, Perú',
+    location: 'Miraflores, Lima',
     mode: 'Híbrido',
-    salaryMin: 2500,
-    salaryMax: 4000,
-    level: 'Semi Senior',
-    ageMin: 23,
-    ageMax: 35,
-    tags: ['Figma', 'Prototipado', 'UX'],
-    highlight: 'Enfoque en accesibilidad',
-    requirement: 'Portafolio de productos reales',
-    description: 'Diseño de experiencias centradas en el usuario para nuestra nueva app móvil.',
-    functions: ['Creación de wireframes y prototipos.', 'User testing.', 'Mantenimiento del Design System.'],
-    skills: ['Figma', 'UI Design', 'UX Research', 'Design Systems'],
-    matchFeedback: 'Tus diseños en Figma son limpios y sigues buenas prácticas de UI.',
-    matchMissing: 'Falta más profundidad en la etapa de investigación de usuarios (UX Research).',
-    source: 'Indeed',
+    salaryMin: 2200,
+    salaryMax: 3200,
+    level: 'Junior',
+    ageMin: 21,
+    ageMax: 30,
+    tags: ['SQL', 'Power BI', 'ETL'],
+    highlight: 'Gran corporación retail',
+    requirement: 'Conocimientos sólidos en bases de datos relacionales',
+    description: 'Desarrolla, automatiza y mantiene los procesos ETL y reportes ejecutivos para el área comercial.',
+    functions: ['Desarrollo de stored procedures SQL y cargas de datos ETL.', 'Diseño de dashboards en Power BI con fórmulas DAX eficientes.', 'Mantenimiento del almacén de datos (Data Warehouse).'],
+    skills: ['SQL Server', 'Power BI', 'DAX', 'SSIS ETL'],
+    matchFeedback: 'Excelente estructura lógica y un muy buen manejo de modelamiento estrella.',
+    matchMissing: 'Aprender Python orientado a datos facilitaría automatizaciones.',
+    source: 'Computrabajo',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 4 días',
   },
 ]
 
 const defaultFilters: AppliedFilters = {
   query: '',
-  location: '',
+  address: '',
   modes: [],
   salaryMin: '',
   salaryMax: '',
   levels: [],
   ageMin: '',
   ageMax: '',
+  sources: [],
 }
 
 function toggleItem(items: string[], value: string) {
@@ -349,35 +932,86 @@ function toggleItem(items: string[], value: string) {
 
 function JobInfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between gap-4 rounded-2xl bg-slate-50 px-4 py-3 text-sm">
-      <span className="text-slate-500">{label}</span>
-      <span className="font-medium text-slate-900">{value}</span>
+    <div className="flex items-center justify-between gap-4 rounded-2xl bg-base-200/60 px-4 py-3 text-sm">
+      <span className="text-base-content/60">{label}</span>
+      <span className="font-medium text-base-content">{value}</span>
     </div>
   )
 }
 
+function getSourceBadgeStyle(source: string) {
+  switch (source) {
+    case 'LinkedIn':
+      return 'bg-blue-50 text-blue-700 border-blue-200/50 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-900/30'
+    case 'Bumeran':
+      return 'bg-pink-50 text-pink-700 border-pink-200/50 dark:bg-pink-950/30 dark:text-pink-400 dark:border-pink-900/30'
+    case 'Computrabajo':
+      return 'bg-orange-50 text-orange-700 border-orange-200/50 dark:bg-orange-950/30 dark:text-orange-400 dark:border-orange-900/30'
+    case 'UTP Bolsa Laboral':
+      return 'bg-red-50 text-red-700 border-red-200/50 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900/30'
+    default:
+      return 'bg-base-200 text-base-content/85 border-base-300'
+  }
+}
+
 export default function JobMatchPage() {
-  const [draftFilters, setDraftFilters] = useState<AppliedFilters>(defaultFilters)
-  const [appliedFilters, setAppliedFilters] = useState<AppliedFilters>(defaultFilters)
+  const [filters, setFilters] = useState<AppliedFilters>(defaultFilters)
   const [quickOpen, setQuickOpen] = useState(false)
   const [quickIndex, setQuickIndex] = useState(0)
   const [matchedJobs, setMatchedJobs] = useState<JobItem[]>([])
   const [filtersOpen, setFiltersOpen] = useState(false)
-  const [matchesOpen, setMatchesOpen] = useState(false)
   const [selectedJobDetail, setSelectedJobDetail] = useState<JobItem | null>(null)
   const [expandedFeedbackId, setExpandedFeedbackId] = useState<string | null>(null)
   
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 4
+  const itemsPerPage = 6
   const [showDisclaimer, setShowDisclaimer] = useState(true)
 
+  const [activeTab, setActiveTab] = useState<'explorar' | 'matches'>('explorar')
+  
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null)
+
+  const filterCounts = useMemo(() => {
+    const query = filters.query.trim().toLowerCase()
+    const address = filters.address.trim().toLowerCase()
+    
+    const counts = {
+      modes: {} as Record<string, number>,
+      levels: {} as Record<string, number>,
+      sources: {} as Record<string, number>,
+    }
+    
+    workModes.forEach(m => counts.modes[m] = 0)
+    levels.forEach(l => counts.levels[l] = 0)
+    const allSources = ['LinkedIn', 'Bumeran', 'Computrabajo', 'UTP Bolsa Laboral']
+    allSources.forEach(s => counts.sources[s] = 0)
+
+    jobCatalog.forEach(job => {
+      const matchesQuery =
+        !query ||
+        job.title.toLowerCase().includes(query) ||
+        job.company.toLowerCase().includes(query) ||
+        job.tags.some((tag) => tag.toLowerCase().includes(query))
+
+      const matchesAddress = !address || job.location.toLowerCase().includes(address)
+
+      if (matchesQuery && matchesAddress) {
+        if (counts.modes[job.mode] !== undefined) counts.modes[job.mode]++
+        if (counts.levels[job.level] !== undefined) counts.levels[job.level]++
+        if (counts.sources[job.source] !== undefined) counts.sources[job.source]++
+      }
+    })
+
+    return counts
+  }, [filters.query, filters.address])
+
   const filteredJobs = useMemo(() => {
-    const query = appliedFilters.query.trim().toLowerCase()
-    const location = appliedFilters.location.trim().toLowerCase()
-    const salaryMin = appliedFilters.salaryMin ? Number(appliedFilters.salaryMin) : null
-    const salaryMax = appliedFilters.salaryMax ? Number(appliedFilters.salaryMax) : null
-    const ageMin = appliedFilters.ageMin ? Number(appliedFilters.ageMin) : null
-    const ageMax = appliedFilters.ageMax ? Number(appliedFilters.ageMax) : null
+    const query = filters.query.trim().toLowerCase()
+    const address = filters.address.trim().toLowerCase()
+    const salaryMin = filters.salaryMin ? Number(filters.salaryMin) : null
+    const salaryMax = filters.salaryMax ? Number(filters.salaryMax) : null
+    const ageMin = filters.ageMin ? Number(filters.ageMin) : null
+    const ageMax = filters.ageMax ? Number(filters.ageMax) : null
 
     return jobCatalog.filter((job) => {
       const matchesQuery =
@@ -386,28 +1020,88 @@ export default function JobMatchPage() {
         job.company.toLowerCase().includes(query) ||
         job.tags.some((tag) => tag.toLowerCase().includes(query))
 
-      const matchesLocation = !location || job.location.toLowerCase().includes(location)
-      const matchesMode = appliedFilters.modes.length === 0 || appliedFilters.modes.includes(job.mode)
-      const matchesLevel = appliedFilters.levels.length === 0 || appliedFilters.levels.includes(job.level)
+      const matchesAddress = !address || job.location.toLowerCase().includes(address)
+      const matchesMode = filters.modes.length === 0 || filters.modes.includes(job.mode)
+      const matchesLevel = filters.levels.length === 0 || filters.levels.includes(job.level)
       const matchesSalary =
         (salaryMin === null || job.salaryMax >= salaryMin) &&
         (salaryMax === null || job.salaryMin <= salaryMax)
       const matchesAge =
         (ageMin === null || job.ageMax >= ageMin) &&
         (ageMax === null || job.ageMin <= ageMax)
+      const matchesSource = filters.sources.length === 0 || filters.sources.includes(job.source)
 
-      return matchesQuery && matchesLocation && matchesMode && matchesLevel && matchesSalary && matchesAge
+      return matchesQuery && matchesAddress && matchesMode && matchesLevel && matchesSalary && matchesAge && matchesSource
     }).sort((a, b) => b.matchPercent - a.matchPercent)
-  }, [appliedFilters])
+  }, [filters])
+
+  const activeJobsList = useMemo(() => {
+    return activeTab === 'explorar' ? filteredJobs : matchedJobs
+  }, [activeTab, filteredJobs, matchedJobs])
+
+  const selectedJob = useMemo(() => {
+    if (selectedJobId) {
+      const found = activeJobsList.find((j) => j.id === selectedJobId)
+      if (found) return found
+    }
+    return activeJobsList[0] || null
+  }, [selectedJobId, activeJobsList])
 
   const currentQuickJob = filteredJobs[quickIndex] ?? null
   const selectedJobs = useMemo(() => matchedJobs, [matchedJobs])
 
-  const totalPages = Math.ceil(filteredJobs.length / itemsPerPage)
+  const totalPages = Math.ceil(activeJobsList.length / itemsPerPage)
   const paginatedJobs = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage
-    return filteredJobs.slice(start, start + itemsPerPage)
-  }, [filteredJobs, currentPage, itemsPerPage])
+    return activeJobsList.slice(start, start + itemsPerPage)
+  }, [activeJobsList, currentPage, itemsPerPage])
+
+  const activeFilterChips = useMemo(() => {
+    const chips: { type: string; value: string; label: string }[] = []
+    
+    filters.modes.forEach(mode => {
+      chips.push({ type: 'mode', value: mode, label: `Modalidad: ${mode}` })
+    })
+    filters.levels.forEach(level => {
+      chips.push({ type: 'level', value: level, label: `Nivel: ${level}` })
+    })
+    filters.sources.forEach(source => {
+      chips.push({ type: 'source', value: source, label: `Portal: ${source}` })
+    })
+    if (filters.salaryMin) {
+      chips.push({ type: 'salaryMin', value: filters.salaryMin, label: `Sueldo Mín: S/ ${filters.salaryMin}` })
+    }
+    if (filters.salaryMax) {
+      chips.push({ type: 'salaryMax', value: filters.salaryMax, label: `Sueldo Máx: S/ ${filters.salaryMax}` })
+    }
+    if (filters.query) {
+      chips.push({ type: 'query', value: filters.query, label: `Buscar: "${filters.query}"` })
+    }
+    if (filters.address) {
+      chips.push({ type: 'address', value: filters.address, label: `Ubicación: "${filters.address}"` })
+    }
+
+    return chips
+  }, [filters])
+
+  function removeFilterChip(type: string, value: string) {
+    if (type === 'mode') {
+      setFilters(f => ({ ...f, modes: f.modes.filter(m => m !== value) }))
+    } else if (type === 'level') {
+      setFilters(f => ({ ...f, levels: f.levels.filter(l => l !== value) }))
+    } else if (type === 'source') {
+      setFilters(f => ({ ...f, sources: f.sources.filter(s => s !== value) }))
+    } else if (type === 'salaryMin') {
+      setFilters(f => ({ ...f, salaryMin: '' }))
+    } else if (type === 'salaryMax') {
+      setFilters(f => ({ ...f, salaryMax: '' }))
+    } else if (type === 'query') {
+      setFilters(f => ({ ...f, query: '' }))
+    } else if (type === 'address') {
+      setFilters(f => ({ ...f, address: '' }))
+    }
+    setCurrentPage(1)
+  }
 
   useEffect(() => {
     if (!quickOpen) {
@@ -436,18 +1130,17 @@ export default function JobMatchPage() {
   }, [filteredJobs.length, quickIndex])
 
   function applyFilters() {
-    setAppliedFilters(draftFilters)
     setFiltersOpen(false)
   }
 
   function clearFilters() {
-    setDraftFilters(defaultFilters)
-    setAppliedFilters(defaultFilters)
+    setFilters(defaultFilters)
     setQuickIndex(0)
+    setCurrentPage(1)
+    setSelectedJobId(null)
   }
 
   function openQuickSearch() {
-    setAppliedFilters(draftFilters)
     setQuickIndex(0)
     setQuickOpen(true)
   }
@@ -477,82 +1170,104 @@ export default function JobMatchPage() {
     <PageShell>
       <PageHeader
         title="Encuentra empleos que sí encajen contigo"
-        subtitle="Filtra por ubicación, modalidad, sueldo, nivel y edad. También puedes abrir la búsqueda rápida tipo Tinder para guardar, rechazar o hacer match con un clic."
+        subtitle="Filtra por modalidad, sueldo, nivel y dirección. Usa la búsqueda rápida interactiva o explora las vacantes detalladas con análisis de match en tiempo real."
         maxWidthClassName="max-w-[1600px]"
         right={
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-bold text-white border border-white/5 shadow-sm">
-            🏆 BEST JOBS PLACE
+          <span className="inline-flex items-center gap-2 rounded-full bg-base-300 px-4 py-2 text-xs font-bold text-base-content border border-base-content/5 shadow-sm">
+            🏆 UX-UI PREMIUM DESIGN
           </span>
         }
       />
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto bg-transparent">
         <main className="max-w-[1600px] mx-auto px-6 pb-12 pt-2">
           {/* Card de Filtros de Búsqueda Rápida */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 mb-6 shadow-sm">
-            <div className="grid gap-4 md:grid-cols-[1fr_1fr_auto] items-end">
+          <div className="bg-base-100 border border-base-200 rounded-3xl p-6 mb-6 shadow-sm">
+            <div className="grid gap-4 md:grid-cols-[1.2fr_1.2fr_auto] items-end">
               <label className="relative flex flex-col gap-1.5 flex-1">
-                <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Puesto o empresa</span>
+                <span className="text-xs font-bold text-base-content/60">Puesto o empresa</span>
                 <div className="relative">
-                  <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/40" />
                   <input
                     aria-label="Puesto o empresa"
                     placeholder="Puesto, empresa o palabra clave"
-                    value={draftFilters.query}
-                    onChange={(e) => setDraftFilters({ ...draftFilters, query: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 py-3.5 pl-11 pr-4 text-sm text-slate-800 dark:text-slate-100 outline-none transition focus:border-blue-400 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/30"
+                    value={filters.query}
+                    onChange={(e) => {
+                      setFilters({ ...filters, query: e.target.value })
+                      setCurrentPage(1)
+                    }}
+                    className="w-full rounded-2xl border border-base-300 bg-base-100 py-3.5 pl-11 pr-4 text-sm text-base-content outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
               </label>
+
               <label className="relative flex flex-col gap-1.5 flex-1">
-                <span className="text-xs font-bold text-slate-500 dark:text-slate-400">Ubicación</span>
+                <span className="text-xs font-bold text-base-content/60">Dirección</span>
                 <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <MapPin className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-base-content/40" />
                   <input
-                    aria-label="Ubicación"
-                    placeholder="Ubicación"
-                    value={draftFilters.location}
-                    onChange={(e) => setDraftFilters({ ...draftFilters, location: e.target.value })}
-                    className="w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 py-3.5 pl-11 pr-4 text-sm text-slate-800 dark:text-slate-100 outline-none transition focus:border-blue-400 dark:focus:border-blue-500 focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/30"
+                    aria-label="Dirección"
+                    placeholder="Ciudad, país, distrito o 'Remoto'"
+                    value={filters.address}
+                    onChange={(e) => {
+                      setFilters({ ...filters, address: e.target.value })
+                      setCurrentPage(1)
+                    }}
+                    className="w-full rounded-2xl border border-base-300 bg-base-100 py-3.5 pl-11 pr-4 text-sm text-base-content outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                   />
                 </div>
               </label>
+
               <div className="flex gap-3 w-full md:w-auto">
                 <button
                   type="button"
-                  onClick={applyFilters}
-                  className="flex-1 md:flex-initial inline-flex h-[48px] items-center justify-center gap-2 rounded-2xl bg-red-600 px-6 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-red-700"
-                >
-                  Buscar Ahora
-                </button>
-                <button
-                  type="button"
                   onClick={openQuickSearch}
-                  className="inline-flex h-[48px] items-center justify-center gap-2 rounded-2xl bg-slate-800 dark:bg-slate-700 px-6 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-700 dark:hover:bg-slate-600 xl:hidden"
+                  className="inline-flex h-[48px] items-center justify-center gap-2 rounded-2xl bg-primary hover:bg-primary/90 px-6 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 w-full md:w-auto cursor-pointer"
                 >
-                  <Sparkles className="h-4 w-4 text-yellow-400" />
+                  <Sparkles className="h-4 w-4 text-yellow-400 fill-yellow-400" />
                   Búsqueda rápida
                 </button>
               </div>
             </div>
 
-            <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
-              <span className="text-slate-500 dark:text-slate-400">Búsquedas populares:</span>
-              {['Data', 'Developer', 'Ingeniero', 'Senior'].map((item) => (
-                <button
-                  key={item}
-                  type="button"
-                  onClick={() => setDraftFilters({ ...draftFilters, query: item })}
-                  className="rounded-full border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 px-4 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm transition"
-                >
-                  {item}
-                </button>
-              ))}
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-base-200 pt-4 text-sm">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-base-content/60 font-bold text-xs uppercase tracking-wider">Búsquedas populares:</span>
+                {['Data', 'Developer', 'Designer', 'Practicante'].map((item) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => {
+                      setFilters({ ...filters, query: item })
+                      setCurrentPage(1)
+                    }}
+                    className="rounded-full border border-base-200 bg-base-200 hover:bg-base-300 px-4 py-1 text-xs font-semibold text-base-content/85 shadow-sm transition cursor-pointer"
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-base-content/60 font-bold text-xs uppercase tracking-wider">Ubicaciones populares:</span>
+                {['San Isidro', 'Miraflores', 'Surco', 'Arequipa', 'Remoto'].map((loc) => (
+                  <button
+                    key={loc}
+                    type="button"
+                    onClick={() => {
+                      setFilters({ ...filters, address: loc })
+                      setCurrentPage(1)
+                    }}
+                    className="rounded-full border border-base-200 bg-base-200 hover:bg-base-300 px-4 py-1 text-xs font-semibold text-base-content/85 shadow-sm transition cursor-pointer"
+                  >
+                    {loc}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         {showDisclaimer && (
-          <div className="mb-6 rounded-2xl bg-amber-50 border border-amber-200 p-4 sm:p-5 flex items-start gap-4 shadow-sm relative animate-fadeIn">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+          <div className="mb-6 rounded-2xl bg-amber-100 border border-amber-200 p-4 sm:p-5 flex items-start gap-4 shadow-sm relative animate-fadeIn">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-200 text-amber-800">
               <Info className="h-5 w-5" />
             </div>
             <div className="flex-1 pr-6">
@@ -563,421 +1278,692 @@ export default function JobMatchPage() {
             </div>
             <button
               onClick={() => setShowDisclaimer(false)}
-              className="absolute top-4 right-4 text-amber-400 hover:bg-amber-200 hover:text-amber-600 p-1.5 rounded-full transition"
+              className="absolute top-4 right-4 text-amber-700 hover:bg-amber-300 p-1.5 rounded-full transition cursor-pointer"
             >
               <X className="h-4 w-4" />
             </button>
           </div>
         )}
-        <div className="grid grid-cols-1 xl:grid-cols-[300px_1fr_340px] gap-6 items-start">
-          {/* ── Filtros: Sidebar en XL, Modal en Móvil ── */}
-          <aside className={`
-            ${filtersOpen ? 'fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-slate-900/45 sm:p-4 backdrop-blur-sm xl:static xl:inset-auto xl:z-auto xl:flex xl:items-start xl:justify-start xl:bg-transparent xl:p-0 xl:backdrop-blur-none' : 'hidden xl:block xl:order-1'}
-          `}>
-            <div className={`w-full rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl xl:max-w-none xl:rounded-3xl xl:border xl:border-slate-200 xl:shadow-sm ${filtersOpen ? 'max-h-[85vh] overflow-y-auto animate-slideUp sm:animate-none' : ''}`}>
-              <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-white/90 backdrop-blur-md">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                    <Filter className="h-5 w-5" />
+        <div className="grid grid-cols-1 xl:grid-cols-[280px_1fr] gap-6 items-start">
+            {/* ── Filtros: Sidebar ── */}
+            <aside className={`
+              ${filtersOpen ? 'fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-base-content/20 sm:p-4 backdrop-blur-sm xl:static xl:inset-auto xl:z-auto xl:flex xl:items-start xl:justify-start xl:bg-transparent xl:p-0 xl:backdrop-blur-none' : 'hidden xl:block'}
+            `}>
+              <div className={`w-full rounded-t-3xl sm:rounded-3xl bg-base-100 shadow-2xl xl:max-w-none xl:rounded-3xl xl:border xl:border-base-200 xl:shadow-xs ${filtersOpen ? 'max-h-[85vh] overflow-y-auto animate-slideUp sm:animate-none' : ''}`}>
+                <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-5 border-b border-base-200 bg-base-100/95 backdrop-blur-md">
+                  <div className="flex items-center gap-2.5">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <Filter className="h-4.5 w-4.5" />
+                    </div>
+                    <h2 className="text-sm font-extrabold text-base-content uppercase tracking-wider">Filtros</h2>
                   </div>
-                  <div>
-                    <h2 className="text-base font-bold text-slate-900">Filtros</h2>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setFiltersOpen(false)}
-                  className="rounded-full p-2 text-slate-400 xl:hidden hover:bg-slate-100"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
-              <div className="space-y-5 px-6 py-6">
-                <section className="rounded-2xl bg-slate-50 p-4">
-                  <div className="mb-3 flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-slate-500" />
-                    <h3 className="font-semibold text-slate-900">Ubicación</h3>
-                  </div>
-                  <input
-                    placeholder="Lima, Perú"
-                    value={draftFilters.location}
-                    onChange={(e) => setDraftFilters({ ...draftFilters, location: e.target.value })}
-                    className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-400 focus:ring-4 focus:ring-blue-100"
-                  />
-                </section>
-
-                <section className="rounded-2xl bg-slate-50 p-4">
-                  <div className="mb-3 flex items-center gap-2">
-                    <Clock3 className="h-4 w-4 text-slate-500" />
-                    <h3 className="font-semibold text-slate-900">Modalidad</h3>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {workModes.map((mode) => {
-                      const selected = draftFilters.modes.includes(mode)
-                      return (
-                        <button
-                          key={mode}
-                          type="button"
-                          onClick={() => setDraftFilters({ ...draftFilters, modes: toggleItem(draftFilters.modes, mode) })}
-                          className={`rounded-xl border px-3 py-2.5 text-xs font-medium transition ${
-                            selected ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-sm' : 'border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50'
-                          }`}
-                        >
-                          {mode}
-                        </button>
-                      )
-                    })}
-                  </div>
-                </section>
-
-                <section className="rounded-2xl bg-slate-50 p-4">
-                  <div className="mb-3 flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-slate-500" />
-                    <h3 className="font-semibold text-slate-900">Rango salarial</h3>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <input
-                      type="number"
-                      placeholder="Min (S/)"
-                      value={draftFilters.salaryMin}
-                      onChange={(e) => setDraftFilters({ ...draftFilters, salaryMin: e.target.value })}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                    />
-                    <input
-                      type="number"
-                      placeholder="Max (S/)"
-                      value={draftFilters.salaryMax}
-                      onChange={(e) => setDraftFilters({ ...draftFilters, salaryMax: e.target.value })}
-                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                    />
-                  </div>
-                </section>
-
-                <section className="rounded-2xl bg-slate-50 p-4">
-                  <div className="mb-3 flex items-center gap-2">
-                    <GraduationCap className="h-4 w-4 text-slate-500" />
-                    <h3 className="font-semibold text-slate-900">Nivel</h3>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {levels.map((level) => {
-                      const selected = draftFilters.levels.includes(level)
-                      return (
-                        <button
-                          key={level}
-                          type="button"
-                          onClick={() => setDraftFilters({ ...draftFilters, levels: toggleItem(draftFilters.levels, level) })}
-                          className={`rounded-xl border px-3 py-2.5 text-xs font-medium transition ${
-                            selected ? 'border-blue-500 bg-blue-50 text-blue-700 shadow-sm' : 'border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50'
-                          }`}
-                        >
-                          {level}
-                        </button>
-                      )
-                    })}
-                  </div>
-                </section>
-
-                <div className="grid grid-cols-1 gap-3 pt-2">
                   <button
                     type="button"
-                    onClick={applyFilters}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
-                  >
-                    <Check className="h-4 w-4" />
-                    Aplicar filtros
-                  </button>
-                  <button
-                    type="button"
-                    onClick={clearFilters}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-                  >
-                    <RotateCcw className="h-4 w-4" />
-                    Limpiar
-                  </button>
-                </div>
-              </div>
-            </div>
-          </aside>
-
-          {/* Mobile Floating Actions menu */}
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-3 bg-slate-900/90 dark:bg-slate-800/95 backdrop-blur-md px-6 py-3 rounded-full shadow-lg border border-slate-700/50 xl:hidden">
-            <button
-              onClick={() => setFiltersOpen(true)}
-              className="flex items-center gap-2 text-white text-sm font-semibold hover:text-blue-400 transition"
-            >
-              <Filter className="h-4 w-4 text-slate-400" />
-              Filtros
-            </button>
-            <div className="h-4 w-[1px] bg-slate-700" />
-            <button
-              onClick={() => setMatchesOpen(true)}
-              className="flex items-center gap-2 text-white text-sm font-semibold hover:text-emerald-400 transition"
-            >
-              <Heart className="h-4 w-4 text-emerald-400 fill-emerald-400" />
-              Matches ({matchedJobs.length})
-            </button>
-          </div>
-          {/* ── Cartas de Trabajo: Centro en Desktop, Abajo en Móvil ── */}
-          <section className="order-2 xl:order-2 rounded-3xl border border-slate-200 bg-slate-50/80 p-4 md:p-6 shadow-sm">
-            <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-slate-900">Resultados</h2>
-                <p className="text-sm text-slate-500">
-                  Hemos encontrado <span className="font-semibold text-slate-700">{filteredJobs.length} empleos</span>{' '}
-                  para ti
-                </p>
-              </div>
-            </div>
-
-            {filteredJobs.length === 0 ? (
-              <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-10 text-center">
-                <p className="text-lg font-semibold text-slate-900">No encontramos resultados</p>
-                <p className="mt-2 text-sm text-slate-500">Prueba limpiar filtros o cambiar ubicación, nivel o modalidad.</p>
-              </div>
-            ) : (
-              <>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-1 min-[1500px]:grid-cols-2 gap-4 md:gap-6 auto-rows-fr">
-                  {paginatedJobs.map((job, index) => (
-                    <article
-                      key={job.id}
-                      className="group h-full rounded-2xl md:rounded-3xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/60"
-                      style={{ animationDelay: `${index * 90}ms` }}
-                    >
-                      <div className="animate-cardIn flex h-full flex-col p-4 md:p-6">
-                        <div className="mb-4 flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                          <div className="flex items-center gap-3">
-                            <div className={`${job.avatarColor} flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-xl sm:rounded-2xl text-white shadow-sm transition-transform duration-300 group-hover:scale-105 flex-shrink-0`}>
-                              <span className="text-base sm:text-lg font-bold">{job.initial}</span>
-                            </div>
-                            <div>
-                              <span className="inline-flex items-center rounded-full bg-red-500 px-2.5 py-0.5 text-[10px] sm:text-xs font-semibold text-white">
-                                Urgente
-                              </span>
-                            </div>
-                          </div>
-                          <span className="inline-flex items-center rounded-full bg-emerald-400/15 px-3 py-1 text-xs sm:text-sm font-semibold text-emerald-600 self-start sm:self-auto">
-                            {job.matchPercent}% match
-                          </span>
-                        </div>
-
-                        <h3 className="mb-1.5 text-lg sm:text-xl font-semibold leading-snug text-slate-900 transition-colors group-hover:text-blue-700">
-                          {job.title}
-                        </h3>
-                        <p className="mb-3 flex items-center gap-2 text-sm sm:text-base text-slate-500">
-                          {job.company}
-                          <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium border border-slate-200">
-                            {job.source}
-                          </span>
-                        </p>
-
-                        <div className="space-y-3 text-xs sm:text-sm text-slate-500">
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            <span className="rounded-full bg-slate-100 px-2.5 py-0.5">{job.location}</span>
-                            <span className="rounded-full bg-slate-100 px-2.5 py-0.5">{job.mode}</span>
-                            <span className="rounded-full bg-slate-100 px-2.5 py-0.5">{job.level}</span>
-                          </div>
-                        </div>
-
-                        <div className="mt-3 hidden md:flex flex-wrap gap-2">
-                          {job.tags.slice(0, 3).map((tag) => (
-                            <span key={tag} className="badge badge-soft badge-neutral px-2.5 py-1.5 text-xs">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-
-                        <button
-                          onClick={() => setSelectedJobDetail(job)}
-                          className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-blue-50/50 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
-                        >
-                          <Info className="h-4 w-4" />
-                          Ver detalles del puesto
-                        </button>
-
-                        <div className="mt-auto pt-6 border-t border-slate-100 flex items-center justify-between">
-                          <div className="text-base font-semibold text-red-500">
-                            S/ {job.salaryMin} - {job.salaryMax}
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm text-slate-400 hidden sm:inline">{job.status}</span>
-                            {matchedJobs.some((m) => m.id === job.id) ? (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600">
-                                <CheckCircle2 className="h-3.5 w-3.5" /> Match
-                              </span>
-                            ) : (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  if (!matchedJobs.some((m) => m.id === job.id)) {
-                                    setMatchedJobs((prev) => [...prev, job])
-                                  }
-                                }}
-                                className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-600 transition hover:bg-emerald-100 hover:scale-105 active:scale-95"
-                                title="Hacer match"
-                              >
-                                <Plus className="h-3.5 w-3.5" />
-                                <span className="hidden sm:inline">Match</span>
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-
-                {totalPages > 1 && (
-                  <div className="mt-8 flex items-center justify-center gap-4">
-                    <button
-                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                      disabled={currentPage === 1}
-                      className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                      aria-label="Página anterior"
-                    >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                    </button>
-                    <span className="text-sm font-medium text-slate-600">
-                      Página {currentPage} de {totalPages}
-                    </span>
-                    <button
-                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                      disabled={currentPage === totalPages}
-                      className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                      aria-label="Página siguiente"
-                    >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-          </section>
-
-          {/* ── Resumen de matches: Modal en móvil, lateral derecho en desktop ── */}
-          <aside className={`
-            ${matchesOpen ? 'fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-slate-900/45 sm:p-4 backdrop-blur-sm xl:static xl:inset-auto xl:z-auto xl:flex xl:items-start xl:justify-start xl:bg-transparent xl:p-0 xl:backdrop-blur-none' : 'hidden xl:block xl:order-3 xl:sticky xl:top-6 xl:self-start'}
-          `}
-            onClick={() => setMatchesOpen(false)}
-          >
-            <div className={`w-full rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl xl:max-w-none xl:rounded-3xl xl:border xl:border-slate-200 xl:shadow-sm overflow-hidden ${matchesOpen ? 'max-h-[85vh] overflow-y-auto animate-slideUp sm:animate-none' : ''}`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-white/90 backdrop-blur-md">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
-                    <Heart className="h-5 w-5 fill-emerald-500 text-emerald-500" />
-                  </div>
-                  <h2 className="text-lg font-bold text-slate-900">Mis Matches</h2>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
-                    <CheckCircle2 className="h-3.5 w-3.5" />
-                    {matchedJobs.length}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setMatchesOpen(false)}
-                    className="rounded-full p-2 text-slate-400 xl:hidden hover:bg-slate-100"
+                    onClick={() => setFiltersOpen(false)}
+                    className="rounded-full p-2 text-base-content/40 xl:hidden hover:bg-base-200 cursor-pointer"
                   >
                     <X className="h-5 w-5" />
                   </button>
                 </div>
+
+                <div className="space-y-5 px-5 py-6">
+                  {/* Modalidad Filter */}
+                  <section className="rounded-2xl bg-base-200/40 p-4 border border-base-200/60">
+                    <div className="mb-3 flex items-center gap-2 text-base-content/60">
+                      <Clock3 className="h-4 w-4" />
+                      <h3 className="text-xs font-bold uppercase tracking-wider">Modalidad</h3>
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      {workModes.map((mode) => {
+                        const selected = filters.modes.includes(mode)
+                        const count = filterCounts.modes[mode] || 0
+                        return (
+                          <button
+                            key={mode}
+                            type="button"
+                            onClick={() => {
+                              setFilters({ ...filters, modes: toggleItem(filters.modes, mode) })
+                              setCurrentPage(1)
+                            }}
+                            className={`flex items-center justify-between w-full rounded-xl border px-3 py-2.5 text-xs font-bold transition-all cursor-pointer ${
+                              selected 
+                                ? 'border-primary bg-primary/10 text-primary shadow-2xs' 
+                                : 'border-transparent bg-base-100 text-base-content/80 hover:border-base-300 hover:bg-base-200/50'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className={`flex h-4 w-4 items-center justify-center rounded-md border transition-all ${
+                                selected ? 'border-primary bg-primary text-white' : 'border-base-300 bg-base-100'
+                              }`}>
+                                {selected && <Check className="h-3 w-3 stroke-[3]" />}
+                              </div>
+                              <span>{mode}</span>
+                            </div>
+                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                              selected ? 'bg-primary/20 text-primary' : 'bg-base-200 text-base-content/60'
+                            }`}>
+                              {count}
+                            </span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </section>
+
+                  {/* Rango Salarial Filter */}
+                  <section className="rounded-2xl bg-base-200/40 p-4 border border-base-200/60">
+                    <div className="mb-3 flex items-center gap-2 text-base-content/60">
+                      <DollarSign className="h-4 w-4" />
+                      <h3 className="text-xs font-bold uppercase tracking-wider">Rango Salarial</h3>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <input
+                        type="number"
+                        placeholder="Min (S/)"
+                        value={filters.salaryMin}
+                        onChange={(e) => {
+                          setFilters({ ...filters, salaryMin: e.target.value })
+                          setCurrentPage(1)
+                        }}
+                        className="w-full rounded-xl border border-base-300 bg-base-100 px-3 py-2 text-xs font-semibold outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base-content"
+                      />
+                      <input
+                        type="number"
+                        placeholder="Max (S/)"
+                        value={filters.salaryMax}
+                        onChange={(e) => {
+                          setFilters({ ...filters, salaryMax: e.target.value })
+                          setCurrentPage(1)
+                        }}
+                        className="w-full rounded-xl border border-base-300 bg-base-100 px-3 py-2 text-xs font-semibold outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base-content"
+                      />
+                    </div>
+                  </section>
+
+                  {/* Nivel Filter */}
+                  <section className="rounded-2xl bg-base-200/40 p-4 border border-base-200/60">
+                    <div className="mb-3 flex items-center gap-2 text-base-content/60">
+                      <GraduationCap className="h-4 w-4" />
+                      <h3 className="text-xs font-bold uppercase tracking-wider">Nivel</h3>
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      {levels.map((level) => {
+                        const selected = filters.levels.includes(level)
+                        const count = filterCounts.levels[level] || 0
+                        return (
+                          <button
+                            key={level}
+                            type="button"
+                            onClick={() => {
+                              setFilters({ ...filters, levels: toggleItem(filters.levels, level) })
+                              setCurrentPage(1)
+                            }}
+                            className={`flex items-center justify-between w-full rounded-xl border px-3 py-2.5 text-xs font-bold transition-all cursor-pointer ${
+                              selected 
+                                ? 'border-primary bg-primary/10 text-primary shadow-2xs' 
+                                : 'border-transparent bg-base-100 text-base-content/80 hover:border-base-300 hover:bg-base-200/50'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className={`flex h-4 w-4 items-center justify-center rounded-md border transition-all ${
+                                selected ? 'border-primary bg-primary text-white' : 'border-base-300 bg-base-100'
+                              }`}>
+                                {selected && <Check className="h-3 w-3 stroke-[3]" />}
+                              </div>
+                              <span>{level}</span>
+                            </div>
+                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                              selected ? 'bg-primary/20 text-primary' : 'bg-base-200 text-base-content/60'
+                            }`}>
+                              {count}
+                            </span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </section>
+
+                  {/* Portal Filter */}
+                  <section className="rounded-2xl bg-base-200/40 p-4 border border-base-200/60">
+                    <div className="mb-3 flex items-center gap-2 text-base-content/60">
+                      <Briefcase className="h-4 w-4" />
+                      <h3 className="text-xs font-bold uppercase tracking-wider">Portal</h3>
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      {['LinkedIn', 'Bumeran', 'Computrabajo', 'UTP Bolsa Laboral'].map((source) => {
+                        const selected = filters.sources.includes(source)
+                        const count = filterCounts.sources[source] || 0
+                        return (
+                          <button
+                            key={source}
+                            type="button"
+                            onClick={() => {
+                              setFilters({ ...filters, sources: toggleItem(filters.sources, source) })
+                              setCurrentPage(1)
+                            }}
+                            className={`flex items-center justify-between w-full rounded-xl border px-3 py-2.5 text-xs font-bold transition-all cursor-pointer ${
+                              selected 
+                                ? 'border-primary bg-primary/10 text-primary shadow-2xs' 
+                                : 'border-transparent bg-base-100 text-base-content/80 hover:border-base-300 hover:bg-base-200/50'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className={`flex h-4 w-4 items-center justify-center rounded-md border transition-all ${
+                                selected ? 'border-primary bg-primary text-white' : 'border-base-300 bg-base-100'
+                              }`}>
+                                {selected && <Check className="h-3 w-3 stroke-[3]" />}
+                              </div>
+                              <span>{source}</span>
+                            </div>
+                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                              selected ? 'bg-primary/20 text-primary' : 'bg-base-200 text-base-content/60'
+                            }`}>
+                              {count}
+                            </span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </section>
+
+                  {/* Sidebar actions buttons */}
+                  <div className="grid grid-cols-1 gap-2 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setFiltersOpen(false)}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary/90 py-3 text-xs font-bold text-white shadow-sm transition xl:hidden cursor-pointer"
+                    >
+                      <Check className="h-4 w-4" />
+                      Listo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={clearFilters}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl border border-base-300 bg-base-100 hover:bg-base-200 py-3 text-xs font-bold text-base-content transition cursor-pointer"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                      Limpiar filtros
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            {/* ── Main content area ── */}
+            <div className="flex-1">
+              {/* Tab Navigation */}
+              <div className="mb-6 flex border-b border-base-200">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('explorar')
+                    setSelectedJobId(null)
+                    setCurrentPage(1)
+                  }}
+                  className={`pb-4 px-6 text-sm font-bold border-b-2 transition relative flex items-center gap-2 cursor-pointer ${
+                    activeTab === 'explorar'
+                      ? 'border-primary text-primary'
+                      : 'border-transparent text-base-content/60 hover:text-base-content'
+                  }`}
+                >
+                  <span>Explorar Vacantes</span>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
+                    activeTab === 'explorar'
+                      ? 'bg-primary/10 text-primary'
+                      : 'bg-base-200 text-base-content/60'
+                  }`}>
+                    {filteredJobs.length}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('matches')
+                    setSelectedJobId(null)
+                    setCurrentPage(1)
+                  }}
+                  className={`pb-4 px-6 text-sm font-bold border-b-2 transition relative flex items-center gap-2 cursor-pointer ${
+                    activeTab === 'matches'
+                      ? 'border-primary text-primary'
+                      : 'border-transparent text-base-content/60 hover:text-base-content'
+                  }`}
+                >
+                  <Heart className={`h-4 w-4 ${activeTab === 'matches' ? 'fill-primary text-primary' : 'text-base-content/40'}`} />
+                  <span>Mis Matches</span>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold ${
+                    activeTab === 'matches'
+                      ? 'bg-primary/10 text-primary'
+                      : 'bg-base-200 text-base-content/60'
+                  }`}>
+                    {matchedJobs.length}
+                  </span>
+                </button>
               </div>
 
-              <div className="px-4 py-4 max-h-[calc(100vh-200px)] overflow-y-auto">
-              {selectedJobs.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-6 text-center">
-                  <Heart className="mx-auto h-8 w-8 text-slate-300 mb-2" />
-                  <p className="font-semibold text-sm text-slate-700">Sin matches aún</p>
-                  <p className="mt-1 text-xs text-slate-500">Usa los botones de cada empleo para agregar.</p>
+              {/* Empty state when no jobs found */}
+              {activeJobsList.length === 0 ? (
+                <div className="rounded-3xl border border-dashed border-base-300 bg-base-100 p-12 text-center shadow-xs">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-base-200 text-base-content/60 mb-4">
+                    {activeTab === 'explorar' ? <Search className="h-6 w-6" /> : <Heart className="h-6 w-6" />}
+                  </div>
+                  <h3 className="text-base font-bold text-base-content">
+                    {activeTab === 'explorar' ? 'No se encontraron resultados' : 'Aún no tienes matches'}
+                  </h3>
+                  <p className="mt-1.5 text-xs text-base-content/60 max-w-sm mx-auto leading-relaxed">
+                    {activeTab === 'explorar' 
+                      ? 'Intenta cambiar las palabras clave, escribir otra dirección o limpiar los filtros seleccionados.' 
+                      : 'Explora las ofertas laborales y haz clic en el botón de corazón para guardar tus vacantes favoritas aquí.'}
+                  </p>
+                  {activeTab === 'explorar' && (
+                    <button
+                      onClick={clearFilters}
+                      className="mt-5 inline-flex items-center gap-2 rounded-xl bg-primary hover:bg-primary/90 px-5 py-2.5 text-xs font-bold text-white transition cursor-pointer"
+                    >
+                      <RotateCcw className="h-3.5 w-3.5" />
+                      Restablecer filtros
+                    </button>
+                  )}
                 </div>
               ) : (
-                <div className="flex flex-col gap-3">
-                  {selectedJobs.map((job) => {
-                    return (
-                      <article
-                        key={`summary-${job.id}`}
-                        className="group/item rounded-2xl border p-3 transition-all duration-200 hover:shadow-md border-emerald-200 bg-emerald-50/60"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className={`${job.avatarColor} flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-white`}>
-                            <span className="text-sm font-bold">{job.initial}</span>
+                /* Split Screen Layout (Cards on Left, Details on Right) */
+                <div className="lg:grid lg:grid-cols-[1.1fr_1.3fr] gap-6 items-start">
+                  {/* Left Pane: Job list */}
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4">
+                      {paginatedJobs.map((job, index) => {
+                        const isMatched = matchedJobs.some((m) => m.id === job.id)
+                        const isSelected = selectedJob?.id === job.id
+                        return (
+                          <article
+                            key={job.id}
+                            onClick={() => {
+                              if (window.innerWidth < 1024) {
+                                setSelectedJobDetail(job)
+                              } else {
+                                setSelectedJobId(job.id)
+                              }
+                            }}
+                            className={`group relative flex flex-col justify-between h-full rounded-2xl border bg-base-100 p-5 shadow-xs transition-all duration-350 cursor-pointer hover:border-base-300 hover:shadow-md hover:scale-[1.005] ${
+                              isSelected 
+                                ? 'border-primary bg-primary/5 ring-1 ring-primary/20' 
+                                : 'border-base-200'
+                            }`}
+                            style={{ animationDelay: `${index * 50}ms` }}
+                          >
+                            <div className="flex flex-col h-full">
+                              {/* Top Bar of the Card */}
+                              <div className="flex items-start justify-between gap-3 mb-3">
+                                <div className="flex items-center gap-3">
+                                  <div className={`${job.avatarColor} flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-xs font-extrabold text-sm flex-shrink-0 transition-transform group-hover:scale-105`}>
+                                    {job.initial}
+                                  </div>
+                                  <div>
+                                    <h4 className="text-sm font-bold text-base-content group-hover:text-primary transition-colors line-clamp-1 leading-snug">
+                                      {job.title}
+                                    </h4>
+                                    <p className="text-xs text-base-content/70 font-medium">
+                                      {job.company}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 flex-shrink-0">
+                                  <span className="inline-flex items-center rounded-full bg-emerald-50 dark:bg-emerald-950/30 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-100/60 dark:border-emerald-900/30">
+                                    {job.matchPercent}% match
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      if (isMatched) {
+                                        setMatchedJobs((prev) => prev.filter((m) => m.id !== job.id))
+                                      } else {
+                                        setMatchedJobs((prev) => [...prev, job])
+                                      }
+                                    }}
+                                    className={`rounded-full p-1.5 transition-all hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer ${
+                                      isMatched 
+                                        ? 'text-rose-500 fill-rose-500 scale-110' 
+                                        : 'text-base-content/40 hover:text-rose-500'
+                                    }`}
+                                    title={isMatched ? "Quitar de matches" : "Guardar en Matches"}
+                                  >
+                                    <Heart className="h-4.5 w-4.5" />
+                                  </button>
+                                </div>
+                              </div>
+
+                              {/* Mid section description */}
+                              <p className="text-xs text-base-content/65 line-clamp-2 mb-3 leading-relaxed">
+                                {job.description}
+                              </p>
+
+                              {/* Info tags list */}
+                              <div className="flex flex-wrap gap-1.5 mb-3.5">
+                                <span className="inline-flex items-center gap-1 rounded-lg bg-base-200 px-2 py-0.5 text-[10px] font-bold text-base-content/80 border border-base-200">
+                                  <MapPin className="h-3 w-3 text-base-content/50" />
+                                  {job.location}
+                                </span>
+                                <span className="inline-flex items-center gap-1 rounded-lg bg-base-200 px-2 py-0.5 text-[10px] font-bold text-base-content/80 border border-base-200">
+                                  <Clock3 className="h-3 w-3 text-base-content/50" />
+                                  {job.mode}
+                                </span>
+                                <span className="inline-flex items-center gap-1 rounded-lg bg-base-200 px-2 py-0.5 text-[10px] font-bold text-base-content/80 border border-base-200">
+                                  <Briefcase className="h-3 w-3 text-base-content/50" />
+                                  {job.contractType}
+                                </span>
+                              </div>
+
+                              {/* Skills preview tags */}
+                              <div className="flex flex-wrap gap-1 mb-4">
+                                {job.skills.slice(0, 3).map((skill) => (
+                                  <span key={skill} className="bg-base-200 text-base-content/70 rounded-md px-2 py-0.5 text-[9px] font-semibold border border-base-300/50">
+                                    {skill}
+                                  </span>
+                                ))}
+                                {job.skills.length > 3 && (
+                                  <span className="text-[9px] text-base-content/50 font-bold px-1 py-0.5">
+                                    +{job.skills.length - 3}
+                                  </span>
+                                )}
+                              </div>
+
+                              {/* Footer section (Salary & Buttons) */}
+                              <div className="mt-auto pt-3 border-t border-base-200 flex items-center justify-between gap-2">
+                                <div>
+                                  <span className="block text-[8px] text-base-content/50 uppercase font-bold tracking-wider leading-none mb-0.5">Sueldo Estimado</span>
+                                  <span className="text-sm font-extrabold text-base-content">
+                                    S/ {job.salaryMin} - {job.salaryMax}
+                                  </span>
+                                </div>
+                                <div className="flex gap-2">
+                                  {/* Mobile details indicator, hidden on desktop */}
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      setSelectedJobDetail(job)
+                                    }}
+                                    className="lg:hidden inline-flex items-center justify-center gap-1 rounded-lg bg-base-200 hover:bg-base-300 border border-base-300 px-3 py-2 text-[10px] font-bold text-base-content/85 cursor-pointer"
+                                  >
+                                    Detalles
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      alert(`Redirigiendo a postular en ${job.source}...`)
+                                    }}
+                                    className="inline-flex items-center justify-center gap-1 rounded-lg bg-primary hover:bg-primary/90 px-4 py-2 text-[10px] font-bold text-white shadow-xs transition cursor-pointer"
+                                  >
+                                    Postular
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </article>
+                        )
+                      })}
+                    </div>
+
+                    {/* Pagination */}
+                    {totalPages > 1 && (
+                      <div className="mt-6 flex items-center justify-center gap-4">
+                        <button
+                          onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                          disabled={currentPage === 1}
+                          className="flex h-9 w-9 items-center justify-center rounded-xl border border-base-250 bg-base-100 text-base-content/75 transition hover:bg-base-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                          aria-label="Página anterior"
+                        >
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                        </button>
+                        <span className="text-xs font-bold text-base-content/70">
+                          Página {currentPage} de {totalPages}
+                        </span>
+                        <button
+                          onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                          disabled={currentPage === totalPages}
+                          className="flex h-9 w-9 items-center justify-center rounded-xl border border-base-250 bg-base-100 text-base-content/75 transition hover:bg-base-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                          aria-label="Página siguiente"
+                        >
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right Pane: Sticky detailed panel */}
+                  <div className="sticky top-6 hidden lg:block">
+                    {selectedJob ? (
+                      <div className="border border-base-200 rounded-3xl bg-base-100 p-6 shadow-sm max-h-[calc(100vh-180px)] overflow-y-auto flex flex-col [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-base-300 [&::-webkit-scrollbar-thumb]:rounded-full animate-fadeIn">
+                        {/* Header details */}
+                        <div className="flex items-start justify-between border-b border-base-200 pb-5 mb-5">
+                          <div className="flex items-center gap-4">
+                            <div className={`${selectedJob.avatarColor} flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-xs font-extrabold text-xl flex-shrink-0`}>
+                              {selectedJob.initial}
+                            </div>
+                            <div>
+                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold mb-1.5 border ${
+                                selectedJob.status === 'Urgente'
+                                  ? 'bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'
+                                  : 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/30'
+                              }`}>
+                                <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${selectedJob.status === 'Urgente' ? 'bg-red-500 animate-pulse' : 'bg-emerald-500'}`} />
+                                {selectedJob.status}
+                              </span>
+                              <h3 className="text-lg font-extrabold text-base-content leading-tight">
+                                {selectedJob.title}
+                              </h3>
+                              <p className="text-xs text-base-content/70 mt-1 flex items-center gap-2">
+                                <span className="font-semibold text-base-content/90">{selectedJob.company}</span>
+                                <span>•</span>
+                                <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold border ${getSourceBadgeStyle(selectedJob.source)}`}>
+                                  {selectedJob.source}
+                                </span>
+                              </p>
+                            </div>
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-slate-900 truncate">{job.title}</p>
-                            <p className="text-xs text-slate-500 truncate">{job.company}</p>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (matchedJobs.some(m => m.id === selectedJob.id)) {
+                                setMatchedJobs(prev => prev.filter(m => m.id !== selectedJob.id))
+                              } else {
+                                setMatchedJobs(prev => [...prev, selectedJob])
+                              }
+                            }}
+                            className={`rounded-full p-2.5 border transition-all cursor-pointer ${
+                              matchedJobs.some(m => m.id === selectedJob.id)
+                                ? 'bg-rose-500/15 border-rose-500/30 text-rose-500 fill-rose-500'
+                                : 'bg-base-200 border-base-300 text-base-content/40 hover:text-rose-500 hover:border-rose-200'
+                            }`}
+                            title={matchedJobs.some(m => m.id === selectedJob.id) ? "Quitar de matches" : "Guardar en Matches"}
+                          >
+                            <Heart className="h-4.5 w-4.5" />
+                          </button>
+                        </div>
+
+                        {/* Match Indicator Circle */}
+                        <div className="rounded-2xl bg-gradient-to-r from-primary/5 to-success/5 p-4 border border-primary/10 mb-5">
+                          <div className="flex items-center gap-4.5 mb-3.5">
+                            <div className="relative flex items-center justify-center h-12 w-12 flex-shrink-0">
+                              <svg className="w-full h-full transform -rotate-90">
+                                <circle cx="24" cy="24" r="20" className="stroke-base-200" strokeWidth="4.5" fill="transparent" />
+                                <circle cx="24" cy="24" r="20" className="stroke-emerald-500 dark:stroke-emerald-400" strokeWidth="4.5" fill="transparent" 
+                                  strokeDasharray={2 * Math.PI * 20}
+                                  strokeDashoffset={2 * Math.PI * 20 * (1 - selectedJob.matchPercent / 100)}
+                                  strokeLinecap="round"
+                                />
+                              </svg>
+                              <span className="absolute text-xs font-black text-base-content">{selectedJob.matchPercent}%</span>
+                            </div>
+                            <div>
+                              <h4 className="text-xs font-bold text-base-content flex items-center gap-1">
+                                <Sparkles className="h-3.5 w-3.5 text-emerald-500 fill-emerald-500/10" /> Compatibilidad de Perfil
+                              </h4>
+                              <p className="text-[10px] text-base-content/60 mt-0.5">
+                                Comparación automatizada con las habilidades de tu perfil de egreso.
+                              </p>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1.5 flex-shrink-0">
-                            <span className="rounded-full px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-700">
-                              {job.matchPercent}%
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setMatchedJobs((prev) => prev.filter((m) => m.id !== job.id))
-                              }}
-                              className="rounded-full p-1 text-slate-400 opacity-0 group-hover/item:opacity-100 transition hover:bg-rose-50 hover:text-rose-500"
-                              title="Quitar"
-                            >
-                              <X className="h-3.5 w-3.5" />
-                            </button>
+                          
+                          <div className="space-y-2 text-xs">
+                            <div className="bg-base-200/80 p-3 rounded-xl border border-base-250 text-base-content/80">
+                              <strong className="text-base-content block mb-0.5 text-[11px]">¿Por qué este match?</strong>
+                              <p className="leading-relaxed">{selectedJob.matchFeedback}</p>
+                            </div>
                           </div>
                         </div>
 
-                          <div className="mt-2 pt-2 border-t border-emerald-200/50">
-                            <button 
-                              onClick={() => setExpandedFeedbackId(expandedFeedbackId === job.id ? null : job.id)}
-                              className="flex w-full items-center justify-between text-[11px] font-semibold text-emerald-700 hover:text-emerald-800"
-                            >
-                              <span className="flex items-center gap-1">
-                                <Target className="h-3.5 w-3.5" /> Análisis de Match
-                              </span>
-                              {expandedFeedbackId === job.id ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
-                            </button>
-                            
-                            {expandedFeedbackId === job.id && (
-                              <div className="mt-2 space-y-2 text-[11px] leading-relaxed">
-                                <div className="bg-white/60 p-2 rounded-lg text-emerald-800">
-                                  <strong className="block mb-0.5 text-emerald-900">¿Por qué este match?</strong>
-                                  {job.matchFeedback}
-                                </div>
-                                <div className="bg-amber-50/80 p-2 rounded-lg text-amber-800 border border-amber-100/50">
-                                  <strong className="block mb-0.5 text-amber-900">¿Qué te falta?</strong>
-                                  {job.matchMissing}
-                                </div>
-                              </div>
-                            )}
+                        {/* Stats Grid */}
+                        <div className="grid grid-cols-2 gap-2.5 mb-5 text-xs">
+                          <div className="rounded-xl border border-base-200 bg-base-200/40 p-3 flex items-start gap-2">
+                            <MapPin className="h-4 w-4 text-base-content/50 flex-shrink-0 mt-0.5" />
+                            <div>
+                              <span className="block text-[9px] text-base-content/50 font-bold uppercase tracking-wider">Ubicación</span>
+                              <span className="font-semibold text-base-content">{selectedJob.location}</span>
+                            </div>
                           </div>
-                      </article>
-                    )
-                  })}
+                          <div className="rounded-xl border border-base-200 bg-base-200/40 p-3 flex items-start gap-2">
+                            <Clock3 className="h-4 w-4 text-base-content/50 flex-shrink-0 mt-0.5" />
+                            <div>
+                              <span className="block text-[9px] text-base-content/50 font-bold uppercase tracking-wider">Modalidad</span>
+                              <span className="font-semibold text-base-content">{selectedJob.mode}</span>
+                            </div>
+                          </div>
+                          <div className="rounded-xl border border-base-200 bg-base-200/40 p-3 flex items-start gap-2">
+                            <Briefcase className="h-4 w-4 text-base-content/50 flex-shrink-0 mt-0.5" />
+                            <div>
+                              <span className="block text-[9px] text-base-content/50 font-bold uppercase tracking-wider">Contrato</span>
+                              <span className="font-semibold text-base-content">{selectedJob.contractType}</span>
+                            </div>
+                          </div>
+                          <div className="rounded-xl border border-base-200 bg-base-200/40 p-3 flex items-start gap-2">
+                            <DollarSign className="h-4 w-4 text-base-content/50 flex-shrink-0 mt-0.5" />
+                            <div>
+                              <span className="block text-[9px] text-base-content/50 font-bold uppercase tracking-wider">Sueldo Estimado</span>
+                              <span className="font-semibold text-base-content">S/ {selectedJob.salaryMin} - {selectedJob.salaryMax}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Content parts */}
+                        <div className="space-y-5 flex-1 pr-1">
+                          <div>
+                            <h4 className="text-xs font-bold text-base-content uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                              <Briefcase className="h-4 w-4 text-base-content/50" /> Sobre el puesto
+                            </h4>
+                            <p className="text-xs sm:text-sm text-base-content/80 leading-relaxed">
+                              {selectedJob.description}
+                            </p>
+                          </div>
+
+                          <div>
+                            <h4 className="text-xs font-bold text-base-content uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                              <CheckCircle2 className="h-4 w-4 text-base-content/50" /> Funciones Principales
+                            </h4>
+                            <ul className="space-y-1.5">
+                              {selectedJob.functions.map((fn, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-base-content/85">
+                                  <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
+                                  <span className="leading-relaxed">{fn}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          <div>
+                            <h4 className="text-xs font-bold text-base-content uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                              <Sparkles className="h-4 w-4 text-base-content/50" /> Habilidades Requeridas
+                            </h4>
+                            <div className="flex flex-wrap gap-1.5">
+                              {selectedJob.skills.map((skill, idx) => (
+                                <span key={idx} className="rounded-lg bg-base-200 border border-base-300 px-2.5 py-1.5 text-xs font-medium text-base-content/80">
+                                  {skill}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Sticky Action Footer */}
+                        <div className="border-t border-base-200 pt-4 mt-6 flex gap-3">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (matchedJobs.some(m => m.id === selectedJob.id)) {
+                                setMatchedJobs(prev => prev.filter(m => m.id !== selectedJob.id))
+                              } else {
+                                setMatchedJobs(prev => [...prev, selectedJob])
+                              }
+                            }}
+                            className={`flex-1 rounded-2xl py-3 text-xs font-bold border transition-all cursor-pointer flex items-center justify-center gap-2 ${
+                              matchedJobs.some(m => m.id === selectedJob.id)
+                                ? 'bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-450'
+                                : 'bg-base-200 border-base-300 text-base-content/80 hover:bg-base-300'
+                            }`}
+                          >
+                            <Heart className={`h-4 w-4 ${matchedJobs.some(m => m.id === selectedJob.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
+                            {matchedJobs.some(m => m.id === selectedJob.id) ? 'Quitar Match' : 'Hacer Match'}
+                          </button>
+                          
+                          <button
+                            type="button"
+                            onClick={() => alert(`Redirigiendo a postular en ${selectedJob.source}...`)}
+                            className="flex-1 rounded-2xl bg-primary hover:bg-primary/90 py-3 text-xs font-bold text-white shadow-md shadow-primary/20 transition-all hover:-translate-y-0.5 cursor-pointer"
+                          >
+                            Postular ahora
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="border border-dashed border-base-300 rounded-3xl bg-base-200/50 p-8 text-center h-[350px] flex flex-col items-center justify-center shadow-2xs">
+                        <Briefcase className="h-10 w-10 text-base-content/30 mb-3" />
+                        <h4 className="font-bold text-base-content/80">Ningún empleo seleccionado</h4>
+                        <p className="text-xs text-base-content/60 mt-1 max-w-[200px]">
+                          Haz clic en cualquier oferta de la lista para ver su análisis de compatibilidad y especificaciones.
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
           </div>
-        </aside>
-      </div>
-    </main>
 
+          {/* Floating Actions on Mobile */}
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center bg-base-100 border border-base-300 text-base-content backdrop-blur-md px-6 py-3 rounded-full shadow-lg xl:hidden">
+            <button
+              onClick={() => setFiltersOpen(true)}
+              className="flex items-center gap-2 text-base-content text-xs font-bold hover:text-primary transition cursor-pointer"
+            >
+              <Filter className="h-4 w-4 text-base-content/40" />
+              Filtros
+            </button>
+          </div>
+        </main>
+      </div>
+
+      {/* Tinder-style Quick Search Modal */}
       {quickOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/45 px-4 py-8 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 px-4 py-8 backdrop-blur-xs"
           onClick={() => setQuickOpen(false)}
         >
           <div
-            className="w-full max-w-md rounded-4xl bg-slate-100 px-4 py-4 shadow-2xl"
+            className="w-full max-w-md rounded-3xl bg-base-200 p-4 shadow-2xl border border-base-300 animate-fadeIn"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-center justify-between px-2 pb-2">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm">
-                <Sparkles className="h-3.5 w-3.5 text-blue-500" />
+              <div className="inline-flex items-center gap-2 rounded-full bg-base-100 px-3 py-1 text-xs font-bold text-base-content/80 shadow-xs border border-base-200">
+                <Sparkles className="h-3.5 w-3.5 text-primary" />
                 Búsqueda rápida
               </div>
               <button
                 type="button"
                 onClick={() => setQuickOpen(false)}
-                className="rounded-full p-2 text-slate-400 transition hover:bg-white hover:text-slate-700"
+                className="rounded-full p-2 text-base-content/40 hover:bg-base-100 hover:text-base-content cursor-pointer"
                 aria-label="Cerrar modal"
               >
                 <X className="h-5 w-5" />
@@ -985,63 +1971,63 @@ export default function JobMatchPage() {
             </div>
 
             {currentQuickJob ? (
-              <div className="rounded-4xl bg-white p-5 shadow-sm">
+              <div className="rounded-2xl bg-base-100 p-5 shadow-xs border border-base-200">
                 <div className="mb-4 flex items-start justify-between">
-                  <div className={`${currentQuickJob.avatarColor} flex h-16 w-16 items-center justify-center rounded-2xl text-white shadow-sm`}>
-                    <span className="text-xl font-bold">{currentQuickJob.initial}</span>
+                  <div className={`${currentQuickJob.avatarColor} flex h-14 w-14 items-center justify-center rounded-xl text-white shadow-xs font-extrabold text-lg`}>
+                    {currentQuickJob.initial}
                   </div>
-                  <span className="inline-flex items-center rounded-full bg-emerald-400/15 px-4 py-1.5 text-sm font-semibold text-emerald-600">
+                  <span className="inline-flex items-center rounded-full bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30">
                     {currentQuickJob.matchPercent}% match
                   </span>
                 </div>
 
-                <h3 className="text-2xl font-semibold text-slate-900 flex items-center gap-2">
+                <h3 className="text-lg font-black text-base-content leading-tight">
                   {currentQuickJob.title}
                 </h3>
-                <p className="mt-1 flex items-center gap-2 text-base text-slate-500">
+                <p className="mt-1.5 flex items-center gap-2 text-xs font-semibold text-base-content/75">
                   {currentQuickJob.company}
-                  <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium border border-slate-200">
+                  <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold border ${getSourceBadgeStyle(currentQuickJob.source)}`}>
                     {currentQuickJob.source}
                   </span>
                 </p>
 
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {currentQuickJob.tags.map((tag) => (
-                    <span key={tag} className="rounded-full bg-pink-50 px-3 py-1.5 text-sm text-pink-600">
+                <div className="mt-3 flex flex-wrap gap-1">
+                  {currentQuickJob.tags.slice(0, 3).map((tag) => (
+                    <span key={tag} className="rounded-md bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary border border-primary/20">
                       {tag}
                     </span>
                   ))}
                 </div>
 
-                <div className="mt-5 space-y-4 max-h-[35vh] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full">
+                <div className="mt-5 space-y-4 max-h-[35vh] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-base-300 [&::-webkit-scrollbar-thumb]:rounded-full">
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-700">
-                      <span className="block text-[10px] text-slate-400">Modalidad</span>
-                      <span className="font-medium">{currentQuickJob.mode}</span>
+                    <div className="rounded-xl bg-base-200 border border-base-300 px-3 py-2 text-xs text-base-content/80">
+                      <span className="block text-[9px] text-base-content/50 font-bold uppercase tracking-wider">Modalidad</span>
+                      <span className="font-semibold">{currentQuickJob.mode}</span>
                     </div>
-                    <div className="rounded-xl bg-slate-50 px-3 py-2 text-xs text-slate-700">
-                      <span className="block text-[10px] text-slate-400">Ubicación</span>
-                      <span className="font-medium">{currentQuickJob.location}</span>
+                    <div className="rounded-xl bg-base-200 border border-base-300 px-3 py-2 text-xs text-base-content/80">
+                      <span className="block text-[9px] text-base-content/50 font-bold uppercase tracking-wider">Ubicación</span>
+                      <span className="font-semibold">{currentQuickJob.location}</span>
                     </div>
                   </div>
                   
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900 mb-1 flex items-center gap-1">
-                      <Briefcase className="h-3.5 w-3.5 text-slate-400" /> Sobre el puesto
+                    <h4 className="text-xs font-bold text-base-content mb-1.5 flex items-center gap-1.5">
+                      <Briefcase className="h-3.5 w-3.5 text-base-content/40" /> Sobre el puesto
                     </h4>
-                    <p className="text-xs text-slate-600 leading-relaxed">
+                    <p className="text-xs text-base-content/80 leading-relaxed">
                       {currentQuickJob.description}
                     </p>
                   </div>
 
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900 mb-2 flex items-center gap-1">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-slate-400" /> Funciones principales
+                    <h4 className="text-xs font-bold text-base-content mb-2 flex items-center gap-1.5">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-base-content/40" /> Funciones principales
                     </h4>
                     <ul className="space-y-1.5">
                       {currentQuickJob.functions.map((fn, idx) => (
-                        <li key={idx} className="flex items-start gap-1.5 text-[11px] text-slate-600 leading-relaxed">
-                          <span className="mt-1.5 h-1 w-1 rounded-full bg-blue-400 flex-shrink-0" />
+                        <li key={idx} className="flex items-start gap-1.5 text-[11px] text-base-content/80 leading-relaxed">
+                          <span className="mt-1.5 h-1 w-1 rounded-full bg-primary flex-shrink-0" />
                           <span>{fn}</span>
                         </li>
                       ))}
@@ -1049,22 +2035,22 @@ export default function JobMatchPage() {
                   </div>
 
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900 mb-2 flex items-center gap-1">
+                    <h4 className="text-xs font-bold text-base-content mb-2 flex items-center gap-1.5">
                       <Target className="h-3.5 w-3.5 text-emerald-500" /> Análisis de Match
                     </h4>
-                    <div className="rounded-xl bg-emerald-50/60 p-3 text-xs text-emerald-800 border border-emerald-100">
-                      <p className="mb-2 leading-relaxed">{currentQuickJob.matchFeedback}</p>
-                      <p className="border-t border-emerald-200/50 pt-2 text-amber-700 leading-relaxed"><strong>Para mejorar:</strong> {currentQuickJob.matchMissing}</p>
+                    <div className="rounded-xl bg-success/5 p-3 text-xs text-success-content border border-success/15">
+                      <p className="leading-relaxed"><strong>¿Por qué?</strong> {currentQuickJob.matchFeedback}</p>
+                      <p className="border-t border-success-content/20 pt-2 mt-2 text-warning-content leading-relaxed"><strong>Para mejorar:</strong> {currentQuickJob.matchMissing}</p>
                     </div>
                   </div>
                   
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900 mb-2 flex items-center gap-1">
-                      <Sparkles className="h-3.5 w-3.5 text-slate-400" /> Habilidades
+                    <h4 className="text-xs font-bold text-base-content mb-2 flex items-center gap-1.5">
+                      <Sparkles className="h-3.5 w-3.5 text-base-content/40" /> Habilidades
                     </h4>
                     <div className="flex flex-wrap gap-1.5">
                       {currentQuickJob.skills.map((skill, idx) => (
-                        <span key={idx} className="rounded-lg bg-slate-100 px-2.5 py-1 text-[10px] font-medium text-slate-700">
+                        <span key={idx} className="rounded-lg bg-base-200 px-2.5 py-1 text-[10px] font-semibold text-base-content/85">
                           {skill}
                         </span>
                       ))}
@@ -1076,157 +2062,183 @@ export default function JobMatchPage() {
                   <button
                     type="button"
                     onClick={rejectCurrent}
-                    className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-rose-400 bg-white text-rose-500 transition hover:scale-105"
+                    className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-rose-400 bg-base-100 text-rose-500 hover:scale-105 transition-all shadow-xs cursor-pointer"
                     aria-label="Rechazar empleo"
                   >
-                    <X className="h-7 w-7" />
+                    <X className="h-6 w-6 stroke-[2.5]" />
                   </button>
 
                   <button
                     type="button"
                     onClick={matchCurrent}
-                    className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-emerald-400 bg-white text-emerald-500 transition hover:scale-105"
+                    className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-emerald-400 bg-base-100 text-emerald-500 hover:scale-105 transition-all shadow-xs cursor-pointer"
                     aria-label="Hacer match"
                   >
-                    <CheckCircle2 className="h-7 w-7" />
+                    <Check className="h-6 w-6 stroke-[3]" />
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="rounded-4xl bg-white p-8 text-center">
-                <p className="text-lg font-semibold text-slate-900">No hay resultados para mostrar</p>
-                <p className="mt-2 text-sm text-slate-500">Ajusta los filtros y vuelve a abrir la búsqueda rápida.</p>
+              <div className="rounded-2xl bg-base-100 p-8 text-center border border-base-200">
+                <p className="text-base font-bold text-base-content">Búsqueda rápida completada</p>
+                <p className="mt-1.5 text-xs text-base-content/60 leading-relaxed">No hay más vacantes que coincidan con tu criterio actual. Ajusta los filtros para recargar.</p>
               </div>
             )}
 
-            <p className="mt-4 text-center text-sm text-slate-500">← saltar · ✓ hacer match →</p>
-            <p className="mt-2 text-center text-xs text-slate-400">
-              {filteredJobs.length === 0 ? '0 empleos' : `${quickIndex + 1} / ${filteredJobs.length}`}
+            <p className="mt-4 text-center text-xs text-base-content/40">← saltar (X) · hacer match (✓) →</p>
+            <p className="mt-1 text-center text-[10px] font-black text-base-content/50">
+              {filteredJobs.length === 0 ? '0 vacantes' : `${quickIndex + 1} de ${filteredJobs.length}`}
             </p>
           </div>
         </div>
       )}
 
+      {/* Mobile Job Details Modal (Popup) */}
       {selectedJobDetail && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-base-content/40 p-4 backdrop-blur-xs"
           onClick={() => setSelectedJobDetail(null)}
         >
           <div
-            className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl"
+            className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-base-100 shadow-2xl border border-base-200"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-100 bg-white/80 px-6 py-4 backdrop-blur-md">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-base-200 bg-base-100/90 px-6 py-4.5 backdrop-blur-md">
               <div className="flex items-center gap-3">
-                <div className={`${selectedJobDetail.avatarColor} flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-sm`}>
-                  <span className="font-bold">{selectedJobDetail.initial}</span>
+                <div className={`${selectedJobDetail.avatarColor} flex h-10 w-10 items-center justify-center rounded-xl text-white shadow-xs font-bold text-sm flex-shrink-0`}>
+                  {selectedJobDetail.initial}
                 </div>
                 <div>
-                  <h3 className="font-bold text-slate-900 flex flex-wrap items-center gap-2 text-sm sm:text-base">
+                  <h3 className="font-extrabold text-base-content flex flex-wrap items-center gap-2 text-sm leading-snug">
                     {selectedJobDetail.title}
-                    <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium border border-slate-200">
+                    <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold border ${getSourceBadgeStyle(selectedJobDetail.source)}`}>
                       {selectedJobDetail.source}
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-500">{selectedJobDetail.company}</p>
+                  <p className="text-[11px] text-base-content/60">{selectedJobDetail.company}</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setSelectedJobDetail(null)}
-                className="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                className="rounded-full p-2 text-base-content/40 hover:bg-base-200 hover:text-base-content cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             <div className="p-6 space-y-6">
-              {/* Resumen de Match */}
-              <div className="rounded-2xl bg-linear-to-r from-blue-50 to-emerald-50 p-5 border border-blue-100">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm font-bold text-slate-800">Cálculo de Match: <span className="text-emerald-600">{selectedJobDetail.matchPercent}%</span></span>
+              {/* Match overview */}
+              <div className="rounded-2xl bg-gradient-to-r from-primary/5 to-success/5 p-4.5 border border-primary/10">
+                <div className="flex items-center justify-between mb-3.5">
+                  <span className="text-xs font-bold text-base-content flex items-center gap-1">
+                    <Sparkles className="h-4 w-4 text-emerald-500" /> Compatibilidad de Perfil: <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">{selectedJobDetail.matchPercent}% match</span>
+                  </span>
                 </div>
-                <p className="text-sm text-slate-600 mb-3">{selectedJobDetail.matchFeedback}</p>
-                <p className="text-sm text-slate-600 border-t border-blue-200/50 pt-3"><strong className="text-amber-600">Para mejorar:</strong> {selectedJobDetail.matchMissing}</p>
+                <div className="space-y-2 text-xs">
+                  <div className="bg-base-200/85 p-3 rounded-xl border border-base-250 text-base-content/80">
+                    <strong className="text-base-content block mb-0.5">¿Por qué?</strong>
+                    <p className="leading-relaxed">{selectedJobDetail.matchFeedback}</p>
+                  </div>
+                  <div className="bg-warning/5 p-3 rounded-xl border border-warning/15 text-warning-content">
+                    <strong className="text-base-content block mb-0.5">¿Qué falta?</strong>
+                    <p className="leading-relaxed">{selectedJobDetail.matchMissing}</p>
+                  </div>
+                </div>
               </div>
 
-              {/* Descripción */}
+              {/* Description */}
               <section>
-                <h4 className="flex items-center gap-2 font-semibold text-slate-900 mb-2">
-                  <Briefcase className="h-4 w-4 text-slate-400" /> Sobre el puesto
+                <h4 className="flex items-center gap-1.5 font-bold text-base-content uppercase tracking-wider text-xs mb-2">
+                  <Briefcase className="h-4 w-4 text-base-content/50" /> Sobre el puesto
                 </h4>
-                <p className="text-sm text-slate-600 leading-relaxed">
+                <p className="text-xs sm:text-sm text-base-content/85 leading-relaxed">
                   {selectedJobDetail.description}
                 </p>
               </section>
 
-              {/* Funciones */}
+              {/* Functions */}
               <section>
-                <h4 className="flex items-center gap-2 font-semibold text-slate-900 mb-3">
-                  <CheckCircle2 className="h-4 w-4 text-slate-400" /> Funciones principales
+                <h4 className="flex items-center gap-1.5 font-bold text-base-content uppercase tracking-wider text-xs mb-2.5">
+                  <CheckCircle2 className="h-4 w-4 text-base-content/50" /> Funciones principales
                 </h4>
                 <ul className="space-y-2">
                   {selectedJobDetail.functions.map((fn, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-sm text-slate-600">
-                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-blue-400 flex-shrink-0" />
-                      <span>{fn}</span>
+                    <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-base-content/85">
+                      <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
+                      <span className="leading-relaxed">{fn}</span>
                     </li>
                   ))}
                 </ul>
               </section>
 
-              {/* Habilidades */}
+              {/* Skills */}
               <section>
-                <h4 className="flex items-center gap-2 font-semibold text-slate-900 mb-3">
-                  <Sparkles className="h-4 w-4 text-slate-400" /> Habilidades requeridas
+                <h4 className="flex items-center gap-1.5 font-bold text-base-content uppercase tracking-wider text-xs mb-2.5">
+                  <Sparkles className="h-4 w-4 text-base-content/50" /> Habilidades requeridas
                 </h4>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5">
                   {selectedJobDetail.skills.map((skill, idx) => (
-                    <span key={idx} className="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-700">
+                    <span key={idx} className="rounded-lg bg-base-200 border border-base-300 px-3 py-1.5 text-xs font-semibold text-base-content/80">
                       {skill}
                     </span>
                   ))}
                 </div>
               </section>
 
-              {/* Requisitos Generales */}
-              <div className="grid grid-cols-2 gap-4 rounded-2xl bg-slate-50 p-4 text-sm">
+              {/* Specs info */}
+              <div className="grid grid-cols-2 gap-3 rounded-2xl bg-base-200 p-4 text-xs border border-base-300">
                 <div>
-                  <span className="block text-xs text-slate-400 mb-1">Modalidad</span>
-                  <span className="font-medium text-slate-700">{selectedJobDetail.mode}</span>
+                  <span className="block text-base-content/50 font-bold uppercase tracking-wider text-[9px] mb-0.5">Modalidad</span>
+                  <span className="font-bold text-base-content">{selectedJobDetail.mode}</span>
                 </div>
                 <div>
-                  <span className="block text-xs text-slate-400 mb-1">Ubicación</span>
-                  <span className="font-medium text-slate-700">{selectedJobDetail.location}</span>
+                  <span className="block text-base-content/50 font-bold uppercase tracking-wider text-[9px] mb-0.5">Ubicación</span>
+                  <span className="font-bold text-base-content">{selectedJobDetail.location}</span>
                 </div>
                 <div>
-                  <span className="block text-xs text-slate-400 mb-1">Nivel</span>
-                  <span className="font-medium text-slate-700">{selectedJobDetail.level}</span>
+                  <span className="block text-base-content/50 font-bold uppercase tracking-wider text-[9px] mb-0.5">Nivel</span>
+                  <span className="font-bold text-base-content">{selectedJobDetail.level}</span>
                 </div>
                 <div>
-                  <span className="block text-xs text-slate-400 mb-1">Salario</span>
-                  <span className="font-medium text-slate-700">S/ {selectedJobDetail.salaryMin} - {selectedJobDetail.salaryMax}</span>
+                  <span className="block text-base-content/50 font-bold uppercase tracking-wider text-[9px] mb-0.5">Salario</span>
+                  <span className="font-bold text-base-content">S/ {selectedJobDetail.salaryMin} - {selectedJobDetail.salaryMax}</span>
+                </div>
+                <div>
+                  <span className="block text-base-content/50 font-bold uppercase tracking-wider text-[9px] mb-0.5">Contrato</span>
+                  <span className="font-bold text-base-content">{selectedJobDetail.contractType}</span>
+                </div>
+                <div>
+                  <span className="block text-base-content/50 font-bold uppercase tracking-wider text-[9px] mb-0.5">Publicado</span>
+                  <span className="font-bold text-base-content">{selectedJobDetail.postedDate}</span>
                 </div>
               </div>
             </div>
 
-            <div className="sticky bottom-0 border-t border-slate-100 bg-white/90 px-6 py-4 backdrop-blur-md flex gap-3">
+            <div className="sticky bottom-0 border-t border-base-200 bg-base-100/95 px-6 py-4 flex gap-3">
               <button 
                 onClick={() => {
-                  if (!matchedJobs.some((m) => m.id === selectedJobDetail.id)) {
+                  if (matchedJobs.some((m) => m.id === selectedJobDetail.id)) {
+                    setMatchedJobs((prev) => prev.filter((m) => m.id !== selectedJobDetail.id))
+                  } else {
                     setMatchedJobs((prev) => [...prev, selectedJobDetail])
                   }
                   setSelectedJobDetail(null)
                 }}
-                className="flex-1 rounded-xl border-2 border-emerald-500 bg-emerald-50 py-3 text-sm font-semibold text-emerald-600 transition hover:bg-emerald-100"
+                className={`flex-1 rounded-xl py-3 text-xs font-bold transition flex items-center justify-center gap-1.5 border cursor-pointer ${
+                  matchedJobs.some(m => m.id === selectedJobDetail.id)
+                    ? 'bg-rose-500/10 border-rose-500/20 text-rose-600'
+                    : 'bg-base-200 border-base-300 text-base-content/80 hover:bg-base-300'
+                }`}
               >
-                Hacer Match
+                <Heart className={`h-4.5 w-4.5 ${matchedJobs.some(m => m.id === selectedJobDetail.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
+                {matchedJobs.some(m => m.id === selectedJobDetail.id) ? 'Quitar Match' : 'Hacer Match'}
               </button>
               <button 
                 onClick={() => {
                   alert(`Redirigiendo a postular en ${selectedJobDetail.source}...`)
                 }}
-                className="flex-1 rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-md shadow-blue-500/20 transition hover:bg-blue-700"
+                className="flex-1 rounded-xl bg-primary py-3 text-xs font-bold text-white shadow-md shadow-primary/20 transition hover:bg-primary/90 cursor-pointer"
               >
                 Postular
               </button>
@@ -1234,7 +2246,6 @@ export default function JobMatchPage() {
           </div>
         </div>
       )}
-      </div>
     </PageShell>
   )
 }
