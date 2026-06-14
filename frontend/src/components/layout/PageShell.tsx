@@ -4,8 +4,8 @@ interface PageShellProps {
 
 export default function PageShell({ children }: PageShellProps) {
   return (
-    <div className="flex flex-col flex-1 overflow-hidden">
+    <section className="min-h-screen">
       {children}
-    </div>
+    </section>
   )
 }

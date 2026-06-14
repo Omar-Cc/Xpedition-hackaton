@@ -144,4 +144,7 @@ export interface CourseRecommendation {
   source: 'UTP+Class' | 'UTP+Portal'
   description: string
   benefit: string
+  reinforces?: string
+  impact?: string
+  actionLabel?: string
 }

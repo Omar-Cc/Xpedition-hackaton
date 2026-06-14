@@ -31,7 +31,7 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 min-h-screen bg-navy text-white flex-shrink-0">
+    <aside className="hidden lg:sticky lg:top-0 lg:flex h-dvh w-64 shrink-0 self-start flex-col overflow-hidden bg-navy text-white">
       <div className="p-6 pb-4">
         <h1 className="text-lg font-bold tracking-tight">EmpléaUTP</h1>
         <p className="text-xs text-white/50 mt-0.5">Asistente de empleabilidad</p>
