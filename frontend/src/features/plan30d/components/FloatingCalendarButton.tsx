@@ -109,7 +109,7 @@ export default function FloatingCalendarButton({
 
         {/* Scrollable Contents */}
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
-          
+
           {/* Section A: Quick metrics */}
           <div className="grid grid-cols-3 gap-2 bg-slate-50 border border-slate-200/50 rounded-xl p-3.5 text-center">
             <div>
