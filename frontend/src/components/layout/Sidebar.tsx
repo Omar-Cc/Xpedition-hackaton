@@ -95,10 +95,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <span className="text-sm font-semibold">{studentProfile.avatarInitial}</span>
               </div>
             </div>
-            <div className="min-w-0">
-              <p className="text-sm font-medium truncate">{studentProfile.name}</p>
-              <p className="text-xs text-white/50 truncate">{studentProfile.career}</p>
-            </div>
           </div>
         </div>
       </aside>

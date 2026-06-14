@@ -7,13 +7,13 @@ interface ModeSelectorProps {
 
 const ModeSelector: React.FC<ModeSelectorProps> = ({ activeMode, setActiveMode }) => {
   return (
-    <div className="flex bg-slate-100 border border-slate-200/60 mb-6 p-1 rounded-xl max-w-md shadow-inner">
+    <div className="flex bg-base-200 border border-base-300 mb-6 p-1 rounded-xl max-w-md shadow-inner">
       <button
         onClick={() => setActiveMode('technical')}
         className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all duration-200 cursor-pointer ${
           activeMode === 'technical'
             ? 'bg-navy text-white shadow-md'
-            : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50'
+            : 'text-base-content/60 hover:text-base-content hover:bg-base-100/50'
         }`}
       >
         <span className="flex items-center justify-center gap-2">
@@ -29,7 +29,7 @@ const ModeSelector: React.FC<ModeSelectorProps> = ({ activeMode, setActiveMode }
         className={`flex-1 py-2 px-4 rounded-lg text-sm font-bold transition-all duration-200 cursor-pointer ${
           activeMode === 'soft-skills'
             ? 'bg-navy text-white shadow-md'
-            : 'text-slate-500 hover:text-slate-800 hover:bg-slate-200/50'
+            : 'text-base-content/60 hover:text-base-content hover:bg-base-100/50'
         }`}
       >
         <span className="flex items-center justify-center gap-2">

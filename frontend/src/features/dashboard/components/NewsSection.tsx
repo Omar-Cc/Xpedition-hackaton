@@ -38,7 +38,7 @@ export default function NewsSection() {
           key={currentIndex} 
           className="animate-in fade-in slide-in-from-right-3 duration-300 flex flex-col"
         >
-          <figure className="relative w-full aspect-[16/10] bg-slate-50 flex items-center justify-center overflow-hidden flex-shrink-0">
+          <figure className="relative w-full aspect-[2/1] bg-slate-50 flex items-center justify-center overflow-hidden flex-shrink-0">
             <img 
               src={news.imageUrl} 
               alt={news.title} 

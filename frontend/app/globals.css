@@ -1,11 +1,26 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: light --default;
+  themes: light --default, dark;
 }
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --bg-soft: #f0f4f8;
+  --navy: #1a2540;
+}
+
+[data-theme="dark"] {
+  --background: #080c16;
+  --foreground: #f8fafc;
+  --bg-soft: #0c1220;
+  --navy: #151d30;
+  
+  /* Overrides for DaisyUI & Tailwind v4 dark theme */
+  --color-base-100: #121926;
+  --color-base-200: #1a2436;
+  --color-base-300: #25334c;
+  --color-base-content: #f8fafc;
 }
 
 @theme inline {
@@ -16,8 +31,8 @@
 }
 
 @theme {
-  --color-navy: #1a2540;
-  --color-bg-soft: #f0f4f8;
+  --color-navy: var(--navy);
+  --color-bg-soft: var(--bg-soft);
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -47,4 +62,120 @@ body {
 
 .animate-cardIn {
   animation: cardIn 0.6s ease-out both;
+}
+
+/* Dark Mode Component Overrides */
+[data-theme="dark"] .bg-white:not(.cv-sheet) {
+  background-color: var(--color-base-100) !important;
+}
+
+[data-theme="dark"] .bg-slate-50:not(.cv-sheet *) {
+  background-color: var(--color-base-200) !important;
+}
+
+[data-theme="dark"] .bg-slate-100:not(.cv-sheet *):not(.bg-slate-100.rounded-xl) {
+  background-color: var(--color-base-200) !important;
+}
+
+[data-theme="dark"] .text-slate-900:not(.cv-sheet *),
+[data-theme="dark"] .text-slate-800:not(.cv-sheet *) {
+  color: var(--foreground) !important;
+}
+
+[data-theme="dark"] .text-slate-700:not(.cv-sheet *) {
+  color: rgba(248, 250, 252, 0.9) !important;
+}
+
+[data-theme="dark"] .text-slate-600:not(.cv-sheet *) {
+  color: rgba(248, 250, 252, 0.7) !important;
+}
+
+[data-theme="dark"] .text-slate-500:not(.cv-sheet *) {
+  color: rgba(248, 250, 252, 0.5) !important;
+}
+
+[data-theme="dark"] .border-slate-200,
+[data-theme="dark"] .border-slate-100 {
+  border-color: var(--color-base-300) !important;
+}
+
+[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]),
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background-color: var(--color-base-200) !important;
+  color: var(--foreground) !important;
+  border-color: var(--color-base-300) !important;
+}
+
+/* Specific pastel background overlays for Dark Mode */
+[data-theme="dark"] .bg-violet-50 {
+  background-color: rgba(139, 92, 246, 0.1) !important; /* violet-500/10 */
+}
+[data-theme="dark"] .border-violet-200 {
+  border-color: rgba(139, 92, 246, 0.2) !important;
+}
+[data-theme="dark"] .text-violet-800 {
+  color: #c084fc !important; /* violet-400 */
+}
+[data-theme="dark"] .text-violet-700\/70,
+[data-theme="dark"] .text-violet-700\/80 {
+  color: rgba(192, 132, 252, 0.7) !important;
+}
+
+[data-theme="dark"] .bg-violet-100 {
+  background-color: rgba(139, 92, 246, 0.15) !important;
+}
+[data-theme="dark"] .bg-emerald-100 {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+}
+[data-theme="dark"] .bg-amber-100 {
+  background-color: rgba(245, 158, 11, 0.15) !important;
+}
+[data-theme="dark"] .bg-rose-100 {
+  background-color: rgba(244, 63, 94, 0.15) !important;
+}
+[data-theme="dark"] .bg-white\/60 {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Hover base-50 override */
+[data-theme="dark"] .hover\:bg-base-50:hover {
+  background-color: var(--color-base-200) !important;
+}
+
+/* Additional dark mode adjustments for job match and learns page */
+[data-theme="dark"] .bg-teal-50 {
+  background-color: rgba(20, 184, 166, 0.1) !important; /* teal-500/10 */
+}
+[data-theme="dark"] .text-teal-600 {
+  color: #2dd4bf !important; /* teal-400 */
+}
+
+[data-theme="dark"] .bg-orange-50 {
+  background-color: rgba(249, 115, 22, 0.1) !important; /* orange-500/10 */
+}
+[data-theme="dark"] .text-orange-500 {
+  color: #fb923c !important; /* orange-400 */
+}
+
+[data-theme="dark"] .bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.1) !important; /* blue-500/10 */
+}
+[data-theme="dark"] .text-blue-700 {
+  color: #60a5fa !important; /* blue-400 */
+}
+
+[data-theme="dark"] .bg-pink-50 {
+  background-color: rgba(236, 72, 153, 0.1) !important; /* pink-500/10 */
+}
+[data-theme="dark"] .text-pink-600 {
+  color: #f472b6 !important; /* pink-400 */
+}
+
+[data-theme="dark"] .bg-slate-100 {
+  background-color: var(--color-base-200) !important;
+}
+
+[data-theme="dark"] .bg-linear-to-r.from-indigo-50 {
+  background-image: linear-gradient(to right, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.08), rgba(234, 179, 8, 0.08)) !important;
 }
