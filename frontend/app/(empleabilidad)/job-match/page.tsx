@@ -1037,7 +1037,12 @@ export default function JobMatchPage() {
       const matchesSource = filters.sources.length === 0 || filters.sources.includes(job.source)
 
       return matchesQuery && matchesAddress && matchesMode && matchesLevel && matchesSalary && matchesAge && matchesSource && !removedJobs.includes(job.id)
-    }).sort((a, b) => b.matchPercent - a.matchPercent)
+    }).sort((a, b) => {
+      // Prioritize the Scotiabank Junior Data Analyst (ID '1') to show first
+      if (a.id === '1') return -1
+      if (b.id === '1') return 1
+      return b.matchPercent - a.matchPercent
+    })
   }, [filters, removedJobs])
 
   const activeJobsList = useMemo(() => {

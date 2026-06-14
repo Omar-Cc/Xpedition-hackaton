@@ -107,14 +107,8 @@ export const progressItems: ProgressItem[] = [
 export const newsItems = [
   {
     id: '1',
-    title: 'Feria Laboral UTP: ¡Postula a las mejores ofertas!',
+    title: 'Startup UTP',
     imageUrl: '/image.png',
-    link: 'https://portal.utp.edu.pe',
-  },
-  {
-    id: '2',
-    title: 'Concurso Startup UTP: Inspírate y da el siguiente paso',
-    imageUrl: '/image 2png',
     link: 'https://portal.utp.edu.pe',
   },
   {

@@ -21,6 +21,46 @@ export default function NewsSection() {
 
   const news = newsItems[currentIndex]
 
+  const [touchStartX, setTouchStartX] = useState<number | null>(null)
+  const [swipeOccurred, setSwipeOccurred] = useState(false)
+  const minSwipeDistance = 50
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.targetTouches[0].clientX)
+    setSwipeOccurred(false)
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX) {
+      const currentX = e.targetTouches[0].clientX
+      if (Math.abs(touchStartX - currentX) > 10) {
+        setSwipeOccurred(true)
+      }
+    }
+  }
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStartX) return
+    const touchEndX = e.changedTouches[0].clientX
+    const distance = touchStartX - touchEndX
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+    
+    if (isLeftSwipe) {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % newsItems.length)
+    } else if (isRightSwipe) {
+      setCurrentIndex((prevIndex) => (prevIndex - 1 + newsItems.length) % newsItems.length)
+    }
+  }
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    if (swipeOccurred) {
+      e.stopPropagation()
+      return
+    }
+    setSelectedNews(news)
+  }
+
   return (
     <div className="mt-4 flex flex-col gap-4">
       <h3 className="text-xs font-bold text-base-content/50 uppercase tracking-widest flex items-center gap-2">
@@ -29,10 +69,13 @@ export default function NewsSection() {
       </h3>
       
       <div 
-        className="card bg-base-100 shadow-sm border border-base-200 cursor-pointer hover:shadow-md transition-all overflow-hidden group relative flex flex-col"
+        className="card bg-base-100 shadow-sm border border-base-200 cursor-pointer hover:shadow-md transition-all overflow-hidden group relative flex flex-col select-none touch-pan-y"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
-        onClick={() => setSelectedNews(news)}
+        onClick={handleCardClick}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
         <div 
           key={currentIndex} 
