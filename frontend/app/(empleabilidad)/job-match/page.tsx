@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import PageShell from '@/src/components/layout/PageShell'
 import PageHeader from '@/src/components/layout/PageHeader'
-import { useJobMatch } from '@/src/contexts/JobMatchContext'
+import { useJobMatch, type JobItem } from '@/src/contexts/JobMatchContext'
 import {
   Bookmark,
   Cake,
@@ -28,35 +28,6 @@ import {
   Trash2,
   X,
 } from 'lucide-react'
-
-type JobItem = {
-  id: string
-  initial: string
-  avatarColor: string
-  matchPercent: number
-  title: string
-  company: string
-  status: string
-  statusColor: 'success' | 'warning' | 'error'
-  location: string
-  mode: 'Full Time' | 'Part Time' | 'Remoto' | 'Híbrido' | 'Presencial'
-  salaryMin: number
-  salaryMax: number
-  level: 'Practicante' | 'Pasantía' | 'Junior' | 'Semi Senior' | 'Senior'
-  ageMin: number
-  ageMax: number
-  tags: string[]
-  highlight: string
-  requirement: string
-  description: string
-  functions: string[]
-  skills: string[]
-  matchFeedback: string
-  matchMissing: string
-  source: string
-  contractType: string
-  postedDate: string
-}
 
 type AppliedFilters = {
   query: string
