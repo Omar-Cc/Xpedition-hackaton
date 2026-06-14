@@ -77,8 +77,14 @@ export default function NewsSection() {
 
       {/* Modal para ver la noticia/anuncio completo */}
       {selectedNews && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-base-100 rounded-2xl overflow-hidden max-w-4xl w-full max-h-[90vh] flex flex-col relative shadow-2xl animate-in zoom-in-95 duration-200">
+        <div 
+          onClick={() => setSelectedNews(null)}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-base-100 rounded-2xl overflow-hidden max-w-4xl w-full max-h-[90vh] flex flex-col relative shadow-2xl animate-in zoom-in-95 duration-200"
+          >
             <button 
               onClick={() => setSelectedNews(null)}
               className="absolute top-4 right-4 z-10 btn btn-circle btn-sm btn-ghost bg-black/40 hover:bg-black/60 text-white border-none"

@@ -6,6 +6,7 @@ interface PageHeaderProps {
   left?: React.ReactNode
   right?: React.ReactNode
   maxWidthClassName?: string
+  titleClassName?: string
 }
 
 export default function PageHeader({
@@ -13,7 +14,8 @@ export default function PageHeader({
   subtitle,
   left,
   right,
-  maxWidthClassName = 'max-w-7xl'
+  maxWidthClassName = 'max-w-7xl',
+  titleClassName
 }: PageHeaderProps) {
   return (
     <div className={`w-full mx-auto px-4 sm:px-6 md:px-8 pt-6 pb-2 flex-shrink-0 ${maxWidthClassName}`}>
@@ -21,7 +23,7 @@ export default function PageHeader({
         <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
           {left}
           <div className="min-w-0">
-            <h1 className="text-xl md:text-2xl font-bold tracking-tight transition-all duration-200 truncate">{title}</h1>
+            <h1 className={titleClassName ?? "text-xl md:text-2xl font-bold tracking-tight transition-all duration-200 truncate"}>{title}</h1>
             {typeof subtitle === 'string' ? (
               <p className="text-xs md:text-sm text-white/60 font-medium mt-1 whitespace-normal sm:truncate">{subtitle}</p>
             ) : (
