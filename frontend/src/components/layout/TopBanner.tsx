@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Bell, Moon, Sun, ExternalLink, ChevronDown, Menu } from "lucide-react";
 import { studentProfile } from "@/src/features/dashboard/data/mock-data";
 import Link from "next/link";
+import UtpEmpleaLogo from "./UtpEmpleaLogo";
+import StudentAvatar from "./StudentAvatar";
 
 interface TopBannerProps {
   onMenuClick?: () => void;
@@ -36,42 +38,15 @@ export default function TopBanner({ onMenuClick }: Readonly<TopBannerProps>) {
       {/* Hamburger Menu on Mobile */}
       <button
         onClick={onMenuClick}
-        className="h-14 text-white cursor-pointer lg:hidden bg-navy px-4 items-center justify-center"
+        className="h-14 text-white cursor-pointer flex lg:hidden bg-navy px-4 items-center justify-center"
         aria-label="Abrir menú"
       >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
+        <Menu className="w-6 h-6" />
       </button>
+
       {/* Lado izquierdo: Logo, Progreso y Bienvenida */}
       <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0 h-full">
-        {/* UTP+emplea Logo */}
-        <div className="flex items-center shrink-0 select-none mr-3">
-          <div className="flex items-center font-sans font-black">
-            <div className="flex gap-px">
-              <span className="bg-black text-white w-7 h-7 flex items-center justify-center text-[16px] font-black rounded-none">
-                U
-              </span>
-              <span className="bg-black text-white w-7 h-7 flex items-center justify-center text-[16px] font-black rounded-none">
-                T
-              </span>
-              <span className="bg-black text-white w-7 h-7 flex items-center justify-center text-[16px] font-black rounded-none">
-                P
-              </span>
-            </div>
-            <span className="text-[#e30613] text-[22px] font-black ml-2 mr-1.5 leading-none">
-              +
-            </span>
-            <span className="text-base-content text-[18px] font-black tracking-tight leading-none">
-              emplea
-            </span>
-          </div>
-        </div>
+        <UtpEmpleaLogo className="mr-3" />
 
         <div className="w-px h-6 bg-base-300 mx-1 hidden xl:block"></div>
 
@@ -162,14 +137,7 @@ export default function TopBanner({ onMenuClick }: Readonly<TopBannerProps>) {
               {studentProfile.career}
             </p>
           </div>
-          <div className="avatar">
-            <div className="w-9 h-9 rounded-full bg-[#4fd1c5] text-white flex items-center justify-center overflow-hidden">
-              <img
-                src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${fullName}&backgroundColor=4fd1c5`}
-                alt="Avatar"
-              />
-            </div>
-          </div>
+          <StudentAvatar fullName={fullName} />
           <ChevronDown className="w-4 h-4 text-base-content/50" />
         </div>
       </div>
