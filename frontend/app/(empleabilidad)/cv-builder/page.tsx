@@ -40,7 +40,7 @@ class PdfDownloadStrategy implements DownloadStrategy {
     })
 
     const imgData = canvas.toDataURL('image/jpeg', 1.0)
-    
+
     // Configuración de dimensiones en pulgadas (tamaño carta / letter: 8.5 x 11 in)
     const pdf = new jsPDF({
       orientation: 'portrait',
@@ -215,12 +215,12 @@ export default function CVBuilderPage() {
   const [atsText, setAtsText] = useState('')
   const [atsScore, setAtsScore] = useState<number | null>(null)
   const [atsSummary, setAtsSummary] = useState<AtsSummary | null>(null)
-  
+
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false)
   const [isDownloadingDocx, setIsDownloadingDocx] = useState(false)
   const [isSendingMail, setIsSendingMail] = useState(false)
-  
+
   const [showMailModal, setShowMailModal] = useState(false)
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
 
@@ -231,11 +231,11 @@ export default function CVBuilderPage() {
 
   const handleAnalyzeAts = () => {
     if (!atsText.trim()) return showToast('Pega una oferta laboral primero', 'error')
-    
+
     setIsAnalyzing(true)
     setAtsScore(null)
     setAtsSummary(null)
-    
+
     // Simulación del motor de Inteligencia / Matching
     setTimeout(() => {
       setAtsScore(78)
@@ -276,31 +276,31 @@ export default function CVBuilderPage() {
     <PageShell>
       <PageHeader
         title="Constructor de CV"
-        subtitle="Genera tu currículum optimizado en LaTeX y envíalo directamente a reclutadores."
+        subtitle="Genera tu currículum optimizado y envíalo directamente a reclutadores."
         maxWidthClassName="max-w-[1400px]"
       />
 
       <main className="flex flex-col flex-1 p-3 md:p-6 md:pt-2 pt-2 relative min-h-0 overflow-y-auto lg:overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6 max-w-[1400px] mx-auto h-auto lg:h-full w-full">
-          
+
           {/* PANEL LATERAL */}
           <div className="flex flex-col h-auto lg:h-full lg:overflow-hidden">
             <div className="flex-1 lg:overflow-y-auto flex flex-col gap-5 lg:pr-2 lg:pb-2">
-              <TemplateSelector 
-                activeTemplate={activeTemplate} 
-                onSelect={setActiveTemplate} 
+              <TemplateSelector
+                activeTemplate={activeTemplate}
+                onSelect={setActiveTemplate}
               />
-              <JobOfferInput 
-                atsText={atsText} 
-                setAtsText={setAtsText} 
-                isAnalyzing={isAnalyzing} 
-                onAnalyze={handleAnalyzeAts} 
+              <JobOfferInput
+                atsText={atsText}
+                setAtsText={setAtsText}
+                isAnalyzing={isAnalyzing}
+                onAnalyze={handleAnalyzeAts}
               />
-              <SkillGapPanel 
-                atsScore={atsScore} 
-                atsSummary={atsSummary} 
+              <SkillGapPanel
+                atsScore={atsScore}
+                atsSummary={atsSummary}
               />
-              <ExportPanel 
+              <ExportPanel
                 isDownloadingPdf={isDownloadingPdf}
                 isDownloadingDocx={isDownloadingDocx}
                 onDownloadPdf={() => handleDownload('pdf')}
@@ -317,7 +317,7 @@ export default function CVBuilderPage() {
       </main>
 
       {/* MODALES Y TOASTS */}
-      <MailModal 
+      <MailModal
         isOpen={showMailModal}
         isSending={isSendingMail}
         onClose={() => setShowMailModal(false)}
