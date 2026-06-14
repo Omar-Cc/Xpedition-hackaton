@@ -1481,45 +1481,52 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 14. CTA Final de Alta Conversión (Scroll-Triggered) */}
       <section className="py-20 sm:py-28 bg-[#FAFCFF] relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <FadeInSection>
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden shadow-2xl">
-              {/* Fondo de red */}
+            <div className="bg-linear-to-r from-blue-600 to-indigo-700 text-white rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden shadow-2xl">
               <div className="absolute top-[-20%] left-[-20%] w-[60%] h-[60%] rounded-full bg-white/5 blur-[80px] pointer-events-none"></div>
               <div className="absolute bottom-[-20%] right-[-20%] w-[60%] h-[60%] rounded-full bg-blue-400/20 blur-[80px] pointer-events-none"></div>
 
-              <div className="max-w-2xl mx-auto space-y-6 relative z-10">
-                <span className="text-xs font-bold uppercase tracking-wider text-blue-200 bg-white/10 px-3.5 py-1.5 rounded-full inline-block">
-                  Asegura tu futuro
-                </span>
+              <div className="flex flex-col items-center max-w-2xl mx-auto space-y-6 relative z-10">
+                <div className="flex gap-1.5 select-none shrink-0">
+                  <div className="flex gap-0.5">
+                    <span className="w-8 h-8 bg-black text-white flex items-center justify-center font-bold text-[18px] rounded-[3px] leading-none">
+                      U
+                    </span>
+                    <span className="w-8 h-8 bg-black text-white flex items-center justify-center font-bold text-[18px] rounded-[3px] leading-none">
+                      T
+                    </span>
+                    <span className="w-8 h-8 bg-black text-white flex items-center justify-center font-bold text-[18px] rounded-[3px] leading-none">
+                      P
+                    </span>
+                  </div>
+                  <span className="text-red-600 font-extrabold text-[22px] px-0.5 leading-none flex items-center">
+                    +
+                  </span>
+                  <span className="text-black font-black text-[22px] tracking-tight font-sans leading-none flex items-center">
+                    emplea
+                  </span>
+                </div>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
-                  ¿Listo para dar el primer paso de tu vida profesional?
+                  Tu asistente inteligente de empleabilidad UTP
                 </h2>
-                <p className="text-base sm:text-lg text-blue-100 font-light leading-relaxed">
-                  Únete a los miles de estudiantes que ya están transformando su empleabilidad.
-                  Regístrate gratis en **UTP+emplea** y comienza a guiar tu carrera con Inteligencia
-                  Artificial.
+                <p className="text-base sm:text-lg text-blue-200 font-light leading-relaxed">
+                  Mejora tu perfil, adapta tu CV, practica entrevistas y sigue un plan personalizado
+                  para postular a tus primeras prácticas con más seguridad.
                 </p>
 
-                <div className="pt-4 flex flex-col sm:flex-row justify-center gap-4 items-center">
+                <div className="pt-4 flex justify-center">
                   <Link
                     href="/login"
-                    className="w-full sm:w-auto bg-[#ffffff] text-blue-700 hover:bg-slate-50 px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer"
+                    className="w-full sm:w-auto bg-[#ffffff] text-blue-700 hover:bg-slate-50 px-10 py-4.5 rounded-xl font-bold text-lg shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer flex items-center justify-center gap-2"
                   >
-                    Registrarme Gratis
-                  </Link>
-                  <Link
-                    href="/login"
-                    className="text-white hover:text-blue-200 transition-colors text-base font-semibold px-4 py-2 cursor-pointer"
-                  >
-                    Ya tengo una cuenta
+                    Ingresar con mi cuenta UTP
                   </Link>
                 </div>
 
                 <div className="text-[11px] text-blue-200 font-medium pt-2">
-                  ⚡ Registro 100% gratuito exclusivo para la comunidad universitaria.
+                  Acceso seguro con tu correo institucional.
                 </div>
               </div>
             </div>
@@ -1527,7 +1534,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 15. Footer */}
       <footer className="bg-[#000F37] text-slate-400 py-16 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
@@ -1558,7 +1564,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Links 1 */}
             <div className="space-y-3">
               <h4 className="text-sm font-bold text-white uppercase tracking-wider">Plataforma</h4>
               <ul className="space-y-2 text-xs">
@@ -1637,9 +1642,8 @@ export default function Home() {
           {/* Copyrights */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500">
             <span>
-              © {new Date().getFullYear()} Desarrollado
-              con ❤️ por el equipo <strong>Innovative Minds</strong> para la Hackathon UTP+ by
-              Xpedition.
+              © {new Date().getFullYear()} Desarrollado con ❤️ por el equipo{" "}
+              <strong>Innovative Minds</strong> para la Hackathon UTP+ by Xpedition.
             </span>
 
             <div className="flex gap-4">
