@@ -7,11 +7,17 @@ export default function EmpleabilidadLayout({
   children: React.ReactNode
 }>) {
   return (
-    <div className="flex h-screen overflow-hidden bg-bg-soft">
-      <Sidebar />
-      <div className="flex flex-col flex-1 overflow-hidden">
-        <TopBanner />
-        {children}
+    <div className="min-h-screen bg-bg-soft">
+      <div className="flex min-h-screen">
+        <Sidebar />
+
+        <div className="min-w-0 flex-1">
+          <div className="sticky top-0 z-50">
+            <TopBanner />
+          </div>
+
+          {children}
+        </div>
       </div>
     </div>
   )

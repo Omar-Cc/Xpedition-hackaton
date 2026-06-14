@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { CalendarDays, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { CalendarDays, CheckCircle2, ArrowRight } from 'lucide-react'
 import PageShell from '@/src/components/layout/PageShell'
 import JobTargetSelector from '@/src/features/plan30d/components/JobTargetSelector'
 import PlanConfigBar from '@/src/features/plan30d/components/PlanConfigBar'
@@ -14,7 +15,7 @@ import QuickWinsCard from '@/src/features/plan30d/components/QuickWinsCard'
 import {
   SimulationRecommendationCard,
   MentorshipRecommendationCard,
-  IntegratedCoursesCard,
+  RefuerzosCard,
 } from '@/src/features/plan30d/components/RecommendationCards'
 import type { PlanDuration, AcademicLoad, PlanIntensity } from '@/src/features/plan30d/types'
 import {
@@ -32,10 +33,17 @@ import {
 } from '@/src/features/plan30d/data/mock-data'
 
 export default function PlanPage() {
+  const router = useRouter()
+
   // Config Bar States
   const [selectedJobId, setSelectedJobId] = useState<string>(defaultSelectedJobId)
   const [duration, setDuration] = useState<PlanDuration>(30)
   const [academicLoad, setAcademicLoad] = useState<AcademicLoad>('Normal')
+
+  // Interactive flow states
+  const [simulationStatus, setSimulationStatus] = useState<'pendiente' | 'lista' | 'completada'>('pendiente')
+  const [simulationSent, setSimulationSent] = useState<boolean>(false)
+  const [addedCourses, setAddedCourses] = useState<string[]>([])
 
   // Toast feedback state
   const [toastMessage, setToastMessage] = useState<string | null>(null)
@@ -68,6 +76,40 @@ export default function PlanPage() {
     setTimeout(() => {
       setToastMessage(null)
     }, 4000)
+  }
+
+  // Handle flow triggers
+  const handleSendToMentor = () => {
+    setSimulationSent(true)
+    setToastMessage(`¡Resumen de simulación enviado con éxito a tu mentor ${mentor.name}!`)
+    setTimeout(() => {
+      setToastMessage(null)
+    }, 4000)
+  }
+
+  const handleScheduleMentorship = () => {
+    setToastMessage(`¡Sesión de mentoría con ${mentor.name} agendada con éxito!`)
+    setTimeout(() => {
+      setToastMessage(null)
+    }, 4000)
+  }
+
+  const handleAddCourse = (courseTitle: string) => {
+    if (addedCourses.includes(courseTitle)) {
+      setAddedCourses((prev) => prev.filter((c) => c !== courseTitle))
+      setToastMessage(`Se eliminó "${courseTitle}" de tu plan de estudio.`)
+    } else {
+      setAddedCourses((prev) => [...prev, courseTitle])
+      setToastMessage(`¡"${courseTitle}" añadido a tu plan de estudio con éxito!`)
+    }
+    setTimeout(() => {
+      setToastMessage(null)
+    }, 3000)
+  }
+
+  const handleNavigateToSimulator = () => {
+    // Redirige al simulador
+    router.push('/simulator')
   }
 
   // Dynamic local header title helper
@@ -166,10 +208,10 @@ export default function PlanPage() {
               </p>
             </div>
 
-            {/* 3-Column 9-Card Grid */}
+            {/* 3-Column 7-Card Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
               
-              {/* Column 1: Timeline & Skill Gaps & Simulation */}
+              {/* Column 1: Timeline & Skill Gaps */}
               <div key={`col1-${selectedJobId}-${duration}`} className="flex flex-col gap-6 animate-cardIn">
                 {/* Card 1: Cronograma del plan */}
                 <WeekCalendar
@@ -180,24 +222,18 @@ export default function PlanPage() {
                 
                 {/* Card 2: Brechas frente al puesto */}
                 <SkillGapsCard skills={skills} />
-                
-                {/* Card 7: Simulación recomendada */}
-                <SimulationRecommendationCard simulation={simulation} />
               </div>
 
-              {/* Column 2: Today's Task & Impact & Mentorship */}
+              {/* Column 2: Today's Task & Impact */}
               <div key={`col2-${selectedJobId}-${academicLoad}`} className="flex flex-col gap-6 animate-cardIn">
                 {/* Card 3: Tarea de hoy */}
                 <TodayTask task={todayTask} academicLoad={academicLoad} />
                 
                 {/* Card 4: Impacto del plan */}
                 <WeekImpactCard impact={impact} />
-                
-                {/* Card 8: Mentoría sugerida */}
-                <MentorshipRecommendationCard mentor={mentor} />
               </div>
 
-              {/* Column 3: Urgency & Quick Wins & Integrated Courses */}
+              {/* Column 3: Urgency & Quick Wins & Refuerzos */}
               <div key={`col3-${selectedJobId}`} className="flex flex-col gap-6 animate-cardIn">
                 {/* Card 5: Fecha límite / urgencia */}
                 <DeadlineUrgencyCard
@@ -209,8 +245,106 @@ export default function PlanPage() {
                 {/* Card 6: Quick wins */}
                 <QuickWinsCard quickWins={quickWins} />
                 
-                {/* Card 9: Cursos y talleres recomendados */}
-                <IntegratedCoursesCard courses={courses} />
+                {/* Card 9: Refuerzos (Cursos y talleres recomendados) */}
+                <RefuerzosCard
+                  courses={courses}
+                  addedCourses={addedCourses}
+                  onAddCourse={handleAddCourse}
+                />
+              </div>
+
+            </div>
+          </section>
+
+          {/* SECTION 4: PREPARACIÓN ASISTIDA */}
+          <section className="space-y-4">
+            <div>
+              <h2 className="text-sm font-bold text-base-content uppercase tracking-wider">
+                4. Preparación Asistida
+              </h2>
+              <p className="text-[11px] text-base-content/40 font-medium">
+                Conecta tu práctica simulada con asesoría personalizada: Simulación IA → Feedback → Mentoría
+              </p>
+            </div>
+
+            <div className="bg-base-100 shadow-sm border border-base-200 rounded-3xl p-6">
+              <div className="flex flex-col lg:flex-row items-stretch gap-6">
+                
+                {/* Card: Simulación recomendada */}
+                <div className="flex-1">
+                  <SimulationRecommendationCard
+                    simulation={simulation}
+                    status={simulationStatus}
+                    onStatusChange={setSimulationStatus}
+                    onSendToMentor={handleSendToMentor}
+                    isSent={simulationSent}
+                    onNavigateToSimulator={handleNavigateToSimulator}
+                    selectedJob={selectedJob}
+                    skills={skills}
+                    courses={courses}
+                    todayTask={todayTask}
+                  />
+                </div>
+
+                {/* Flow Connector Arrow */}
+                <div className="hidden lg:flex flex-col items-center justify-center text-base-content/20 px-4 flex-shrink-0">
+                  <span className="text-[9px] font-black uppercase tracking-wider text-base-content/30 mb-1.5">
+                    Paso 2
+                  </span>
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 border border-slate-200 text-slate-400">
+                    <ArrowRight className="w-4.5 h-4.5" />
+                  </div>
+                  <span className="text-[9px] font-bold text-base-content/40 mt-1.5">
+                    Feedback
+                  </span>
+                </div>
+
+                {/* Card: Mentoría sugerida */}
+                <div className="flex-1">
+                  <MentorshipRecommendationCard
+                    mentor={mentor}
+                    selectedJob={selectedJob}
+                    simulationStatus={simulationStatus}
+                    simulationSent={simulationSent}
+                    onSchedule={handleScheduleMentorship}
+                  />
+                </div>
+
+              </div>
+
+              {/* Demo Control Switches */}
+              <div className="flex flex-wrap items-center justify-end gap-2 mt-6 pt-4 border-t border-slate-100 text-[10px] font-bold text-slate-400">
+                <span className="uppercase tracking-wide text-[9px] text-slate-400/80 mr-1">Demostración (Hackathon):</span>
+                <button
+                  onClick={() => { setSimulationStatus('pendiente'); setSimulationSent(false); }}
+                  className={`px-2.5 py-1 rounded-lg border text-[9px] transition-all duration-150 cursor-pointer ${
+                    simulationStatus === 'pendiente'
+                      ? 'bg-violet-100 border-violet-300 text-violet-700'
+                      : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
+                  }`}
+                >
+                  1. Pendiente
+                </button>
+                <button
+                  onClick={() => { setSimulationStatus('lista'); setSimulationSent(false); }}
+                  className={`px-2.5 py-1 rounded-lg border text-[9px] transition-all duration-150 cursor-pointer ${
+                    simulationStatus === 'lista'
+                      ? 'bg-violet-100 border-violet-300 text-violet-700'
+                      : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
+                  }`}
+                >
+                  2. Lista (Habilitar Iniciar)
+                </button>
+                <button
+                  onClick={() => { setSimulationStatus('completada'); }}
+                  className={`px-2.5 py-1 rounded-lg border text-[9px] transition-all duration-150 cursor-pointer ${
+                    simulationStatus === 'completada'
+                      ? 'bg-violet-100 border-violet-300 text-violet-700'
+                      : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
+                  }`}
+                >
+                  3. Completada (Feedback IA)
+                </button>
               </div>
 
             </div>
