@@ -200,7 +200,7 @@ const jobMatches = await fetch('/api/v1/jobs', { userId })
 
 ## 🎓 Autor(es)
 
-Hackathon Xpedition 2026 — Universidad Tecnológica del Perú  
+Equipo Innovative Minds — Hackathon Xpedition 2026 — Universidad Tecnológica del Perú  
 Repositorio: [Omar-Cc/Xpedition-hackaton](https://github.com/Omar-Cc/Xpedition-hackaton)
 
 ---
