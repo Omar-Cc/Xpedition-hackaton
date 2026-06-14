@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Lock, ArrowRight } from "lucide-react";
+import { User, Eye, EyeOff, Info, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
+  const [codigo, setCodigo] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -16,13 +17,13 @@ export default function LoginForm() {
     setError("");
 
     try {
-      console.log("Conectando al backend con:", { email, password });
+      console.log("Conectando al backend con:", { codigo, password });
       
       // TODO: Reemplazar con el fetch real al backend
       // const response = await fetch('/api/login', {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email, password }),
+      //   body: JSON.stringify({ email: codigo, password }), // Mantener compatibilidad de payload si se usaba email
       // });
       // if (!response.ok) throw new Error('Credenciales inválidas');
       
@@ -39,89 +40,134 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="w-full max-w-md p-8 sm:p-10 bg-base-100/80 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-base-200/50">
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
-          <Lock className="w-8 h-8 text-primary" />
+    <div className="w-full max-w-[440px] px-4 py-6 sm:px-6">
+      {/* Logo y Encabezado */}
+      <div className="flex flex-col items-center mb-8">
+        {/* Logo UTP + emplea */}
+        <div 
+          className="flex items-center justify-center select-none mb-6"
+          style={{ width: "310px", height: "50px" }}
+        >
+          {/* UTP squares: each is 50px * 50px, gap 4px between them */}
+          <div className="flex gap-[4px] h-full items-center">
+            <span className="w-[50px] h-[50px] bg-black text-white flex items-center justify-center font-bold text-[26px] rounded-[3px] leading-none">U</span>
+            <span className="w-[50px] h-[50px] bg-black text-white flex items-center justify-center font-bold text-[26px] rounded-[3px] leading-none">T</span>
+            <span className="w-[50px] h-[50px] bg-black text-white flex items-center justify-center font-bold text-[26px] rounded-[3px] leading-none">P</span>
+          </div>
+          {/* Plus sign: red, bold, no space on left or right */}
+          <span className="text-[#E30613] font-bold text-[40px] pl-[5px] pr-[0px] h-full flex items-center justify-center leading-none">
+            +
+          </span>
+          {/* Text emplea: lowercase, extremely bold, centered vertically */}
+          <span className="text-black font-black text-[38px] font-sans tracking-tight h-full flex items-center leading-none">
+            emplea
+          </span>
         </div>
-        <h2 className="text-3xl font-bold tracking-tight text-base-content mb-2">Bienvenido de nuevo</h2>
-        <p className="text-base-content/60">Ingresa tus credenciales para continuar a tu cuenta</p>
+
+        {/* Título Principal */}
+        <div className="text-center space-y-1">
+          <h2 className="text-[22px] sm:text-[24px] font-bold text-slate-800 tracking-tight leading-snug">
+            La nueva experiencia digital de empleabilidad
+          </h2>
+          <p className="text-[16px] sm:text-[17px] text-slate-500 font-light">
+            Cercana, dinámica y <span className="text-red-500 font-normal">flexible</span>
+          </p>
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <p className="text-[15px] text-slate-600 mb-6">
+        Ingresa tus datos para <span className="font-bold text-slate-800">iniciar sesión</span>.
+      </p>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
-          <div className="p-4 text-sm text-error bg-error/10 rounded-xl border border-error/20 flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <div className="p-3 text-xs text-error bg-error/10 rounded-lg border border-error/20 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-4 w-4" fill="none" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
             <span>{error}</span>
           </div>
         )}
 
-        <div className="space-y-5">
+        <div className="space-y-4">
+          {/* Código UTP */}
           <div className="form-control w-full">
-            <label className="label py-1">
-              <span className="label-text font-medium text-base-content">Correo Electrónico</span>
+            <label className="mb-1.5">
+              <span className="text-[13px] font-semibold text-slate-700">
+                Código UTP
+              </span>
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/40">
-                <Mail className="h-5 w-5" />
-              </div>
               <input
-                type="email"
+                type="text"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="input input-bordered w-full pl-12 h-12 bg-base-100 focus:outline-primary focus:border-primary transition-all duration-200"
-                placeholder="tu@email.com"
+                value={codigo}
+                onChange={(e) => setCodigo(e.target.value)}
+                className="w-full h-12 px-4 pr-10 bg-slate-50 border border-slate-300 rounded-lg text-[15px] text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200"
+                placeholder="Ingresa tu usuario"
               />
+              <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-blue-500 pointer-events-none">
+                <User className="h-5 w-5" />
+              </div>
+            </div>
+            {/* Mensaje de ejemplo */}
+            <div className="flex items-start gap-1.5 mt-1.5 text-[12px] text-slate-400 leading-normal">
+              <Info className="h-4 w-4 text-slate-400 shrink-0 mt-0.5" />
+              <span>Ejemplo de usuario: U1533148 (no digitar el @utp.edu.pe)</span>
             </div>
           </div>
 
+          {/* Contraseña */}
           <div className="form-control w-full">
-            <label className="label py-1 flex justify-between">
-              <span className="label-text font-medium text-base-content">Contraseña</span>
-              <Link href="#" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors">
-                ¿Olvidaste tu contraseña?
-              </Link>
+            <label className="mb-1.5">
+              <span className="text-[13px] font-semibold text-slate-700">
+                Contraseña
+              </span>
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-base-content/40">
-                <Lock className="h-5 w-5" />
-              </div>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="input input-bordered w-full pl-12 h-12 bg-base-100 focus:outline-primary focus:border-primary transition-all duration-200"
-                placeholder="••••••••"
+                className="w-full h-12 px-4 pr-10 bg-slate-50 border border-slate-300 rounded-lg text-[15px] text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200"
+                placeholder="Ingresa tu contraseña"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
+              </button>
+            </div>
+            {/* Restablecer Contraseña Link */}
+            <div className="text-right mt-2">
+              <Link href="#" className="text-[13.5px] font-semibold text-blue-600 hover:text-blue-800 transition-colors">
+                Restablecer contraseña
+              </Link>
             </div>
           </div>
         </div>
 
+        {/* Botón de envío */}
         <button
           type="submit"
           disabled={isLoading}
-          className="btn btn-primary w-full h-12 rounded-xl text-base font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary/30 group"
+          className="w-full h-12 bg-[#005BFF] hover:bg-[#004BD6] text-white py-3.5 px-4 mt-2 rounded-lg font-bold text-[15.5px] transition-all duration-200 active:scale-[0.98] shadow-sm hover:shadow-md hover:shadow-blue-500/10 flex items-center justify-center cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
         >
           {isLoading ? (
-            <span className="loading loading-spinner loading-md"></span>
+            <span className="loading loading-spinner loading-sm"></span>
           ) : (
-            <span className="flex items-center gap-2">
-              Iniciar Sesión
-              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </span>
+            "Iniciar sesión"
           )}
         </button>
-        
       </form>
-
-      <div className="mt-8 text-center text-sm text-base-content/70">
-        ¿No tienes una cuenta?{" "}
-        <Link href="#" className="font-semibold text-primary hover:text-primary/80 transition-colors">
-          Regístrate aquí
-        </Link>
-      </div>
     </div>
   );
 }
+

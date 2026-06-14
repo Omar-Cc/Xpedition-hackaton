@@ -193,3 +193,17 @@ body {
 [data-theme="dark"] .bg-linear-to-r.from-indigo-50 {
   background-image: linear-gradient(to right, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.08), rgba(234, 179, 8, 0.08)) !important;
 }
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
