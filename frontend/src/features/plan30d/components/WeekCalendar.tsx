@@ -107,7 +107,7 @@ export default function WeekCalendar({
           {!isShortPlan && (
             <button
               onClick={() => setShowMonthView((prev) => !prev)}
-              className="btn btn-ghost btn-xs gap-1 text-base-content/60 hover:text-base-content"
+              className="btn btn-ghost btn-xs gap-1 text-slate-500 hover:text-slate-800 font-bold"
             >
               {showMonthView ? (
                 <>
@@ -116,7 +116,7 @@ export default function WeekCalendar({
                 </>
               ) : (
                 <>
-                  Ver mes completo ({duration}d)
+                  {duration === 15 ? 'Ver 15 días' : 'Ver mes completo'}
                   <ChevronDown className="w-3.5 h-3.5" />
                 </>
               )}

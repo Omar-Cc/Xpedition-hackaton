@@ -1,23 +1,19 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { CalendarDays, CheckCircle2, ArrowRight } from 'lucide-react'
+import { CheckCircle2 } from 'lucide-react'
 import PageShell from '@/src/components/layout/PageShell'
+import PageMain from '@/src/components/layout/PageMain'
 import JobTargetSelector from '@/src/features/plan30d/components/JobTargetSelector'
 import PlanConfigBar from '@/src/features/plan30d/components/PlanConfigBar'
-import WeekCalendar from '@/src/features/plan30d/components/WeekCalendar'
 import SkillGapsCard from '@/src/features/plan30d/components/SkillGapsCard'
 import TodayTask from '@/src/features/plan30d/components/TodayTask'
 import WeekImpactCard from '@/src/features/plan30d/components/WeekImpactCard'
-import DeadlineUrgencyCard from '@/src/features/plan30d/components/DeadlineUrgencyCard'
-import QuickWinsCard from '@/src/features/plan30d/components/QuickWinsCard'
-import {
-  SimulationRecommendationCard,
-  MentorshipRecommendationCard,
-  RefuerzosCard,
-} from '@/src/features/plan30d/components/RecommendationCards'
-import type { PlanDuration, AcademicLoad, PlanIntensity } from '@/src/features/plan30d/types'
+import KanbanBoard from '@/src/features/plan30d/components/KanbanBoard'
+import PreparacionAsistidaCard from '@/src/features/plan30d/components/PreparacionAsistidaCard'
+import FloatingCalendarButton from '@/src/features/plan30d/components/FloatingCalendarButton'
+import type { PlanDuration, AcademicLoad, PlanIntensity, DayStatusType, TaskItem } from '@/src/features/plan30d/types'
 import {
   jobTargets,
   defaultSelectedJobId,
@@ -29,11 +25,15 @@ import {
   quickWinsByJob,
   simulationsByJob,
   mentorshipsByJob,
-  coursesByJob,
+  calendarEvents,
+  initialTasksByJob,
 } from '@/src/features/plan30d/data/mock-data'
 
 export default function PlanPage() {
   const router = useRouter()
+
+  // Step state: 1 = Selector, 2 = Execution
+  const [step, setStep] = useState<1 | 2>(1)
 
   // Config Bar States
   const [selectedJobId, setSelectedJobId] = useState<string>(defaultSelectedJobId)
@@ -43,20 +43,153 @@ export default function PlanPage() {
   // Interactive flow states
   const [simulationStatus, setSimulationStatus] = useState<'pendiente' | 'lista' | 'completada'>('pendiente')
   const [simulationSent, setSimulationSent] = useState<boolean>(false)
-  const [addedCourses, setAddedCourses] = useState<string[]>([])
 
   // Toast feedback state
   const [toastMessage, setToastMessage] = useState<string | null>(null)
 
+  // Tasks state
+  const [tasks, setTasks] = useState<TaskItem[]>([])
+
+  // Reset/load tasks when selectedJobId changes
+  useEffect(() => {
+    setTasks(initialTasksByJob[selectedJobId] || [])
+  }, [selectedJobId])
+
+  // Helper to format event times
+  const getEventTime = (dayNumber: number): string => {
+    if (dayNumber === 7) return 'Hoy, 3:00 PM'
+    if (dayNumber === 8) return 'Mañana, 10:00 AM'
+    const diff = dayNumber - 7
+    const targetDate = 11 + diff
+    const daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+    const targetDayOfWeekIndex = (3 + diff) % 7
+    const positiveDayOfWeekIndex = targetDayOfWeekIndex < 0 ? targetDayOfWeekIndex + 7 : targetDayOfWeekIndex
+    const dayName = daysOfWeek[positiveDayOfWeekIndex]
+    return `${dayName} ${targetDate}, 10:00 AM`
+  }
+
   // Derived target job details
   const selectedJob = jobTargets.find((j) => j.id === selectedJobId) ?? jobTargets[0]
   const skills = skillGapsByJob[selectedJobId] ?? []
-  const todayTask = todayTaskByJob[selectedJobId]
-  const impact = weekImpactByJob[selectedJobId]
   const quickWins = quickWinsByJob[selectedJobId] ?? []
   const simulation = simulationsByJob[selectedJobId]
   const mentor = mentorshipsByJob[selectedJobId]
-  const courses = coursesByJob[selectedJobId] ?? []
+
+  // Dynamic calculations from tasks state
+  const todayTask = tasks.find(t => t.dayNumber === 7 && t.status !== 'done') 
+    || tasks.find(t => t.dayNumber === 7 && t.status === 'done')
+  
+  const tomorrowTask = tasks.find(t => t.dayNumber === 8)
+  const tomorrowPreview = tomorrowTask 
+    ? `Mañana: ${tomorrowTask.title} — ${tomorrowTask.duration}` 
+    : 'Mañana: No hay tareas programadas.'
+
+  // Dynamic week calendar days
+  const dynamicWeekDays = [5, 6, 7, 8, 9, 10, 11].map((date, idx) => {
+    const labels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
+    const tasksForDay = tasks.filter((t) => t.dayNumber === date)
+    
+    let status: DayStatusType = 'pending'
+    if (date === 7) {
+      status = tasksForDay.length > 0 && tasksForDay.every(t => t.status === 'done') 
+        ? 'completed' 
+        : 'today'
+    } else if (tasksForDay.length > 0) {
+      if (tasksForDay.every(t => t.status === 'done')) {
+        status = 'completed'
+      } else if (date < 7) {
+        status = 'overdue'
+      } else {
+        const ev = tasksForDay.find(t => t.category === 'evento')
+        if (ev) {
+          if (ev.title.toLowerCase().includes('entrevista')) status = 'interview'
+          else if (ev.title.toLowerCase().includes('mentor')) status = 'mentorship'
+          else if (ev.title.toLowerCase().includes('postula')) status = 'application'
+          else if (ev.title.toLowerCase().includes('simula')) status = 'simulation'
+        }
+      }
+    }
+
+    return {
+      date: 9 + idx,
+      dayLabel: labels[idx],
+      status,
+      taskLabel: tasksForDay[0]?.title
+    }
+  })
+
+  // Dynamic month calendar days
+  const dynamicMonthDays = Array.from({ length: duration }, (_, i) => {
+    const date = i + 1
+    const tasksForDay = tasks.filter((t) => t.dayNumber === date)
+    
+    let status: DayStatusType = 'pending'
+    if (date === 7) {
+      status = tasksForDay.length > 0 && tasksForDay.every(t => t.status === 'done') 
+        ? 'completed' 
+        : 'today'
+    } else if (tasksForDay.length > 0) {
+      if (tasksForDay.every(t => t.status === 'done')) {
+        status = 'completed'
+      } else if (date < 7) {
+        status = 'overdue'
+      } else {
+        const ev = tasksForDay.find(t => t.category === 'evento')
+        if (ev) {
+          if (ev.title.toLowerCase().includes('entrevista')) status = 'interview'
+          else if (ev.title.toLowerCase().includes('mentor')) status = 'mentorship'
+          else if (ev.title.toLowerCase().includes('postula')) status = 'application'
+          else if (ev.title.toLowerCase().includes('simula')) status = 'simulation'
+        }
+      }
+    }
+    
+    return {
+      date,
+      dayLabel: '',
+      status,
+      taskLabel: tasksForDay[0]?.title
+    }
+  })
+
+  // Dynamic events
+  const dynamicEvents = tasks
+    .filter(t => t.status !== 'done')
+    .map((t) => {
+      let type: 'task' | 'interview' | 'mentorship' | 'deadline' | 'reminder' = 'task'
+      if (t.category === 'evento') {
+        if (t.title.toLowerCase().includes('entrevista')) type = 'interview'
+        else if (t.title.toLowerCase().includes('mentor')) type = 'mentorship'
+        else if (t.title.toLowerCase().includes('postula') || t.title.toLowerCase().includes('deadline')) type = 'deadline'
+        else type = 'reminder'
+      }
+      
+      return {
+        id: t.id,
+        title: t.title,
+        time: getEventTime(t.dayNumber),
+        type
+      }
+    })
+
+  // Dynamic match metrics
+  const doneCount = tasks.filter(t => t.status === 'done').length
+  const totalCount = tasks.length
+  const currentMatch = Math.min(100, selectedJob.matchPercent + tasks.filter(t => t.status === 'done' && t.dayNumber < 7).length * 2)
+  const projectedMatch = Math.min(100, selectedJob.matchPercent + tasks.filter(t => t.status === 'done' || t.dayNumber >= 7).length * 1.5)
+
+  const dynamicImpact = {
+    currentMatch,
+    projectedMatch,
+    targetCompany: selectedJob.company,
+    deliverables: [
+      { label: 'Prácticas técnicas completadas', done: tasks.filter(t => t.category === 'técnica' && t.status === 'done').length >= 2 },
+      { label: 'Simulaciones de entrevista resueltas', done: tasks.some(t => t.title.toLowerCase().includes('simulacro') && t.status === 'done') },
+      { label: 'Secciones de CV / LinkedIn mejoradas', done: tasks.some(t => t.category === 'CV' && t.status === 'done') },
+      { label: 'Postulación formal enviada', done: tasks.some(t => t.title.toLowerCase().includes('postulación') && t.status === 'done') },
+      { label: 'Sesión de mentoría / feedback agendada', done: tasks.some(t => t.title.toLowerCase().includes('mentoría') && t.status === 'done') },
+    ]
+  }
 
   // Dynamic Intensity calculations based on Load and Duration
   let intensity: PlanIntensity = 'Media'
@@ -94,263 +227,243 @@ export default function PlanPage() {
     }, 4000)
   }
 
-  const handleAddCourse = (courseTitle: string) => {
-    if (addedCourses.includes(courseTitle)) {
-      setAddedCourses((prev) => prev.filter((c) => c !== courseTitle))
-      setToastMessage(`Se eliminó "${courseTitle}" de tu plan de estudio.`)
-    } else {
-      setAddedCourses((prev) => [...prev, courseTitle])
-      setToastMessage(`¡"${courseTitle}" añadido a tu plan de estudio con éxito!`)
-    }
-    setTimeout(() => {
-      setToastMessage(null)
-    }, 3000)
+  const handleNavigateToSimulator = () => {
+    router.push('/simulator')
   }
 
-  const handleNavigateToSimulator = () => {
-    // Redirige al simulador
-    router.push('/simulator')
+  // Task update callbacks
+  const handleUpdateTask = (taskId: string, updates: Partial<TaskItem>) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, ...updates } : t))
+    )
+  }
+
+  const handleToggleCheckbox = (taskId: string, checkboxId: string, checked: boolean) => {
+    setTasks((prev) =>
+      prev.map((t) => {
+        if (t.id === taskId) {
+          const updated = t.checkboxes?.map((cb) =>
+            cb.id === checkboxId ? { ...cb, done: checked } : cb
+          )
+          return { ...t, checkboxes: updated }
+        }
+        return t
+      })
+    )
+  }
+
+  const handleStartTask = (taskId: string) => {
+    handleUpdateTask(taskId, { status: 'inprogress' })
+    setToastMessage('¡Actividad iniciada! Tu sesión de práctica está corriendo.')
+    setTimeout(() => setToastMessage(null), 4000)
+  }
+
+  const handleCompleteTask = (taskId: string) => {
+    setTasks((prev) =>
+      prev.map((t) => {
+        if (t.id === taskId) {
+          const updatedBox = t.checkboxes?.map(cb => ({ ...cb, done: true }))
+          return { ...t, status: 'done', checkboxes: updatedBox }
+        }
+        return t
+      })
+    )
+    setToastMessage('🎉 ¡Actividad completada! Tu nivel de compatibilidad ha mejorado.')
+    setTimeout(() => setToastMessage(null), 4000)
+  }
+
+  const handleAdelantarTask = (taskToAdv: TaskItem, option: 'reemplazar' | 'adicionar') => {
+    setTasks((prev) => {
+      return prev.map((t) => {
+        if (t.id === taskToAdv.id) {
+          return { ...t, dayNumber: 7, isAdelantada: true, status: 'inprogress' }
+        }
+        if (option === 'reemplazar' && t.dayNumber === 7 && t.status !== 'done' && t.id !== taskToAdv.id) {
+          return { ...t, dayNumber: 8, isReprogramada: true }
+        }
+        return t
+      })
+    })
+    setToastMessage(`¡Actividad "${taskToAdv.title}" trasladada a hoy con éxito!`)
+    setTimeout(() => setToastMessage(null), 4000)
+  }
+
+  const handleRecalculatePlan = (option: 'carga' | 'mantener') => {
+    if (option === 'carga') {
+      setToastMessage('¡Carga de estudio recalculada! Se han redistribuido las tareas futuras para optimizar tus tiempos.')
+    } else {
+      setToastMessage('Plan mantenido sin cambios adicionales en la carga futura.')
+    }
+    setTimeout(() => setToastMessage(null), 4000)
   }
 
   // Dynamic local header title helper
   const getLocalHeaderTitle = () => {
     if (duration === 5) {
-      return `Plan intensivo de 5 días para ${selectedJob.position}`
+      return `Plan intensivo de 5 días`
     }
     if (duration === 7) {
-      return `Plan acelerado de 7 días para ${selectedJob.position}`
+      return `Plan acelerado de 7 días`
     }
     if (duration === 15) {
-      return `Plan de preparación de 15 días para ${selectedJob.position}`
+      return `Plan de preparación de 15 días`
     }
-    return `Plan de preparación de 30 días para ${selectedJob.position}`
+    return `Plan de preparación de 30 días`
   }
 
   return (
     <PageShell>
-      {/* Local page wrapper */}
-      <main className="flex-1 overflow-y-auto p-6 bg-bg-soft relative">
-        <div className="max-w-7xl mx-auto space-y-8">
-          
-          {/* LOCAL HEADER: Dynamic title & urgency indicator */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-navy text-white p-6 rounded-2xl shadow-sm border border-white/5">
-            <div className="space-y-1">
-              <h1 className="text-xl font-bold tracking-tight md:text-2xl transition-all duration-200">
-                {getLocalHeaderTitle()}
-              </h1>
-              <p className="text-xs text-white/60 font-medium">
-                Objetivo activo: {selectedJob.position} en {selectedJob.company}
-              </p>
-            </div>
-            
-            {/* Dynamic visual badge for deadline urgency */}
-            <div className="flex items-center gap-2.5 bg-white/10 px-4 py-2.5 rounded-xl border border-white/5 w-fit">
-              <CalendarDays className="w-5 h-5 text-emerald-400" />
-              <div className="flex flex-col">
-                <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest leading-none">
-                  Límite de postulación
-                </span>
-                <span className="text-xs font-bold text-white mt-0.5 leading-none">
-                  Faltan {selectedJob.daysLeft} días ({selectedJob.deadlineDate})
-                </span>
-              </div>
-            </div>
+      <PageMain className="space-y-8 relative">
+        
+        {/* LOCAL HEADER */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-navy text-white p-6 rounded-2xl shadow-sm border border-white/5">
+          <div className="space-y-1">
+            <h1 className="text-xl font-bold tracking-tight md:text-2xl transition-all duration-200">
+              {getLocalHeaderTitle()}
+            </h1>
+            <p className="text-xs text-white/60 font-medium">
+              Flujo de Planificación · Paso {step} de 2
+            </p>
           </div>
+        </div>
 
-          {/* SECTION 1: OBJETIVO LABORAL */}
-          <section className="space-y-3">
-            <div className="flex items-center justify-between">
+        {/* PASO 1: SELECCIONAR OBJETIVO LABORAL */}
+        {step === 1 && (
+          <section className="space-y-6 animate-cardIn">
+            <div className="space-y-3">
+              <JobTargetSelector
+                jobs={jobTargets}
+                selectedJobId={selectedJobId}
+                onSelectJob={setSelectedJobId}
+              />
+            </div>
+
+            {/* Selected Job Summary & Action Button */}
+            <div className="bg-base-100 border border-base-200 p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4 shadow-xs">
+              <div className="text-sm font-bold text-slate-700">
+                Objetivo seleccionado:{' '}
+                <span className="text-navy">{selectedJob.position}</span> en{' '}
+                <span className="text-navy">{selectedJob.company}</span> ·{' '}
+                <span className="text-emerald-600 font-extrabold">{selectedJob.matchPercent}% match</span>
+              </div>
+              
+              <button
+                onClick={() => setStep(2)}
+                className="btn bg-emerald-500 hover:bg-emerald-600 text-white border-none rounded-xl font-bold px-6 cursor-pointer min-h-[38px] transition-all"
+              >
+                Continuar y generar plan
+              </button>
+            </div>
+          </section>
+        )}
+
+        {/* PASO 2: CONFIGURAR Y EJECUTAR PLAN */}
+        {step === 2 && (
+          <section className="space-y-6 animate-cardIn">
+            
+            {/* Active Job Compact Summary with Change button */}
+            <div className="bg-base-100 border border-base-200 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-3 shadow-xs">
+              <div className="text-sm font-bold text-slate-700">
+                Objetivo activo:{' '}
+                <span className="text-navy">{selectedJob.position}</span> en{' '}
+                <span className="text-navy">{selectedJob.company}</span> ·{' '}
+                <span className="text-emerald-600 font-extrabold">{selectedJob.matchPercent}% match</span>
+              </div>
+              
+              <button
+                onClick={() => setStep(1)}
+                className="btn btn-outline btn-sm rounded-xl border-blue-500 text-blue-600 hover:bg-blue-50/50 hover:text-blue-700 cursor-pointer font-bold px-4 py-2 min-h-[34px] h-auto"
+              >
+                Cambiar objetivo
+              </button>
+            </div>
+
+            {/* 2. CONFIGURACIÓN DEL PLAN */}
+            <div className="space-y-3">
               <div>
                 <h2 className="text-sm font-bold text-base-content uppercase tracking-wider">
-                  1. Objetivo Laboral
+                  2. Configuración del Plan
                 </h2>
                 <p className="text-[11px] text-base-content/40 font-medium">
-                  Selecciona el puesto objetivo al que deseas postular para recalcular tu plan
+                  Modifica los parámetros diarios para ajustar automáticamente la intensidad del plan
                 </p>
               </div>
-            </div>
-            <JobTargetSelector
-              jobs={jobTargets}
-              selectedJobId={selectedJobId}
-              onSelectJob={setSelectedJobId}
-            />
-          </section>
-
-          {/* SECTION 2: CONFIGURACIÓN DEL PLAN */}
-          <section className="space-y-3">
-            <div>
-              <h2 className="text-sm font-bold text-base-content uppercase tracking-wider">
-                2. Configuración del Plan
-              </h2>
-              <p className="text-[11px] text-base-content/40 font-medium">
-                Modifica los parámetros diarios para ajustar automáticamente la intensidad del plan
-              </p>
-            </div>
-            <PlanConfigBar
-              duration={duration}
-              onChangeDuration={setDuration}
-              academicLoad={academicLoad}
-              onChangeAcademicLoad={setAcademicLoad}
-              deadlineDate={selectedJob.deadlineDate}
-              intensity={intensity}
-              onAdjust={handleAdjustPlan}
-            />
-          </section>
-
-          {/* SECTION 3: PLAN GENERADO */}
-          <section className="space-y-4">
-            <div>
-              <h2 className="text-sm font-bold text-base-content uppercase tracking-wider">
-                3. Plan Generado
-              </h2>
-              <p className="text-[11px] text-base-content/40 font-medium">
-                Tu ruta de preparación adaptada con actividades diarias, brechas a cerrar e integraciones UTP
-              </p>
+              <PlanConfigBar
+                duration={duration}
+                onChangeDuration={setDuration}
+                academicLoad={academicLoad}
+                onChangeAcademicLoad={setAcademicLoad}
+                deadlineDate={selectedJob.deadlineDate}
+                intensity={intensity}
+                onAdjust={handleAdjustPlan}
+                daysLeft={selectedJob.daysLeft}
+              />
             </div>
 
-            {/* 3-Column 7-Card Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-              
-              {/* Column 1: Timeline & Skill Gaps */}
-              <div key={`col1-${selectedJobId}-${duration}`} className="flex flex-col gap-6 animate-cardIn">
-                {/* Card 1: Cronograma del plan */}
-                <WeekCalendar
-                  duration={duration}
-                  weekDays={weekDays}
-                  monthDays={monthDays}
+            {/* 3. PLAN GENERADO */}
+            <div className="space-y-6">
+              <div>
+                <h2 className="text-sm font-bold text-base-content uppercase tracking-wider">
+                  3. Plan Generado
+                </h2>
+                <p className="text-[11px] text-base-content/40 font-medium">
+                  Tu ruta de preparación adaptada con actividades diarias, brechas a cerrar e integraciones UTP
+                </p>
+              </div>
+
+              {/* Fila 1: Prioridad de hoy & Acelerador de postulación */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
+                <div key={`today-${selectedJobId}-${academicLoad}`} className="animate-cardIn">
+                  <TodayTask
+                    task={todayTask}
+                    tomorrowPreview={tomorrowPreview}
+                    academicLoad={academicLoad}
+                    quickWins={quickWins}
+                    onToggleCheckbox={handleToggleCheckbox}
+                    onStartTask={handleStartTask}
+                    onCompleteTask={handleCompleteTask}
+                  />
+                </div>
+
+                <div key={`asistida-${selectedJobId}`} className="animate-cardIn">
+                  <PreparacionAsistidaCard
+                    simulation={simulation}
+                    mentor={mentor}
+                    selectedJob={selectedJob}
+                    status={simulationStatus}
+                    onStatusChange={setSimulationStatus}
+                    onSchedule={handleScheduleMentorship}
+                    onNavigateToSimulator={handleNavigateToSimulator}
+                    isSent={simulationSent}
+                    onSendToMentor={handleSendToMentor}
+                  />
+                </div>
+              </div>
+
+              {/* Fila 2: Resumen del plan */}
+              <div key={`impact-${selectedJobId}`} className="animate-cardIn">
+                <WeekImpactCard impact={dynamicImpact} />
+              </div>
+
+              {/* Fila 3: Tablero del plan (Kanban) */}
+              <div key={`kanban-board-${selectedJobId}-${duration}`} className="animate-fadeIn">
+                <KanbanBoard
+                  tasks={tasks}
+                  onUpdateTask={handleUpdateTask}
+                  onAdelantarTask={handleAdelantarTask}
+                  onRecalcularPlan={handleRecalculatePlan}
                 />
-                
-                {/* Card 2: Brechas frente al puesto */}
+              </div>
+
+              {/* Fila 4: Brechas críticas */}
+              <div key={`gaps-${selectedJobId}`} className="animate-cardIn">
                 <SkillGapsCard skills={skills} />
               </div>
 
-              {/* Column 2: Today's Task & Impact */}
-              <div key={`col2-${selectedJobId}-${academicLoad}`} className="flex flex-col gap-6 animate-cardIn">
-                {/* Card 3: Tarea de hoy */}
-                <TodayTask task={todayTask} academicLoad={academicLoad} />
-                
-                {/* Card 4: Impacto del plan */}
-                <WeekImpactCard impact={impact} />
-              </div>
-
-              {/* Column 3: Urgency & Quick Wins & Refuerzos */}
-              <div key={`col3-${selectedJobId}`} className="flex flex-col gap-6 animate-cardIn">
-                {/* Card 5: Fecha límite / urgencia */}
-                <DeadlineUrgencyCard
-                  daysLeft={selectedJob.daysLeft}
-                  position={selectedJob.position}
-                  company={selectedJob.company}
-                />
-                
-                {/* Card 6: Quick wins */}
-                <QuickWinsCard quickWins={quickWins} />
-                
-                {/* Card 9: Refuerzos (Cursos y talleres recomendados) */}
-                <RefuerzosCard
-                  courses={courses}
-                  addedCourses={addedCourses}
-                  onAddCourse={handleAddCourse}
-                />
-              </div>
-
             </div>
+
           </section>
-
-          {/* SECTION 4: PREPARACIÓN ASISTIDA */}
-          <section className="space-y-4">
-            <div>
-              <h2 className="text-sm font-bold text-base-content uppercase tracking-wider">
-                4. Preparación Asistida
-              </h2>
-              <p className="text-[11px] text-base-content/40 font-medium">
-                Conecta tu práctica simulada con asesoría personalizada: Simulación IA → Feedback → Mentoría
-              </p>
-            </div>
-
-            <div className="bg-base-100 shadow-sm border border-base-200 rounded-3xl p-6">
-              <div className="flex flex-col lg:flex-row items-stretch gap-6">
-                
-                {/* Card: Simulación recomendada */}
-                <div className="flex-1">
-                  <SimulationRecommendationCard
-                    simulation={simulation}
-                    status={simulationStatus}
-                    onStatusChange={setSimulationStatus}
-                    onSendToMentor={handleSendToMentor}
-                    isSent={simulationSent}
-                    onNavigateToSimulator={handleNavigateToSimulator}
-                    selectedJob={selectedJob}
-                    skills={skills}
-                    courses={courses}
-                    todayTask={todayTask}
-                  />
-                </div>
-
-                {/* Flow Connector Arrow */}
-                <div className="hidden lg:flex flex-col items-center justify-center text-base-content/20 px-4 flex-shrink-0">
-                  <span className="text-[9px] font-black uppercase tracking-wider text-base-content/30 mb-1.5">
-                    Paso 2
-                  </span>
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 border border-slate-200 text-slate-400">
-                    <ArrowRight className="w-4.5 h-4.5" />
-                  </div>
-                  <span className="text-[9px] font-bold text-base-content/40 mt-1.5">
-                    Feedback
-                  </span>
-                </div>
-
-                {/* Card: Mentoría sugerida */}
-                <div className="flex-1">
-                  <MentorshipRecommendationCard
-                    mentor={mentor}
-                    selectedJob={selectedJob}
-                    simulationStatus={simulationStatus}
-                    simulationSent={simulationSent}
-                    onSchedule={handleScheduleMentorship}
-                  />
-                </div>
-
-              </div>
-
-              {/* Demo Control Switches */}
-              <div className="flex flex-wrap items-center justify-end gap-2 mt-6 pt-4 border-t border-slate-100 text-[10px] font-bold text-slate-400">
-                <span className="uppercase tracking-wide text-[9px] text-slate-400/80 mr-1">Demostración (Hackathon):</span>
-                <button
-                  onClick={() => { setSimulationStatus('pendiente'); setSimulationSent(false); }}
-                  className={`px-2.5 py-1 rounded-lg border text-[9px] transition-all duration-150 cursor-pointer ${
-                    simulationStatus === 'pendiente'
-                      ? 'bg-violet-100 border-violet-300 text-violet-700'
-                      : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
-                  }`}
-                >
-                  1. Pendiente
-                </button>
-                <button
-                  onClick={() => { setSimulationStatus('lista'); setSimulationSent(false); }}
-                  className={`px-2.5 py-1 rounded-lg border text-[9px] transition-all duration-150 cursor-pointer ${
-                    simulationStatus === 'lista'
-                      ? 'bg-violet-100 border-violet-300 text-violet-700'
-                      : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
-                  }`}
-                >
-                  2. Lista (Habilitar Iniciar)
-                </button>
-                <button
-                  onClick={() => { setSimulationStatus('completada'); }}
-                  className={`px-2.5 py-1 rounded-lg border text-[9px] transition-all duration-150 cursor-pointer ${
-                    simulationStatus === 'completada'
-                      ? 'bg-violet-100 border-violet-300 text-violet-700'
-                      : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50'
-                  }`}
-                >
-                  3. Completada (Feedback IA)
-                </button>
-              </div>
-
-            </div>
-          </section>
-
-        </div>
+        )}
 
         {/* Adjust Success Toast */}
         {toastMessage && (
@@ -361,7 +474,19 @@ export default function PlanPage() {
             </div>
           </div>
         )}
-      </main>
+      </PageMain>
+
+      {/* RENDER OUTSIDE TRANSFORMED SECTIONS & OUTSIDE PAGEMAIN TO ENSURE GLOBAL VIEWPORT POSITIONING */}
+      {step === 2 && (
+        <FloatingCalendarButton
+          duration={duration}
+          weekDays={dynamicWeekDays}
+          monthDays={dynamicMonthDays}
+          events={dynamicEvents}
+          deadlineDate={selectedJob.deadlineDate}
+          daysLeft={selectedJob.daysLeft}
+        />
+      )}
     </PageShell>
   )
 }

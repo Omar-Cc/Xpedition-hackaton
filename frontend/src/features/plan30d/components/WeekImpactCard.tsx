@@ -20,7 +20,7 @@ export default function WeekImpactCard({ impact }: WeekImpactCardProps) {
             <TrendingUp className="h-4 w-4 text-emerald-600" />
           </div>
           <h3 className="text-sm font-bold text-base-content">
-            Impacto del plan
+            Resumen del plan
           </h3>
         </div>
 

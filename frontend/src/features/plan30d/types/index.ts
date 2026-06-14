@@ -148,3 +148,22 @@ export interface CourseRecommendation {
   impact?: string
   actionLabel?: string
 }
+
+/** Extended plan task item used in KanbanBoard and today priority views */
+export interface TaskItem {
+  id: string
+  title: string
+  dayNumber: number
+  status: 'todo' | 'inprogress' | 'done'
+  category: 'técnica' | 'CV' | 'evento' | 'repaso'
+  isOverdue?: boolean
+  isAdelantada?: boolean
+  isReprogramada?: boolean
+  isUrgente?: boolean
+  isBloqueada?: boolean
+  bloqueoInfo?: string
+  duration: string
+  impact: string
+  description?: string
+  checkboxes?: { id: string; label: string; done: boolean }[]
+}
