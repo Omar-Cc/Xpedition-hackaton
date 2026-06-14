@@ -118,14 +118,6 @@ export default function Sidebar({ isOpen, onOpen, onClose }: Readonly<SidebarPro
             />
           ))}
         </nav>
-
-        <div className="py-4 flex items-center justify-center border-t border-white/10 shrink-0 bg-navy">
-          <div className="avatar avatar-placeholder">
-            <div className="bg-white/20 text-white w-9 h-9 rounded-full flex items-center justify-center">
-              <span className="text-sm font-semibold">{studentProfile.avatarInitial}</span>
-            </div>
-          </div>
-        </div>
       </aside>
 
       {/* 2. DRAWER OVERLAY BACKDROP (Mobile & Desktop) */}
