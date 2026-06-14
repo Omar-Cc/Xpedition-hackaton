@@ -5,6 +5,7 @@ export interface StudentProfile {
   career: string
   completionPercent: number
   avatarInitial: string
+  email: string
 }
 
 export interface StatItem {

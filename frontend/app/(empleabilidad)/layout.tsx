@@ -14,7 +14,11 @@ export default function EmpleabilidadLayout({
   return (
     <div className="min-h-screen bg-bg-soft">
       <div className="flex min-h-screen">
-        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+        <Sidebar 
+          isOpen={isSidebarOpen} 
+          onOpen={() => setIsSidebarOpen(true)}
+          onClose={() => setIsSidebarOpen(false)} 
+        />
 
         <div className="min-w-0 flex-1">
           <div className="sticky top-0 z-50">

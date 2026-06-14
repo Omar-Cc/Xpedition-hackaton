@@ -160,10 +160,6 @@ interface SortableTaskCardProps {
   onReprogram: (task: TaskItem) => void
   menuTaskId: string | null
   setMenuTaskId: (id: string | null) => void
-  quickReprogramTaskId: string | null
-  setQuickReprogramTaskId: (id: string | null) => void
-  quickNewDayVal: number
-  setQuickNewDayVal: (val: number) => void
   onUpdateTask: (taskId: string, updates: Partial<TaskItem>) => void
   setLocalToast: (toast: { message: string; type: 'success' | 'info' | 'warning' } | null) => void
 }
@@ -178,17 +174,13 @@ function SortableTaskCard({
   onReprogram,
   menuTaskId,
   setMenuTaskId,
-  quickReprogramTaskId,
-  setQuickReprogramTaskId,
-  quickNewDayVal,
-  setQuickNewDayVal,
   onUpdateTask,
   setLocalToast,
 }: SortableTaskCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id })
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
   }
 
@@ -272,10 +264,8 @@ function SortableTaskCard({
                   e.stopPropagation();
                   if (menuTaskId === task.id) {
                     setMenuTaskId(null);
-                    setQuickReprogramTaskId(null);
                   } else {
                     setMenuTaskId(task.id);
-                    setQuickReprogramTaskId(null);
                   }
                 }}
                 className="btn btn-ghost btn-circle btn-xs hover:bg-slate-100 cursor-pointer"
@@ -285,96 +275,53 @@ function SortableTaskCard({
 
               {menuTaskId === task.id && (
                 <div className="absolute right-0 bottom-full mb-1 bg-white border border-slate-200 rounded-xl shadow-lg z-20 py-1.5 w-48 animate-in slide-in-from-bottom-2 duration-150">
-                  {quickReprogramTaskId === task.id ? (
-                    <div className="px-3 py-2 space-y-2 text-left" onClick={(e) => e.stopPropagation()}>
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Día destino:</span>
-                      <div className="flex items-center gap-1.5">
-                        <input
-                          type="number"
-                          min={1}
-                          max={30}
-                          value={quickNewDayVal}
-                          onChange={(e) => setQuickNewDayVal(Math.max(1, Math.min(30, parseInt(e.target.value) || 1)))}
-                          className="input input-xs border border-slate-300 rounded-lg w-16 text-center font-bold text-slate-800 bg-white focus:outline-none focus:ring-1 focus:ring-navy focus:border-navy"
-                        />
-                        <span className="text-[10px] text-slate-400 font-semibold">1-30</span>
-                      </div>
-                      <div className="flex gap-1.5 pt-1">
-                        <button
-                          onClick={() => {
-                            onUpdateTask(task.id, { dayNumber: quickNewDayVal, isReprogramada: true })
-                            setQuickReprogramTaskId(null)
-                            setMenuTaskId(null)
-                            setLocalToast({
-                              message: `📅 Actividad reprogramada para el Día ${quickNewDayVal}.`,
-                              type: 'info'
-                            })
-                          }}
-                          className="btn btn-xs bg-navy hover:bg-navy/95 border-none text-white font-bold rounded-lg flex-1 cursor-pointer"
-                        >
-                          Guardar
-                        </button>
-                        <button
-                          onClick={() => {
-                            setQuickReprogramTaskId(null)
-                          }}
-                          className="btn btn-xs btn-outline border-slate-300 text-slate-500 font-bold rounded-lg flex-1 cursor-pointer"
-                        >
-                          Cancelar
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => { onMakeToday(task); setMenuTaskId(null); }}
-                        className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <Play className="w-3.5 h-3.5 text-emerald-500 fill-current" />
-                        Iniciar
-                      </button>
-                      <button
-                        onClick={() => { onCompleteTask(task); setMenuTaskId(null); }}
-                        className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                        Marcar completada
-                      </button>
-                      {task.dayNumber > 7 && (
-                        <button
-                          onClick={() => { onMakeToday(task); setMenuTaskId(null); }}
-                          className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
-                        >
-                          <ArrowRight className="w-3.5 h-3.5 text-blue-500" />
-                          Adelantar a hoy
-                        </button>
-                      )}
-                      <button
-                        onClick={() => { onMoveToTomorrow(task); setMenuTaskId(null); }}
-                        className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <Calendar className="w-3.5 h-3.5 text-amber-500" />
-                        Mover a mañana
-                      </button>
-                      <button
-                        onClick={() => {
-                          setQuickReprogramTaskId(task.id);
-                          setQuickNewDayVal(task.dayNumber);
-                        }}
-                        className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <Calendar className="w-3.5 h-3.5 text-indigo-500" />
-                        Reprogramar
-                      </button>
-                      <button
-                        onClick={() => { onOmitTask(task); setMenuTaskId(null); }}
-                        className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-rose-600 font-bold flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <X className="w-3.5 h-3.5 text-rose-500" />
-                        Omitir del plan
-                      </button>
-                    </>
+                  <button
+                    onClick={() => { onMakeToday(task); setMenuTaskId(null); }}
+                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Play className="w-3.5 h-3.5 text-emerald-500 fill-current" />
+                    Iniciar
+                  </button>
+                  <button
+                    onClick={() => { onCompleteTask(task); setMenuTaskId(null); }}
+                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                    Marcar completada
+                  </button>
+                  {task.dayNumber > 7 && (
+                    <button
+                      onClick={() => { onMakeToday(task); setMenuTaskId(null); }}
+                      className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <ArrowRight className="w-3.5 h-3.5 text-blue-500" />
+                      Adelantar a hoy
+                    </button>
                   )}
+                  <button
+                    onClick={() => { onMoveToTomorrow(task); setMenuTaskId(null); }}
+                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Calendar className="w-3.5 h-3.5 text-amber-500" />
+                    Mover a mañana
+                  </button>
+                  <button
+                    onClick={() => {
+                      onReprogram(task);
+                      setMenuTaskId(null);
+                    }}
+                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Calendar className="w-3.5 h-3.5 text-indigo-500" />
+                    Reprogramar
+                  </button>
+                  <button
+                    onClick={() => { onOmitTask(task); setMenuTaskId(null); }}
+                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-rose-600 font-bold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5 text-rose-500" />
+                    Omitir del plan
+                  </button>
                 </div>
               )}
             </div>
@@ -430,10 +377,8 @@ function SortableTaskCard({
                   e.stopPropagation();
                   if (menuTaskId === task.id) {
                     setMenuTaskId(null);
-                    setQuickReprogramTaskId(null);
                   } else {
                     setMenuTaskId(task.id);
-                    setQuickReprogramTaskId(null);
                   }
                 }}
                 className="btn btn-ghost btn-circle btn-xs hover:bg-slate-100 cursor-pointer"
@@ -443,80 +388,37 @@ function SortableTaskCard({
 
               {menuTaskId === task.id && (
                 <div className="absolute right-0 bottom-full mb-1 bg-white border border-slate-200 rounded-xl shadow-lg z-20 py-1.5 w-48 animate-in slide-in-from-bottom-2 duration-150">
-                  {quickReprogramTaskId === task.id ? (
-                    <div className="px-3 py-2 space-y-2 text-left" onClick={(e) => e.stopPropagation()}>
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Día destino:</span>
-                      <div className="flex items-center gap-1.5">
-                        <input
-                          type="number"
-                          min={1}
-                          max={30}
-                          value={quickNewDayVal}
-                          onChange={(e) => setQuickNewDayVal(Math.max(1, Math.min(30, parseInt(e.target.value) || 1)))}
-                          className="input input-xs border border-slate-300 rounded-lg w-16 text-center font-bold text-slate-800 bg-white focus:outline-none focus:ring-1 focus:ring-navy focus:border-navy"
-                        />
-                        <span className="text-[10px] text-slate-400 font-semibold">1-30</span>
-                      </div>
-                      <div className="flex gap-1.5 pt-1">
-                        <button
-                          onClick={() => {
-                            onUpdateTask(task.id, { dayNumber: quickNewDayVal, isReprogramada: true })
-                            setQuickReprogramTaskId(null)
-                            setMenuTaskId(null)
-                            setLocalToast({
-                              message: `📅 Actividad reprogramada para el Día ${quickNewDayVal}.`,
-                              type: 'info'
-                            })
-                          }}
-                          className="btn btn-xs bg-navy hover:bg-navy/95 border-none text-white font-bold rounded-lg flex-1 cursor-pointer"
-                        >
-                          Guardar
-                        </button>
-                        <button
-                          onClick={() => {
-                            setQuickReprogramTaskId(null)
-                          }}
-                          className="btn btn-xs btn-outline border-slate-300 text-slate-500 font-bold rounded-lg flex-1 cursor-pointer"
-                        >
-                          Cancelar
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => { onCompleteTask(task); setMenuTaskId(null); }}
-                        className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                        Marcar completada
-                      </button>
-                      <button
-                        onClick={() => { onMoveToTomorrow(task); setMenuTaskId(null); }}
-                        className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <Calendar className="w-3.5 h-3.5 text-amber-500" />
-                        Mover a mañana
-                      </button>
-                      <button
-                        onClick={() => {
-                          setQuickReprogramTaskId(task.id);
-                          setQuickNewDayVal(task.dayNumber);
-                        }}
-                        className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <Calendar className="w-3.5 h-3.5 text-indigo-500" />
-                        Reprogramar
-                      </button>
-                      <button
-                        onClick={() => { onOmitTask(task); setMenuTaskId(null); }}
-                        className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-rose-600 font-bold flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <X className="w-3.5 h-3.5 text-rose-500" />
-                        Omitir del plan
-                      </button>
-                    </>
-                  )}
+                  <button
+                    onClick={() => { onCompleteTask(task); setMenuTaskId(null); }}
+                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                    Marcar completada
+                  </button>
+                  <button
+                    onClick={() => { onMoveToTomorrow(task); setMenuTaskId(null); }}
+                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Calendar className="w-3.5 h-3.5 text-amber-500" />
+                    Mover a mañana
+                  </button>
+                  <button
+                    onClick={() => {
+                      onReprogram(task);
+                      setMenuTaskId(null);
+                    }}
+                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-slate-700 font-bold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Calendar className="w-3.5 h-3.5 text-indigo-500" />
+                    Reprogramar
+                  </button>
+                  <button
+                    onClick={() => { onOmitTask(task); setMenuTaskId(null); }}
+                    className="w-full text-left px-3 py-1.5 hover:bg-slate-50 text-[11px] text-rose-600 font-bold flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5 text-rose-500" />
+                    Omitir del plan
+                  </button>
                 </div>
               )}
             </div>
@@ -709,8 +611,6 @@ export default function KanbanBoard({
   const [menuTaskId, setMenuTaskId] = useState<string | null>(null)
   const [reprogrammingTask, setReprogrammingTask] = useState<TaskItem | null>(null)
   const [newDayVal, setNewDayVal] = useState(7)
-  const [quickReprogramTaskId, setQuickReprogramTaskId] = useState<string | null>(null)
-  const [quickNewDayVal, setQuickNewDayVal] = useState(7)
   
   // Advance task flow states
   const [taskToAdvance, setTaskToAdvance] = useState<TaskItem | null>(null)
@@ -755,7 +655,6 @@ export default function KanbanBoard({
       const target = e.target as HTMLElement
       if (menuTaskId && !target.closest('.three-dots-menu-container')) {
         setMenuTaskId(null)
-        setQuickReprogramTaskId(null)
       }
     }
     document.addEventListener('click', handleDocumentClick)
@@ -927,6 +826,13 @@ export default function KanbanBoard({
         message: `🎉 ¡Excelente trabajo! "${task.title}" completada.`,
         type: 'success'
       })
+    } else if (task.status === 'inprogress' && targetCol === 'todo') {
+      // En progreso -> Por hacer: mover de regreso a Por hacer
+      onUpdateTask(task.id, { status: 'todo' })
+      setLocalToast({
+        message: `🔄 "${task.title}" movida de nuevo a Por hacer.`,
+        type: 'info'
+      })
     } else if (task.status === 'todo' && targetCol === 'done') {
       // Por hacer -> Completado: pedir confirmación antes de completar
       setConfirmDragAction({
@@ -1040,10 +946,6 @@ export default function KanbanBoard({
                           }}
                           menuTaskId={menuTaskId}
                           setMenuTaskId={setMenuTaskId}
-                          quickReprogramTaskId={quickReprogramTaskId}
-                          setQuickReprogramTaskId={setQuickReprogramTaskId}
-                          quickNewDayVal={quickNewDayVal}
-                          setQuickNewDayVal={setQuickNewDayVal}
                           onUpdateTask={onUpdateTask}
                           setLocalToast={setLocalToast}
                         />
@@ -1102,10 +1004,6 @@ export default function KanbanBoard({
                           }}
                           menuTaskId={menuTaskId}
                           setMenuTaskId={setMenuTaskId}
-                          quickReprogramTaskId={quickReprogramTaskId}
-                          setQuickReprogramTaskId={setQuickReprogramTaskId}
-                          quickNewDayVal={quickNewDayVal}
-                          setQuickNewDayVal={setQuickNewDayVal}
                           onUpdateTask={onUpdateTask}
                           setLocalToast={setLocalToast}
                         />
@@ -1164,10 +1062,6 @@ export default function KanbanBoard({
                           }}
                           menuTaskId={menuTaskId}
                           setMenuTaskId={setMenuTaskId}
-                          quickReprogramTaskId={quickReprogramTaskId}
-                          setQuickReprogramTaskId={setQuickReprogramTaskId}
-                          quickNewDayVal={quickNewDayVal}
-                          setQuickNewDayVal={setQuickNewDayVal}
                           onUpdateTask={onUpdateTask}
                           setLocalToast={setLocalToast}
                         />

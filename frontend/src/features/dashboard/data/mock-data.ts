@@ -6,6 +6,7 @@ export const studentProfile: StudentProfile = {
   career: 'Estudiante',
   completionPercent: 72,
   avatarInitial: 'A',
+  email: 'u11111111@utp.edu.pe'
 }
 
 export const stats: StatItem[] = [
