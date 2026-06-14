@@ -14,7 +14,7 @@ export const SimulatorMain: React.FC = () => {
   const currentQuestion = "¿Cómo manejas prioridades que compiten entre sí?";
 
   return (
-    <div className="w-full text-white">
+    <div className="w-full text-base-content">
 
       {/* Selector de modo (Pestañas arriba) */}
       <ModeSelector activeMode={activeMode} setActiveMode={setActiveMode} />

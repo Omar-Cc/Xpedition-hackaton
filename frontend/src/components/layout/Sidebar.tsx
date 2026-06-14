@@ -19,7 +19,7 @@ const navItems = [
   { href: '/dashboard', label: 'Inicio', icon: Home },
   { href: '/mi-perfil', label: 'Mi Perfil', icon: UserCircle },
   { href: '/job-match', label: 'Job match', icon: Search },
-  { href: '/cv-builder', label: 'Creador de CV', icon: FileText },
+  { href: '/cv-builder', label: 'Constructor de CV IA', icon: FileText },
   { href: '/simulator', label: 'Simulador de entrevistas', icon: Mic },
   { href: '/plan-30d', label: 'Planificación', icon: Calendar },
   { href: '/cursos', label: 'Aprende +', icon: BookOpen },
@@ -31,7 +31,7 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 min-h-screen bg-navy text-white flex-shrink-0">
+    <aside className="hidden lg:sticky lg:top-0 lg:flex h-dvh w-64 shrink-0 self-start flex-col overflow-hidden bg-navy text-white">
       <div className="p-6 pb-4">
         <h1 className="text-lg font-bold tracking-tight">EmpléaUTP</h1>
         <p className="text-xs text-white/50 mt-0.5">Asistente de empleabilidad</p>
