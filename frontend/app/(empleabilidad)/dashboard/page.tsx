@@ -4,8 +4,6 @@ import NewsSection from '@/src/features/dashboard/components/NewsSection'
 import MentorshipCard from '@/src/features/dashboard/components/MentorshipCard'
 import WeeklyProgress from '@/src/features/dashboard/components/WeeklyProgress'
 import InterviewFeedbackCard from '@/src/features/dashboard/components/InterviewFeedbackCard'
-import CVHealthCard from '@/src/features/dashboard/components/CVHealthCard'
-import TodayTaskCard from '@/src/features/dashboard/components/TodayTaskCard'
 
 export default function DashboardPage() {
   return (
@@ -15,13 +13,11 @@ export default function DashboardPage() {
           <StatsGrid />
           <QuickActions />
           <InterviewFeedbackCard />
-          <NewsSection />
         </div>
         <div className="flex flex-col gap-4">
-          <TodayTaskCard />
-          <CVHealthCard />
           <MentorshipCard />
           <WeeklyProgress />
+          <NewsSection />
         </div>
       </div>
     </main>

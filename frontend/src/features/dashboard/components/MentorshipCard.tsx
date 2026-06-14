@@ -6,7 +6,7 @@ export default function MentorshipCard() {
       <div className="card-body p-5">
         <p className="text-xs font-semibold text-violet-700 mb-2">Tu conexión de mentoría</p>
         <p className="text-xs text-base-content/60 mb-4">
-          {mentor.name} está disponible — agenda una sesión gratuita de 30 min.
+          {mentor.name} está disponible — agenda una sesión.
         </p>
         <div className="flex items-center gap-3 mb-4">
           <div className="avatar avatar-placeholder">

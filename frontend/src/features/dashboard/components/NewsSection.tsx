@@ -1,44 +1,78 @@
-"use client"
-import { useState } from 'react'
+'use client'
+
+import { useState, useEffect } from 'react'
 import { ExternalLink, X, Info } from 'lucide-react'
 import { newsItems } from '../data/mock-data'
 
 export default function NewsSection() {
   const [selectedNews, setSelectedNews] = useState<typeof newsItems[0] | null>(null)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+
+  useEffect(() => {
+    if (isPaused || selectedNews) return
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % newsItems.length)
+    }, 4000)
+
+    return () => clearInterval(interval)
+  }, [isPaused, selectedNews])
+
+  const news = newsItems[currentIndex]
 
   return (
-    <div className="mt-8">
-      <h3 className="text-xs font-bold text-base-content/50 uppercase tracking-widest mb-4 flex items-center gap-2">
+    <div className="mt-4 flex flex-col gap-4">
+      <h3 className="text-xs font-bold text-base-content/50 uppercase tracking-widest flex items-center gap-2">
         <Info className="w-4 h-4 text-primary" />
         Novedades y Eventos
       </h3>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {newsItems.map((news) => (
-          <div 
-            key={news.id} 
-            className="card bg-base-100 shadow-sm border border-base-200 cursor-pointer hover:shadow-md transition-all overflow-hidden group"
-            onClick={() => setSelectedNews(news)}
-          >
-            <figure className="h-40 relative w-full overflow-hidden">
-              <img 
-                src={news.imageUrl} 
-                alt={news.title} 
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <span className="text-white font-medium bg-black/50 px-4 py-2 rounded-lg backdrop-blur-sm text-sm">
-                  Ampliar Anuncio
-                </span>
-              </div>
-            </figure>
-            <div className="p-4 bg-base-100">
-              <h4 className="text-sm font-semibold text-base-content line-clamp-2 leading-tight">
-                {news.title}
-              </h4>
+      <div 
+        className="card bg-base-100 shadow-sm border border-base-200 cursor-pointer hover:shadow-md transition-all overflow-hidden group relative flex flex-col"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onClick={() => setSelectedNews(news)}
+      >
+        <div 
+          key={currentIndex} 
+          className="animate-in fade-in slide-in-from-right-3 duration-300 flex flex-col"
+        >
+          <figure className="relative w-full aspect-[16/10] bg-slate-50 flex items-center justify-center overflow-hidden flex-shrink-0">
+            <img 
+              src={news.imageUrl} 
+              alt={news.title} 
+              className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-500"
+            />
+            <div className="absolute top-2 left-2 bg-primary text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider shadow-sm">
+              Anuncio UTP
             </div>
+            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <span className="text-white font-medium bg-black/50 px-3 py-1.5 rounded backdrop-blur-sm text-xs">
+                Ver Detalles
+              </span>
+            </div>
+          </figure>
+          <div className="p-3 bg-base-100 pr-16 border-t border-slate-100">
+            <h4 className="text-xs font-semibold text-base-content line-clamp-1 leading-tight">
+              {news.title}
+            </h4>
           </div>
-        ))}
+        </div>
+
+        {/* Carousel indicators (dots) */}
+        <div className="absolute bottom-3 right-3 flex gap-1 z-10" onClick={(e) => e.stopPropagation()}>
+          {newsItems.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentIndex(idx)}
+              className={`w-1.5 h-1.5 rounded-full transition-all cursor-pointer ${
+                currentIndex === idx ? 'bg-primary w-3.5' : 'bg-slate-300 hover:bg-slate-400'
+              }`}
+              aria-label={`Ir a diapositiva ${idx + 1}`}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Modal para ver la noticia/anuncio completo */}
