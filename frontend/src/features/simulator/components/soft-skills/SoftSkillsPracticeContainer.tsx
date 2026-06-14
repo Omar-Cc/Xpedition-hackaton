@@ -1,11 +1,10 @@
-"use client"
+'use client'
 
 import React, { useState } from 'react';
 import SoftSkillsTips from './SoftSkillsTips';
 import VideoInterviewRecorder from './VideoInterviewRecorder';
 import InterviewFeedback from './InterviewFeedback';
 
-// Este es el "molde" que le dice a TypeScript qué forma tiene tu feedback
 interface FeedbackData {
   metrics: {
     tone: number;
@@ -16,15 +15,13 @@ interface FeedbackData {
   constructiveFeedback: string;
 }
 
-
-
 interface SoftSkillsPracticeContainerProps {
   companyName: string;
   currentQuestion: string;
 }
 
 const SoftSkillsPracticeContainer: React.FC<SoftSkillsPracticeContainerProps> = ({ companyName, currentQuestion }) => {
-const [feedback, setFeedback] = useState<FeedbackData | null>(null);
+  const [feedback, setFeedback] = useState<FeedbackData | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const handleStartRecording = () => {
@@ -52,9 +49,9 @@ const [feedback, setFeedback] = useState<FeedbackData | null>(null);
 
       {/* Columna Central: Video y Pregunta */}
       <div className="xl:col-span-2 order-1 xl:order-2 space-y-4">
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-5 shadow-lg">
-          <span className="text-xs font-bold text-blue-400 uppercase tracking-widest block mb-1">Pregunta de {companyName}</span>
-          <h2 className="text-lg font-medium text-white">{currentQuestion}</h2>
+        <div className="bg-white border border-base-200 rounded-2xl p-5 shadow-sm">
+          <span className="text-xs font-bold text-blue-600 uppercase tracking-widest block mb-1">Pregunta de {companyName}</span>
+          <h2 className="text-lg font-bold text-slate-800">{currentQuestion}</h2>
         </div>
 
         <VideoInterviewRecorder
@@ -63,8 +60,8 @@ const [feedback, setFeedback] = useState<FeedbackData | null>(null);
         />
 
         {isAnalyzing && (
-          <div className="p-4 bg-slate-800 border border-slate-700 rounded-xl flex items-center justify-center gap-3 text-sm text-slate-300">
-            <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          <div className="p-4 bg-white border border-base-200 rounded-2xl flex items-center justify-center gap-3 text-sm text-slate-600 shadow-sm animate-pulse">
+            <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
             La IA está procesando tu video y respuestas...
           </div>
         )}
@@ -74,10 +71,10 @@ const [feedback, setFeedback] = useState<FeedbackData | null>(null);
 
       {/* Columna Derecha: Tarjeta informativa adicional o historial simplificado */}
       <div className="xl:col-span-1 order-3 space-y-4">
-        <div className="bg-slate-800/40 border border-slate-700/60 rounded-xl p-4 text-xs text-slate-400">
-          <h4 className="text-white font-medium mb-2">Acerca de esta sesión</h4>
-          <p className="mb-2">Estás postulando a: <strong className="text-slate-200">{companyName}</strong></p>
-          <p>Tipo: Entrevista Simulada Conductual ilimitada con feedback en tiempo real.</p>
+        <div className="bg-white border border-base-200 rounded-2xl p-4 text-xs text-slate-500 shadow-sm space-y-3">
+          <h4 className="text-slate-800 font-bold text-sm border-b border-slate-100 pb-2">Acerca de esta sesión</h4>
+          <p className="leading-relaxed">Estás postulando a: <strong className="text-slate-700 font-bold">{companyName}</strong></p>
+          <p className="leading-relaxed">Tipo: Entrevista Simulada Conductual ilimitada con feedback en tiempo real.</p>
         </div>
       </div>
     </div>
