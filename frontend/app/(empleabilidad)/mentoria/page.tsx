@@ -2008,7 +2008,7 @@ export default function MentoriaPage() {
 
       {/* Floating Calendar Button for Mentor (FAB) */}
       {viewMode === 'mentor' && isMentorVerified && (
-        <div className="fixed bottom-6 right-6 z-30 tooltip tooltip-left" data-tip="Ver Agenda de Tutorías">
+        <div className="fixed bottom-24 right-6 z-30 tooltip tooltip-left" data-tip="Ver Agenda de Tutorías">
           <button
             onClick={() => setShowMentorCalendarModal(true)}
             className="btn btn-primary btn-circle btn-lg h-14 w-14 shadow-2xl hover:scale-110 active:scale-95 transition-all duration-200 border-none bg-gradient-to-tr from-violet-600 to-indigo-600 text-white flex items-center justify-center animate-bounce"
@@ -2021,7 +2021,7 @@ export default function MentoriaPage() {
 
       {/* Floating Calendar Button for Student (FAB) */}
       {viewMode === 'student' && (
-        <div className="fixed bottom-6 right-6 z-30 tooltip tooltip-left" data-tip="Ver Calendario de Sesiones">
+        <div className="fixed bottom-24 right-6 z-30 tooltip tooltip-left" data-tip="Ver Calendario de Sesiones">
           <button
             onClick={() => setShowStudentCalendarModal(true)}
             className="btn btn-primary btn-circle btn-lg h-14 w-14 shadow-2xl hover:scale-110 active:scale-95 transition-all duration-200 border-none bg-gradient-to-tr from-violet-600 to-indigo-600 text-white flex items-center justify-center animate-bounce"

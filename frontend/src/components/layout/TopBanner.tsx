@@ -51,7 +51,7 @@ export default function TopBanner({ onMenuClick }: Readonly<TopBannerProps>) {
         <div className="w-px h-6 bg-base-300 mx-1 hidden xl:block"></div>
 
         <div
-          className="radial-progress text-primary flex-shrink-0 hidden lg:flex"
+          className="radial-progress text-primary flex-shrink-0 hidden lg:inline-grid"
           style={
             {
               "--value": String(pct),

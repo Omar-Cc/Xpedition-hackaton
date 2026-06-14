@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import Sidebar from '@/src/components/layout/Sidebar'
 import TopBanner from '@/src/components/layout/TopBanner'
+import { JobMatchProvider } from '@/src/contexts/JobMatchContext'
+import GlobalMatchesDrawer from '@/src/components/layout/GlobalMatchesDrawer'
 
 export default function EmpleabilidadLayout({
   children,
@@ -12,22 +14,25 @@ export default function EmpleabilidadLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-bg-soft">
-      <div className="flex min-h-screen">
-        <Sidebar 
-          isOpen={isSidebarOpen} 
-          onOpen={() => setIsSidebarOpen(true)}
-          onClose={() => setIsSidebarOpen(false)} 
-        />
+    <JobMatchProvider>
+      <div className="min-h-screen bg-bg-soft">
+        <div className="flex min-h-screen">
+          <Sidebar 
+            isOpen={isSidebarOpen} 
+            onOpen={() => setIsSidebarOpen(true)}
+            onClose={() => setIsSidebarOpen(false)} 
+          />
 
-        <div className="min-w-0 flex-1">
-          <div className="sticky top-0 z-50">
-            <TopBanner onMenuClick={() => setIsSidebarOpen(true)} />
+          <div className="min-w-0 flex-1">
+            <div className="sticky top-0 z-50">
+              <TopBanner onMenuClick={() => setIsSidebarOpen(true)} />
+            </div>
+
+            {children}
           </div>
-
-          {children}
         </div>
+        <GlobalMatchesDrawer />
       </div>
-    </div>
+    </JobMatchProvider>
   )
 }
