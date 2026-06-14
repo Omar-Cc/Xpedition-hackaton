@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import PageShell from '@/src/components/layout/PageShell'
 import PageHeader from '@/src/components/layout/PageHeader'
+import { useJobMatch } from '@/src/contexts/JobMatchContext'
 import {
   Bookmark,
   Cake,
@@ -74,11 +75,11 @@ const levels = ['Practicante', 'Pasantía', 'Junior', 'Semi Senior', 'Senior']
 const jobCatalog: JobItem[] = [
   {
     id: '1',
-    initial: 'S',
-    avatarColor: 'bg-red-500',
-    matchPercent: 84,
+    initial: 'SCO',
+    avatarColor: 'bg-red-600',
+    matchPercent: 82,
     title: 'Junior Data Analyst',
-    company: 'Scotiabank Perú',
+    company: 'Scotiabank',
     status: 'Postulación abierta',
     statusColor: 'success',
     location: 'San Isidro, Lima',
@@ -88,25 +89,25 @@ const jobCatalog: JobItem[] = [
     level: 'Junior',
     ageMin: 18,
     ageMax: 28,
-    tags: ['Python', 'Excel', 'SQL'],
+    tags: ['Python', 'SQL', 'Data'],
     highlight: 'Compatible con tu horario',
     requirement: 'Desde 8vo semestre',
     description: 'Únete a nuestro equipo de analítica para transformar datos financieros en decisiones estratégicas de impacto.',
     functions: ['Análisis exploratorio de bases de datos relacionales.', 'Generación de dashboards gerenciales.', 'Automatización de reportes diarios.'],
-    skills: ['Python', 'SQL', 'Power BI', 'Excel Avanzado'],
-    matchFeedback: 'Tienes un gran fit porque dominas Python y SQL, que son el core tecnológico de este rol.',
-    matchMissing: 'Aumentarías al 100% si tuvieras proyectos demostrables en Power BI.',
+    skills: ['Python avanzado', 'SQL avanzado', 'Storytelling'],
+    matchFeedback: 'Tienes un gran fit porque dominas la lógica de programación y entiendes el ecosistema de datos.',
+    matchMissing: 'Aumentarías al 100% mejorando tus habilidades avanzadas de Python y SQL.',
     source: 'LinkedIn',
     contractType: 'Tiempo Completo',
-    postedDate: 'Hace 2 días',
+    postedDate: 'Faltan 12 días',
   },
   {
     id: '2',
-    initial: 'B',
-    avatarColor: 'bg-blue-600',
-    matchPercent: 81,
-    title: 'Practicante de Sistemas',
-    company: 'Banco de Crédito BCP',
+    initial: 'BCP',
+    avatarColor: 'bg-blue-700',
+    matchPercent: 76,
+    title: 'Practicante BI',
+    company: 'BCP',
     status: 'Urgente',
     statusColor: 'warning',
     location: 'La Molina, Lima',
@@ -116,53 +117,53 @@ const jobCatalog: JobItem[] = [
     level: 'Practicante',
     ageMin: 18,
     ageMax: 25,
-    tags: ['SQL', 'Java', 'Scrum'],
+    tags: ['Power BI', 'ETL', 'BI'],
     highlight: 'Líder en banca peruana',
     requirement: 'Estudiantes de 7mo a 9no ciclo',
-    description: 'Apoya en el soporte, mantenimiento y automatización de procesos internos dentro de nuestras células de TI.',
-    functions: ['Apoyo en el desarrollo de microservicios en Java.', 'Consultas y mantenimiento de base de datos SQL.', 'Participación en rituales ágiles Scrum.'],
-    skills: ['SQL', 'Java', 'Scrum', 'Git'],
-    matchFeedback: 'Tu conocimiento básico de SQL e interés en Scrum encaja perfecto con el equipo.',
-    matchMissing: 'Te sumaría mucho conocer sobre testing unitario en Java.',
+    description: 'Apoya en el modelado de datos y generación de reportes en Power BI para el negocio comercial.',
+    functions: ['Apoyo en el desarrollo de tableros de control.', 'Consultas y mantenimiento de bases de datos SQL.', 'Análisis de tendencias.'],
+    skills: ['Power BI avanzado', 'ETL básico', 'Data Warehouse'],
+    matchFeedback: 'Tu interés por la analítica de negocios y conocimientos base de SQL son un buen inicio.',
+    matchMissing: 'Necesitas profundizar urgentemente en herramientas de visualización como Power BI.',
     source: 'Bumeran',
     contractType: 'Prácticas',
-    postedDate: 'Hoy',
+    postedDate: 'Faltan 4 días',
   },
   {
     id: '3',
-    initial: 'N',
+    initial: 'IBK',
     avatarColor: 'bg-emerald-600',
-    matchPercent: 77,
-    title: 'Junior Frontend Developer',
-    company: 'NTT Data',
+    matchPercent: 71,
+    title: 'Data Trainee',
+    company: 'Interbank',
     status: 'Postulación abierta',
     statusColor: 'success',
     location: 'Remoto',
     mode: 'Remoto',
-    salaryMin: 2500,
-    salaryMax: 3500,
-    level: 'Junior',
+    salaryMin: 2000,
+    salaryMax: 2500,
+    level: 'Practicante',
     ageMin: 20,
     ageMax: 30,
-    tags: ['React', 'TypeScript', 'CSS'],
-    highlight: 'Oportunidad internacional',
-    requirement: '6 meses de experiencia',
-    description: 'Buscamos un programador frontend con pasión por crear interfaces de usuario hermosas, rápidas y accesibles.',
-    functions: ['Maquetación de vistas en React con Tailwind CSS.', 'Consumo de APIs RESTful usando TypeScript.', 'Resolución de bugs de interfaz reportados por QA.'],
-    skills: ['React', 'TypeScript', 'CSS', 'TailwindCSS'],
-    matchFeedback: 'Tu portafolio demuestra buen manejo de React y lógica frontend.',
-    matchMissing: 'Aprender sobre pruebas con Jest elevaría tu match al máximo.',
+    tags: ['Excel', 'SQL', 'Data'],
+    highlight: 'Oportunidad de crecimiento',
+    requirement: 'Recién egresados',
+    description: 'Buscamos talento joven para nuestro programa de trainees enfocado en el área de datos e innovación.',
+    functions: ['Limpieza y estructuración de bases de datos de clientes.', 'Elaboración de macros y automatizaciones en Excel.', 'Apoyo a científicos de datos.'],
+    skills: ['Excel avanzado', 'SQL intermedio'],
+    matchFeedback: 'Manejando las herramientas básicas de analítica podrías destacar rápidamente.',
+    matchMissing: 'Aún te falta consolidar el nivel avanzado de hojas de cálculo y queries intermedios.',
     source: 'Computrabajo',
     contractType: 'Tiempo Completo',
-    postedDate: 'Hace 3 días',
+    postedDate: 'Faltan 19 días',
   },
   {
     id: '4',
-    initial: 'B',
-    avatarColor: 'bg-pink-600',
-    matchPercent: 85,
-    title: 'Practicante de Desarrollo Web',
-    company: 'Belcorp',
+    initial: 'BBVA',
+    avatarColor: 'bg-blue-900',
+    matchPercent: 68,
+    title: 'Practicante de Analytics',
+    company: 'BBVA',
     status: 'Postulación abierta',
     statusColor: 'success',
     location: 'San Isidro, Lima',
@@ -172,17 +173,17 @@ const jobCatalog: JobItem[] = [
     level: 'Practicante',
     ageMin: 18,
     ageMax: 26,
-    tags: ['HTML', 'JavaScript', 'CSS'],
-    highlight: 'Buen clima laboral',
-    requirement: 'Conocimientos de Javascript',
-    description: 'Participa en el mantenimiento y desarrollo de módulos para nuestras plataformas e-commerce de belleza.',
-    functions: ['Apoyo en el desarrollo de componentes dinámicos en JavaScript.', 'Asegurar la visualización responsive en dispositivos móviles.', 'Apoyo en pruebas de integración.'],
-    skills: ['HTML5', 'CSS3', 'JavaScript', 'Bootstrap'],
-    matchFeedback: 'Tu nivel de HTML/CSS es excelente y tienes buena base de algoritmia.',
-    matchMissing: 'Sería ideal que conozcas los fundamentos de algún framework moderno.',
+    tags: ['Tableau', 'SQL', 'Analytics'],
+    highlight: 'Innovación constante',
+    requirement: 'Conocimientos de estadística',
+    description: 'Participa en el análisis de campañas de marketing y comportamiento del consumidor mediante datos.',
+    functions: ['Construcción de dashboards de seguimiento en Tableau.', 'Levantamiento de requerimientos de negocio.', 'Extracción de datos en SQL.'],
+    skills: ['Tableau básico', 'SQL intermedio', 'Análisis de negocio'],
+    matchFeedback: 'Tu capacidad analítica será fundamental para este puesto orientado al negocio.',
+    matchMissing: 'Aún te falta aprender Tableau básico y conceptos de inteligencia comercial.',
     source: 'UTP Bolsa Laboral',
     contractType: 'Prácticas',
-    postedDate: 'Hace 1 día',
+    postedDate: 'Faltan 8 días',
   },
   {
     id: '5',
@@ -942,13 +943,13 @@ function JobInfoRow({ label, value }: { label: string; value: string }) {
 function getSourceBadgeStyle(source: string) {
   switch (source) {
     case 'LinkedIn':
-      return 'bg-blue-50 text-blue-700 border-blue-200/50 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-900/30'
+      return 'bg-info/10 text-info border-info/20'
     case 'Bumeran':
-      return 'bg-pink-50 text-pink-700 border-pink-200/50 dark:bg-pink-950/30 dark:text-pink-400 dark:border-pink-900/30'
+      return 'bg-secondary/10 text-secondary border-secondary/20'
     case 'Computrabajo':
-      return 'bg-orange-50 text-orange-700 border-orange-200/50 dark:bg-orange-950/30 dark:text-orange-400 dark:border-orange-900/30'
+      return 'bg-warning/10 text-warning border-warning/20'
     case 'UTP Bolsa Laboral':
-      return 'bg-red-50 text-red-700 border-red-200/50 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900/30'
+      return 'bg-error/10 text-error border-error/20'
     default:
       return 'bg-base-200 text-base-content/85 border-base-300'
   }
@@ -958,34 +959,33 @@ export default function JobMatchPage() {
   const [filters, setFilters] = useState<AppliedFilters>(defaultFilters)
   const [quickOpen, setQuickOpen] = useState(false)
   const [quickIndex, setQuickIndex] = useState(0)
-  const [matchedJobs, setMatchedJobs] = useState<JobItem[]>([])
+  const { matchedJobs, setMatchedJobs, matchesDrawerOpen, setMatchesDrawerOpen } = useJobMatch()
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [selectedJobDetail, setSelectedJobDetail] = useState<JobItem | null>(null)
   const [expandedFeedbackId, setExpandedFeedbackId] = useState<string | null>(null)
-  
+
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6
   const [showDisclaimer, setShowDisclaimer] = useState(true)
 
   const [activeTab, setActiveTab] = useState<'explorar' | 'matches'>('explorar')
-  
+
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null)
-  
+
   const [removedJobs, setRemovedJobs] = useState<string[]>([])
   const [lastRemovedJob, setLastRemovedJob] = useState<string | null>(null)
   const [removedUndoTimer, setRemovedUndoTimer] = useState<NodeJS.Timeout | null>(null)
-  const [matchesDrawerOpen, setMatchesDrawerOpen] = useState(false)
 
   const filterCounts = useMemo(() => {
     const query = filters.query.trim().toLowerCase()
     const address = filters.address.trim().toLowerCase()
-    
+
     const counts = {
       modes: {} as Record<string, number>,
       levels: {} as Record<string, number>,
       sources: {} as Record<string, number>,
     }
-    
+
     workModes.forEach(m => counts.modes[m] = 0)
     levels.forEach(l => counts.levels[l] = 0)
     const allSources = ['LinkedIn', 'Bumeran', 'Computrabajo', 'UTP Bolsa Laboral']
@@ -1053,21 +1053,27 @@ export default function JobMatchPage() {
   }, [selectedJobId, activeJobsList])
 
   const getMatchColorStroke = (percent: number) => {
-    if (percent >= 80) return 'stroke-emerald-500 dark:stroke-emerald-400'
-    if (percent >= 75) return 'stroke-amber-500 dark:stroke-amber-400'
-    return 'stroke-orange-500 dark:stroke-orange-400'
+    if (percent >= 80) return 'stroke-success'
+    if (percent >= 75) return 'stroke-warning'
+    return 'stroke-error'
   }
 
   const getMatchColorText = (percent: number) => {
-    if (percent >= 80) return 'text-emerald-500'
-    if (percent >= 75) return 'text-amber-500'
-    return 'text-orange-500'
+    if (percent >= 80) return 'text-success'
+    if (percent >= 75) return 'text-warning'
+    return 'text-error'
   }
-  
+
   const getMatchColorBg = (percent: number) => {
-    if (percent >= 80) return 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 border-emerald-100/60 dark:border-emerald-900/30'
-    if (percent >= 75) return 'bg-amber-50 dark:bg-amber-950/30 text-amber-600 border-amber-100/60 dark:border-amber-900/30'
-    return 'bg-orange-50 dark:bg-orange-950/30 text-orange-600 border-orange-100/60 dark:border-orange-900/30'
+    if (percent >= 80) return 'bg-success/10 text-success border-success/20'
+    if (percent >= 75) return 'bg-warning/10 text-warning border-warning/20'
+    return 'bg-error/10 text-error border-error/20'
+  }
+
+  const getMatchDotColor = (percent: number) => {
+    if (percent >= 80) return 'bg-success'
+    if (percent >= 75) return 'bg-warning'
+    return 'bg-error'
   }
 
   const currentQuickJob = filteredJobs[quickIndex] ?? null
@@ -1081,7 +1087,7 @@ export default function JobMatchPage() {
 
   const activeFilterChips = useMemo(() => {
     const chips: { type: string; value: string; label: string }[] = []
-    
+
     filters.modes.forEach(mode => {
       chips.push({ type: 'mode', value: mode, label: `Modalidad: ${mode}` })
     })
@@ -1239,8 +1245,16 @@ export default function JobMatchPage() {
               <div className="flex gap-3 w-full md:w-auto">
                 <button
                   type="button"
+                  onClick={() => setFiltersOpen(true)}
+                  className="inline-flex h-[48px] items-center justify-center gap-2 rounded-2xl bg-base-200 hover:bg-base-300 border border-base-300 px-6 text-sm font-bold text-base-content transition cursor-pointer flex-1 md:flex-none"
+                >
+                  <Filter className="h-4.5 w-4.5" />
+                  Filtros
+                </button>
+                <button
+                  type="button"
                   onClick={openQuickSearch}
-                  className="inline-flex h-[48px] items-center justify-center gap-2 rounded-2xl bg-primary hover:bg-primary/90 px-6 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 w-full md:w-auto cursor-pointer"
+                  className="inline-flex h-[48px] items-center justify-center gap-2 rounded-2xl bg-primary hover:bg-primary/90 px-6 text-sm font-bold text-white shadow-sm transition hover:-translate-y-0.5 flex-1 md:flex-none cursor-pointer"
                 >
                   <Sparkles className="h-4 w-4 text-yellow-400 fill-yellow-400" />
                   Búsqueda rápida
@@ -1248,239 +1262,222 @@ export default function JobMatchPage() {
               </div>
             </div>
 
+            {/* Expandable filters panel (Desktop Inline, Mobile Drawer) */}
+            {filtersOpen && (
+              <>
+                {/* Mobile Backdrop */}
+                <div
+                  className="fixed inset-0 z-[60] bg-base-content/40 backdrop-blur-sm lg:hidden animate-fadeIn"
+                  onClick={() => setFiltersOpen(false)}
+                />
 
-          </div>
-        {showDisclaimer && (
-          <div className="mb-6 rounded-2xl bg-amber-100 border border-amber-200 p-4 sm:p-5 flex items-start gap-4 shadow-sm relative animate-fadeIn">
-            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-200 text-amber-800">
-              <Info className="h-5 w-5" />
-            </div>
-            <div className="flex-1 pr-6">
-              <h3 className="text-sm font-bold text-amber-900">Sobre el Porcentaje de Match</h3>
-              <p className="mt-1 text-xs leading-relaxed text-amber-800">
-                El porcentaje de match mide la compatibilidad técnica entre tu perfil y los requisitos de la vacante basado en palabras clave y habilidades. <strong>No significa el éxito de la entrevista ni asegura la contratación.</strong> Te sugerimos usar esta herramienta como guía para identificar qué áreas puedes mejorar.
-              </p>
-            </div>
-            <button
-              onClick={() => setShowDisclaimer(false)}
-              className="absolute top-4 right-4 text-amber-700 hover:bg-amber-300 p-1.5 rounded-full transition cursor-pointer"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        )}
-        <div className="grid grid-cols-1 xl:grid-cols-[280px_1fr] gap-6 items-start">
-            {/* ── Filtros: Sidebar ── */}
-            <aside className={`
-              ${filtersOpen ? 'fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-base-content/20 sm:p-4 backdrop-blur-sm xl:static xl:inset-auto xl:z-auto xl:flex xl:items-start xl:justify-start xl:bg-transparent xl:p-0 xl:backdrop-blur-none' : 'hidden xl:block'}
-            `}>
-              <div className={`w-full rounded-t-3xl sm:rounded-3xl bg-base-100 shadow-2xl xl:max-w-none xl:rounded-3xl xl:border xl:border-base-200 xl:shadow-xs ${filtersOpen ? 'max-h-[85vh] overflow-y-auto animate-slideUp sm:animate-none' : ''}`}>
-                <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-5 border-b border-base-200 bg-base-100/95 backdrop-blur-md">
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                      <Filter className="h-4.5 w-4.5" />
+                {/* Filters Container */}
+                <div className="fixed bottom-0 left-0 right-0 z-[70] max-h-[85vh] flex flex-col bg-base-100 rounded-t-3xl shadow-2xl animate-slideUp lg:static lg:mt-6 lg:pt-6 lg:border-t lg:border-base-200 lg:animate-slideDown lg:max-h-none lg:bg-transparent lg:shadow-none lg:rounded-none lg:block">
+
+                  {/* Mobile Header */}
+                  <div className="flex shrink-0 items-center justify-between px-6 py-5 border-b border-base-200 bg-base-100/95 backdrop-blur-md rounded-t-3xl lg:hidden">
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                        <Filter className="h-4.5 w-4.5" />
+                      </div>
+                      <h2 className="text-sm font-extrabold text-base-content uppercase tracking-wider">Filtros</h2>
                     </div>
-                    <h2 className="text-sm font-extrabold text-base-content uppercase tracking-wider">Filtros</h2>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <button onClick={clearFilters} className="text-xs font-bold text-primary hover:text-primary/80 transition-colors hidden xl:block cursor-pointer">
-                      Limpiar
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setFiltersOpen(false)}
-                      className="rounded-full p-2 text-base-content/40 xl:hidden hover:bg-base-200 cursor-pointer"
-                    >
+                    <button onClick={() => setFiltersOpen(false)} className="rounded-full p-2 text-base-content/40 hover:bg-base-200 cursor-pointer">
                       <X className="h-5 w-5" />
                     </button>
                   </div>
-                </div>
 
-                <div className="space-y-5 px-5 py-6">
-                  {/* Modalidad Filter */}
-                  <section className="rounded-2xl bg-base-200/40 p-4 border border-base-200/60">
-                    <div className="mb-3 flex items-center gap-2 text-base-content/60">
-                      <Clock3 className="h-4 w-4" />
-                      <h3 className="text-xs font-bold uppercase tracking-wider">Modalidad</h3>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      {workModes.map((mode) => {
-                        const selected = filters.modes.includes(mode)
-                        const count = filterCounts.modes[mode] || 0
-                        return (
-                          <button
-                            key={mode}
-                            type="button"
-                            onClick={() => {
-                              setFilters({ ...filters, modes: toggleItem(filters.modes, mode) })
+                  {/* Scrollable Content (Grid) */}
+                  <div className="flex-1 overflow-y-auto px-6 py-6 lg:p-0 lg:overflow-visible">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                      {/* Modalidad Filter */}
+                      <section className="rounded-2xl bg-base-200/40 p-4 border border-base-200/60">
+                        <div className="mb-3 flex items-center gap-2 text-base-content/60">
+                          <Clock3 className="h-4 w-4" />
+                          <h3 className="text-xs font-bold uppercase tracking-wider">Modalidad</h3>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                          {workModes.map((mode) => {
+                            const selected = filters.modes.includes(mode)
+                            const count = filterCounts.modes[mode] || 0
+                            return (
+                              <button
+                                key={mode}
+                                type="button"
+                                onClick={() => {
+                                  setFilters({ ...filters, modes: toggleItem(filters.modes, mode) })
+                                  setCurrentPage(1)
+                                }}
+                                className={`flex items-center justify-between w-full rounded-xl border px-3 py-2.5 text-xs font-bold transition-all cursor-pointer ${selected
+                                    ? 'border-primary bg-primary/10 text-primary shadow-2xs'
+                                    : 'border-transparent bg-base-100 text-base-content/80 hover:border-base-300 hover:bg-base-200/50'
+                                  }`}
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <div className={`flex h-4 w-4 items-center justify-center rounded-md border transition-all ${selected ? 'border-primary bg-primary text-white' : 'border-base-300 bg-base-100'
+                                    }`}>
+                                    {selected && <Check className="h-3 w-3 stroke-[3]" />}
+                                  </div>
+                                  <span>{mode}</span>
+                                </div>
+                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${selected ? 'bg-primary/20 text-primary' : 'bg-base-200 text-base-content/60'
+                                  }`}>
+                                  {count}
+                                </span>
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </section>
+
+                      {/* Rango Salarial Filter */}
+                      <section className="rounded-2xl bg-base-200/40 p-4 border border-base-200/60">
+                        <div className="mb-3 flex items-center gap-2 text-base-content/60">
+                          <DollarSign className="h-4 w-4" />
+                          <h3 className="text-xs font-bold uppercase tracking-wider">Rango Salarial</h3>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <input
+                            type="number"
+                            placeholder="Min (S/)"
+                            value={filters.salaryMin}
+                            onChange={(e) => {
+                              setFilters({ ...filters, salaryMin: e.target.value })
                               setCurrentPage(1)
                             }}
-                            className={`flex items-center justify-between w-full rounded-xl border px-3 py-2.5 text-xs font-bold transition-all cursor-pointer ${
-                              selected 
-                                ? 'border-primary bg-primary/10 text-primary shadow-2xs' 
-                                : 'border-transparent bg-base-100 text-base-content/80 hover:border-base-300 hover:bg-base-200/50'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <div className={`flex h-4 w-4 items-center justify-center rounded-md border transition-all ${
-                                selected ? 'border-primary bg-primary text-white' : 'border-base-300 bg-base-100'
-                              }`}>
-                                {selected && <Check className="h-3 w-3 stroke-[3]" />}
-                              </div>
-                              <span>{mode}</span>
-                            </div>
-                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
-                              selected ? 'bg-primary/20 text-primary' : 'bg-base-200 text-base-content/60'
-                            }`}>
-                              {count}
-                            </span>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </section>
-
-                  {/* Rango Salarial Filter */}
-                  <section className="rounded-2xl bg-base-200/40 p-4 border border-base-200/60">
-                    <div className="mb-3 flex items-center gap-2 text-base-content/60">
-                      <DollarSign className="h-4 w-4" />
-                      <h3 className="text-xs font-bold uppercase tracking-wider">Rango Salarial</h3>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <input
-                        type="number"
-                        placeholder="Min (S/)"
-                        value={filters.salaryMin}
-                        onChange={(e) => {
-                          setFilters({ ...filters, salaryMin: e.target.value })
-                          setCurrentPage(1)
-                        }}
-                        className="w-full rounded-xl border border-base-300 bg-base-100 px-3 py-2 text-xs font-semibold outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base-content"
-                      />
-                      <input
-                        type="number"
-                        placeholder="Max (S/)"
-                        value={filters.salaryMax}
-                        onChange={(e) => {
-                          setFilters({ ...filters, salaryMax: e.target.value })
-                          setCurrentPage(1)
-                        }}
-                        className="w-full rounded-xl border border-base-300 bg-base-100 px-3 py-2 text-xs font-semibold outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base-content"
-                      />
-                    </div>
-                  </section>
-
-                  {/* Nivel Filter */}
-                  <section className="rounded-2xl bg-base-200/40 p-4 border border-base-200/60">
-                    <div className="mb-3 flex items-center gap-2 text-base-content/60">
-                      <GraduationCap className="h-4 w-4" />
-                      <h3 className="text-xs font-bold uppercase tracking-wider">Nivel</h3>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      {levels.map((level) => {
-                        const selected = filters.levels.includes(level)
-                        const count = filterCounts.levels[level] || 0
-                        return (
-                          <button
-                            key={level}
-                            type="button"
-                            onClick={() => {
-                              setFilters({ ...filters, levels: toggleItem(filters.levels, level) })
+                            className="w-full rounded-xl border border-base-300 bg-base-100 px-3 py-2 text-xs font-semibold outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base-content"
+                          />
+                          <input
+                            type="number"
+                            placeholder="Max (S/)"
+                            value={filters.salaryMax}
+                            onChange={(e) => {
+                              setFilters({ ...filters, salaryMax: e.target.value })
                               setCurrentPage(1)
                             }}
-                            className={`flex items-center justify-between w-full rounded-xl border px-3 py-2.5 text-xs font-bold transition-all cursor-pointer ${
-                              selected 
-                                ? 'border-primary bg-primary/10 text-primary shadow-2xs' 
-                                : 'border-transparent bg-base-100 text-base-content/80 hover:border-base-300 hover:bg-base-200/50'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <div className={`flex h-4 w-4 items-center justify-center rounded-md border transition-all ${
-                                selected ? 'border-primary bg-primary text-white' : 'border-base-300 bg-base-100'
-                              }`}>
-                                {selected && <Check className="h-3 w-3 stroke-[3]" />}
-                              </div>
-                              <span>{level}</span>
-                            </div>
-                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
-                              selected ? 'bg-primary/20 text-primary' : 'bg-base-200 text-base-content/60'
-                            }`}>
-                              {count}
-                            </span>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </section>
+                            className="w-full rounded-xl border border-base-300 bg-base-100 px-3 py-2 text-xs font-semibold outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 text-base-content"
+                          />
+                        </div>
+                      </section>
 
-                  {/* Portal Filter */}
-                  <section className="rounded-2xl bg-base-200/40 p-4 border border-base-200/60">
-                    <div className="mb-3 flex items-center gap-2 text-base-content/60">
-                      <Briefcase className="h-4 w-4" />
-                      <h3 className="text-xs font-bold uppercase tracking-wider">Portal</h3>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      {['LinkedIn', 'Bumeran', 'Computrabajo', 'UTP Bolsa Laboral'].map((source) => {
-                        const selected = filters.sources.includes(source)
-                        const count = filterCounts.sources[source] || 0
-                        return (
-                          <button
-                            key={source}
-                            type="button"
-                            onClick={() => {
-                              setFilters({ ...filters, sources: toggleItem(filters.sources, source) })
-                              setCurrentPage(1)
-                            }}
-                            className={`flex items-center justify-between w-full rounded-xl border px-3 py-2.5 text-xs font-bold transition-all cursor-pointer ${
-                              selected 
-                                ? 'border-primary bg-primary/10 text-primary shadow-2xs' 
-                                : 'border-transparent bg-base-100 text-base-content/80 hover:border-base-300 hover:bg-base-200/50'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <div className={`flex h-4 w-4 items-center justify-center rounded-md border transition-all ${
-                                selected ? 'border-primary bg-primary text-white' : 'border-base-300 bg-base-100'
-                              }`}>
-                                {selected && <Check className="h-3 w-3 stroke-[3]" />}
-                              </div>
-                              <span>{source}</span>
-                            </div>
-                            <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
-                              selected ? 'bg-primary/20 text-primary' : 'bg-base-200 text-base-content/60'
-                            }`}>
-                              {count}
-                            </span>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </section>
+                      {/* Nivel Filter */}
+                      <section className="rounded-2xl bg-base-200/40 p-4 border border-base-200/60">
+                        <div className="mb-3 flex items-center gap-2 text-base-content/60">
+                          <GraduationCap className="h-4 w-4" />
+                          <h3 className="text-xs font-bold uppercase tracking-wider">Nivel</h3>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                          {levels.map((level) => {
+                            const selected = filters.levels.includes(level)
+                            const count = filterCounts.levels[level] || 0
+                            return (
+                              <button
+                                key={level}
+                                type="button"
+                                onClick={() => {
+                                  setFilters({ ...filters, levels: toggleItem(filters.levels, level) })
+                                  setCurrentPage(1)
+                                }}
+                                className={`flex items-center justify-between w-full rounded-xl border px-3 py-2.5 text-xs font-bold transition-all cursor-pointer ${selected
+                                    ? 'border-primary bg-primary/10 text-primary shadow-2xs'
+                                    : 'border-transparent bg-base-100 text-base-content/80 hover:border-base-300 hover:bg-base-200/50'
+                                  }`}
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <div className={`flex h-4 w-4 items-center justify-center rounded-md border transition-all ${selected ? 'border-primary bg-primary text-white' : 'border-base-300 bg-base-100'
+                                    }`}>
+                                    {selected && <Check className="h-3 w-3 stroke-[3]" />}
+                                  </div>
+                                  <span>{level}</span>
+                                </div>
+                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${selected ? 'bg-primary/20 text-primary' : 'bg-base-200 text-base-content/60'
+                                  }`}>
+                                  {count}
+                                </span>
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </section>
 
-                  {/* Sidebar actions buttons */}
-                  <div className="grid grid-cols-1 gap-2 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setFiltersOpen(false)}
-                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary/90 py-3 text-xs font-bold text-white shadow-sm transition xl:hidden cursor-pointer"
-                    >
-                      <Check className="h-4 w-4" />
-                      Listo
+                      {/* Portal Filter */}
+                      <section className="rounded-2xl bg-base-200/40 p-4 border border-base-200/60">
+                        <div className="mb-3 flex items-center gap-2 text-base-content/60">
+                          <Briefcase className="h-4 w-4" />
+                          <h3 className="text-xs font-bold uppercase tracking-wider">Portal</h3>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                          {['LinkedIn', 'Bumeran', 'Computrabajo', 'UTP Bolsa Laboral'].map((source) => {
+                            const selected = filters.sources.includes(source)
+                            const count = filterCounts.sources[source] || 0
+                            return (
+                              <button
+                                key={source}
+                                type="button"
+                                onClick={() => {
+                                  setFilters({ ...filters, sources: toggleItem(filters.sources, source) })
+                                  setCurrentPage(1)
+                                }}
+                                className={`flex items-center justify-between w-full rounded-xl border px-3 py-2.5 text-xs font-bold transition-all cursor-pointer ${selected
+                                    ? 'border-primary bg-primary/10 text-primary shadow-2xs'
+                                    : 'border-transparent bg-base-100 text-base-content/80 hover:border-base-300 hover:bg-base-200/50'
+                                  }`}
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <div className={`flex h-4 w-4 items-center justify-center rounded-md border transition-all ${selected ? 'border-primary bg-primary text-white' : 'border-base-300 bg-base-100'
+                                    }`}>
+                                    {selected && <Check className="h-3 w-3 stroke-[3]" />}
+                                  </div>
+                                  <span>{source}</span>
+                                </div>
+                                <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${selected ? 'bg-primary/20 text-primary' : 'bg-base-200 text-base-content/60'
+                                  }`}>
+                                  {count}
+                                </span>
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </section>
+                    </div>
+                  </div>
+
+                  {/* Footer Actions */}
+                  <div className="flex shrink-0 items-center justify-end gap-3 p-5 border-t border-base-200 bg-base-50/50 backdrop-blur-sm lg:bg-transparent lg:border-t lg:border-base-200/60 lg:mt-6 lg:pt-6 lg:p-0">
+                    <button type="button" onClick={clearFilters} className="flex-1 lg:flex-none px-5 py-3 lg:py-2.5 text-sm font-bold text-base-content/60 hover:text-base-content hover:bg-base-200 rounded-xl transition cursor-pointer text-center">
+                      Limpiar
                     </button>
-                    <button
-                      type="button"
-                      onClick={clearFilters}
-                      className="flex w-full items-center justify-center gap-2 rounded-xl border border-base-300 bg-base-100 hover:bg-base-200 py-3 text-xs font-bold text-base-content transition cursor-pointer"
-                    >
-                      <RotateCcw className="h-4 w-4" />
-                      Limpiar filtros
+                    <button type="button" onClick={() => setFiltersOpen(false)} className="flex-1 lg:flex-none px-6 py-3 lg:py-2.5 text-sm font-bold bg-primary text-white hover:bg-primary/90 rounded-xl shadow-sm transition cursor-pointer flex items-center justify-center gap-2">
+                      <Check className="h-4 w-4" />
+                      Aplicar filtros
                     </button>
                   </div>
                 </div>
+              </>
+            )}
+          </div>
+          {showDisclaimer && (
+            <div className="mb-6 rounded-2xl bg-amber-100/50 border border-amber-200 p-4 sm:p-5 flex items-start gap-4 shadow-sm relative animate-fadeIn">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-amber-200 text-amber-800">
+                <Info className="h-5 w-5" />
               </div>
-            </aside>
-
+              <div className="flex-1 pr-6">
+                <h3 className="text-sm font-bold text-amber-900">Sobre el Porcentaje de Match</h3>
+                <p className="mt-1 text-xs leading-relaxed text-amber-800">
+                  El porcentaje de match mide la compatibilidad técnica entre tu perfil y los requisitos de la vacante basado en palabras clave y habilidades. <strong>No significa el éxito de la entrevista ni asegura la contratación.</strong> Te sugerimos usar esta herramienta como guía para identificar qué áreas puedes mejorar.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowDisclaimer(false)}
+                className="absolute top-4 right-4 text-amber-700 hover:bg-amber-300 p-1.5 rounded-full transition cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+          <div className="w-full">
             {/* ── Main content area ── */}
-            <div className="flex-1">
+            <div className="w-full">
               {/* Tab Navigation replaced with title */}
               <div className="mb-6 pb-4 border-b border-base-200 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -1501,8 +1498,8 @@ export default function JobMatchPage() {
                     {activeTab === 'explorar' ? 'No se encontraron resultados' : 'Aún no tienes matches'}
                   </h3>
                   <p className="mt-1.5 text-xs text-base-content/60 max-w-sm mx-auto leading-relaxed">
-                    {activeTab === 'explorar' 
-                      ? 'Intenta cambiar las palabras clave, escribir otra dirección o limpiar los filtros seleccionados.' 
+                    {activeTab === 'explorar'
+                      ? 'Intenta cambiar las palabras clave, escribir otra dirección o limpiar los filtros seleccionados.'
                       : 'Explora las ofertas laborales y haz clic en el botón de corazón para guardar tus vacantes favoritas aquí.'}
                   </p>
                   {activeTab === 'explorar' && (
@@ -1522,187 +1519,179 @@ export default function JobMatchPage() {
                   <div className="flex flex-col h-[calc(100vh-200px)]">
                     <div className="flex-1 overflow-y-auto pr-3 space-y-4 pb-10 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-base-300 [&::-webkit-scrollbar-thumb]:rounded-full">
                       <div className="grid grid-cols-1 gap-4">
-                      {paginatedJobs.map((job, index) => {
-                        const isMatched = matchedJobs.some((m) => m.id === job.id)
-                        const isSelected = selectedJob?.id === job.id
-                        return (
-                          <article
-                            key={job.id}
-                            onClick={() => {
-                              if (window.innerWidth < 1024) {
-                                setSelectedJobDetail(job)
-                              } else {
-                                setSelectedJobId(job.id)
-                              }
-                            }}
-                            className={`group relative flex flex-col justify-between h-full rounded-2xl border bg-base-100 p-5 shadow-xs transition-all duration-350 cursor-pointer hover:border-base-300 hover:shadow-md hover:scale-[1.005] ${
-                              isSelected 
-                                ? 'border-primary bg-primary/5 ring-1 ring-primary/20' 
-                                : 'border-base-200'
-                            }`}
-                            style={{ animationDelay: `${index * 50}ms` }}
-                          >
-                            <div className="flex flex-col h-full">
-                              {/* Top Bar of the Card */}
-                              <div className="flex items-start justify-between gap-3 mb-3">
-                                <div className="flex items-center gap-3">
-                                  <div className={`${job.avatarColor} flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-xs font-extrabold text-sm flex-shrink-0 transition-transform group-hover:scale-105`}>
-                                    {job.initial}
+                        {paginatedJobs.map((job, index) => {
+                          const isMatched = matchedJobs.some((m) => m.id === job.id)
+                          const isSelected = selectedJob?.id === job.id
+                          return (
+                            <article
+                              key={job.id}
+                              onClick={() => {
+                                if (window.innerWidth < 1024) {
+                                  setSelectedJobDetail(job)
+                                } else {
+                                  setSelectedJobId(job.id)
+                                }
+                              }}
+                              className={`group relative flex flex-col justify-between h-full rounded-2xl border bg-base-100 p-5 shadow-xs transition-all duration-350 cursor-pointer hover:border-base-300 hover:shadow-md hover:scale-[1.005] ${isSelected
+                                  ? 'border-primary bg-primary/5 ring-1 ring-primary/20'
+                                  : 'border-base-200'
+                                }`}
+                              style={{ animationDelay: `${index * 50}ms` }}
+                            >
+                              <div className="flex flex-col h-full">
+                                {/* Top Bar of the Card */}
+                                <div className="flex items-start justify-between gap-3 mb-3">
+                                  <div className="flex items-center gap-3">
+                                    <div className={`${job.avatarColor} flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-xs font-extrabold text-sm flex-shrink-0 transition-transform group-hover:scale-105`}>
+                                      {job.initial}
+                                    </div>
+                                    <div>
+                                      <h4 className="text-sm font-bold text-base-content group-hover:text-primary transition-colors line-clamp-1 leading-snug">
+                                        {job.title}
+                                      </h4>
+                                      <p className="text-xs text-base-content/70 font-medium">
+                                        {job.company}
+                                      </p>
+                                    </div>
                                   </div>
-                                  <div>
-                                    <h4 className="text-sm font-bold text-base-content group-hover:text-primary transition-colors line-clamp-1 leading-snug">
-                                      {job.title}
-                                    </h4>
-                                    <p className="text-xs text-base-content/70 font-medium">
-                                      {job.company}
-                                    </p>
-                                  </div>
-                                </div>
 
-                                <div className="flex items-center gap-2 flex-shrink-0">
-                                  <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold border ${getMatchColorBg(job.matchPercent)}`}>
-                                    {job.matchPercent}% match
-                                  </span>
-                                  {activeTab === 'explorar' && (
+                                  <div className="flex items-center gap-2 flex-shrink-0">
+                                    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[10px] font-bold border ${getMatchColorBg(job.matchPercent)}`}>
+                                      <span className={`h-1.5 w-1.5 rounded-full ${getMatchDotColor(job.matchPercent)}`} />
+                                      {job.matchPercent}% match
+                                    </span>
                                     <button
                                       type="button"
                                       onClick={(e) => {
                                         e.stopPropagation()
-                                        setRemovedJobs((prev) => [...prev, job.id])
-                                        setLastRemovedJob(job.id)
-                                        if (removedUndoTimer) clearTimeout(removedUndoTimer)
-                                        const timer = setTimeout(() => setLastRemovedJob(null), 5000)
-                                        setRemovedUndoTimer(timer)
+                                        if (isMatched) {
+                                          setMatchedJobs((prev) => prev.filter((m) => m.id !== job.id))
+                                        } else {
+                                          setMatchedJobs((prev) => [...prev, job])
+                                        }
                                       }}
-                                      className="rounded-full p-1.5 transition-all text-base-content/40 hover:bg-base-200 hover:text-base-content cursor-pointer"
-                                      title="Quitar"
+                                      className={`rounded-full p-1.5 transition-all hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer ${isMatched
+                                          ? 'text-rose-500 fill-rose-500 scale-110'
+                                          : 'text-base-content/40 hover:text-rose-500'
+                                        }`}
+                                      title={isMatched ? "Quitar de matches" : "Guardar en Matches"}
                                     >
-                                      <X className="h-4.5 w-4.5" />
+                                      <Heart className="h-4.5 w-4.5" />
                                     </button>
+                                  </div>
+                                </div>
+
+                                {/* Recommended & Difficulty Tags */}
+                                <div className="flex flex-wrap gap-2 mb-4">
+                                  <span className="inline-flex items-center justify-center px-3 py-1 text-[10px] font-bold text-success border border-success/20 bg-success/10 rounded-full">
+                                    Recomendado
+                                  </span>
+                                  <span className="inline-flex items-center justify-center px-3 py-1 text-[10px] font-bold text-warning border border-warning/20 bg-warning/10 rounded-full">
+                                    Dificultad: {job.level === 'Junior' || job.level === 'Trainee' || job.level === 'Practicante' ? 'Baja' : job.level === 'Senior' ? 'Alta' : 'Media'}
+                                  </span>
+                                </div>
+
+                                {/* Mid section description */}
+                                <p className="text-xs text-base-content/65 line-clamp-2 mb-3 leading-relaxed">
+                                  {job.description}
+                                </p>
+
+                                {/* Info tags list */}
+                                <div className="flex flex-wrap gap-1.5 mb-3.5">
+                                  <span className="inline-flex items-center gap-1 rounded-lg bg-base-200 px-2 py-0.5 text-[10px] font-bold text-base-content/80 border border-base-200">
+                                    <MapPin className="h-3 w-3 text-base-content/50" />
+                                    {job.location}
+                                  </span>
+                                  <span className="inline-flex items-center gap-1 rounded-lg bg-base-200 px-2 py-0.5 text-[10px] font-bold text-base-content/80 border border-base-200">
+                                    <Clock3 className="h-3 w-3 text-base-content/50" />
+                                    {job.mode}
+                                  </span>
+                                  <span className="inline-flex items-center gap-1 rounded-lg bg-base-200 px-2 py-0.5 text-[10px] font-bold text-base-content/80 border border-base-200">
+                                    <Briefcase className="h-3 w-3 text-base-content/50" />
+                                    {job.contractType}
+                                  </span>
+                                </div>
+
+                                {/* Skills preview tags */}
+                                <div className="flex flex-wrap gap-1.5 mb-4">
+                                  {job.skills.slice(0, 3).map((skill) => (
+                                    <span key={skill} className="bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 rounded-xl px-2.5 py-1 text-[10px] font-bold">
+                                      {skill}
+                                    </span>
+                                  ))}
+                                  {job.skills.length > 3 && (
+                                    <span className="bg-slate-100 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 rounded-xl px-2.5 py-1 text-[10px] font-bold">
+                                      +{job.skills.length - 3}
+                                    </span>
                                   )}
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.stopPropagation()
-                                      if (isMatched) {
-                                        setMatchedJobs((prev) => prev.filter((m) => m.id !== job.id))
-                                      } else {
-                                        setMatchedJobs((prev) => [...prev, job])
-                                      }
-                                    }}
-                                    className={`rounded-full p-1.5 transition-all hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer ${
-                                      isMatched 
-                                        ? 'text-rose-500 fill-rose-500 scale-110' 
-                                        : 'text-base-content/40 hover:text-rose-500'
-                                    }`}
-                                    title={isMatched ? "Quitar de matches" : "Guardar en Matches"}
-                                  >
-                                    <Heart className="h-4.5 w-4.5" />
-                                  </button>
+                                </div>
+
+                                {/* Footer section (Salary & Buttons) */}
+                                <div className="mt-auto pt-3 border-t border-base-200 flex items-center justify-between gap-2">
+                                  <div>
+                                    <span className="block text-[8px] text-base-content/50 uppercase font-bold tracking-wider leading-none mb-0.5">Sueldo Estimado</span>
+                                    <span className="text-sm font-extrabold text-base-content">
+                                      S/ {job.salaryMin} - {job.salaryMax}
+                                    </span>
+                                  </div>
+                                  <div className="flex gap-2">
+                                    {/* Mobile details indicator, hidden on desktop */}
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        setSelectedJobDetail(job)
+                                      }}
+                                      className="lg:hidden inline-flex items-center justify-center gap-1 rounded-lg bg-base-200 hover:bg-base-300 border border-base-300 px-3 py-2 text-[10px] font-bold text-base-content/85 cursor-pointer"
+                                    >
+                                      Detalles
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        alert(`Redirigiendo a postular en ${job.source}...`)
+                                      }}
+                                      className="inline-flex items-center justify-center gap-1 rounded-lg bg-primary hover:bg-primary/90 px-4 py-2 text-[10px] font-bold text-white shadow-xs transition cursor-pointer"
+                                    >
+                                      Postular
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
-
-                              {/* Mid section description */}
-                              <p className="text-xs text-base-content/65 line-clamp-2 mb-3 leading-relaxed">
-                                {job.description}
-                              </p>
-
-                              {/* Info tags list */}
-                              <div className="flex flex-wrap gap-1.5 mb-3.5">
-                                <span className="inline-flex items-center gap-1 rounded-lg bg-base-200 px-2 py-0.5 text-[10px] font-bold text-base-content/80 border border-base-200">
-                                  <MapPin className="h-3 w-3 text-base-content/50" />
-                                  {job.location}
-                                </span>
-                                <span className="inline-flex items-center gap-1 rounded-lg bg-base-200 px-2 py-0.5 text-[10px] font-bold text-base-content/80 border border-base-200">
-                                  <Clock3 className="h-3 w-3 text-base-content/50" />
-                                  {job.mode}
-                                </span>
-                                <span className="inline-flex items-center gap-1 rounded-lg bg-base-200 px-2 py-0.5 text-[10px] font-bold text-base-content/80 border border-base-200">
-                                  <Briefcase className="h-3 w-3 text-base-content/50" />
-                                  {job.contractType}
-                                </span>
-                              </div>
-
-                              {/* Skills preview tags */}
-                              <div className="flex flex-wrap gap-1 mb-4">
-                                {job.skills.slice(0, 3).map((skill) => (
-                                  <span key={skill} className="bg-base-200 text-base-content/70 rounded-md px-2 py-0.5 text-[9px] font-semibold border border-base-300/50">
-                                    {skill}
-                                  </span>
-                                ))}
-                                {job.skills.length > 3 && (
-                                  <span className="text-[9px] text-base-content/50 font-bold px-1 py-0.5">
-                                    +{job.skills.length - 3}
-                                  </span>
-                                )}
-                              </div>
-
-                              {/* Footer section (Salary & Buttons) */}
-                              <div className="mt-auto pt-3 border-t border-base-200 flex items-center justify-between gap-2">
-                                <div>
-                                  <span className="block text-[8px] text-base-content/50 uppercase font-bold tracking-wider leading-none mb-0.5">Sueldo Estimado</span>
-                                  <span className="text-sm font-extrabold text-base-content">
-                                    S/ {job.salaryMin} - {job.salaryMax}
-                                  </span>
-                                </div>
-                                <div className="flex gap-2">
-                                  {/* Mobile details indicator, hidden on desktop */}
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.stopPropagation()
-                                      setSelectedJobDetail(job)
-                                    }}
-                                    className="lg:hidden inline-flex items-center justify-center gap-1 rounded-lg bg-base-200 hover:bg-base-300 border border-base-300 px-3 py-2 text-[10px] font-bold text-base-content/85 cursor-pointer"
-                                  >
-                                    Detalles
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      e.stopPropagation()
-                                      alert(`Redirigiendo a postular en ${job.source}...`)
-                                    }}
-                                    className="inline-flex items-center justify-center gap-1 rounded-lg bg-primary hover:bg-primary/90 px-4 py-2 text-[10px] font-bold text-white shadow-xs transition cursor-pointer"
-                                  >
-                                    Postular
-                                  </button>
-                                </div>
-                              </div>
-                            </div>
-                          </article>
-                        )
-                      })}
-                    </div>
-
-                    {/* Pagination */}
-                    {totalPages > 1 && (
-                      <div className="mt-6 flex items-center justify-center gap-4">
-                        <button
-                          onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                          disabled={currentPage === 1}
-                          className="flex h-9 w-9 items-center justify-center rounded-xl border border-base-250 bg-base-100 text-base-content/75 transition hover:bg-base-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-                          aria-label="Página anterior"
-                        >
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                        </button>
-                        <span className="text-xs font-bold text-base-content/70">
-                          Página {currentPage} de {totalPages}
-                        </span>
-                        <button
-                          onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                          disabled={currentPage === totalPages}
-                          className="flex h-9 w-9 items-center justify-center rounded-xl border border-base-250 bg-base-100 text-base-content/75 transition hover:bg-base-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-                          aria-label="Página siguiente"
-                        >
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-                        </button>
+                            </article>
+                          )
+                        })}
                       </div>
-                    )}
-                  </div>
-                </div>
 
-                {/* Right Pane: Sticky detailed panel */}
+                      {/* Pagination */}
+                      {totalPages > 1 && (
+                        <div className="mt-6 flex items-center justify-center gap-4">
+                          <button
+                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                            disabled={currentPage === 1}
+                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-base-250 bg-base-100 text-base-content/75 transition hover:bg-base-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                            aria-label="Página anterior"
+                          >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+                          </button>
+                          <span className="text-xs font-bold text-base-content/70">
+                            Página {currentPage} de {totalPages}
+                          </span>
+                          <button
+                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                            disabled={currentPage === totalPages}
+                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-base-250 bg-base-100 text-base-content/75 transition hover:bg-base-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                            aria-label="Página siguiente"
+                          >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Right Pane: Sticky detailed panel */}
                   <div className="sticky top-6 hidden lg:block h-[calc(100vh-48px)]">
                     {selectedJob ? (
                       <div className="border border-base-200 rounded-3xl bg-base-100 p-6 shadow-sm h-full overflow-y-auto flex flex-col [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-base-300 [&::-webkit-scrollbar-thumb]:rounded-full animate-fadeIn">
@@ -1713,12 +1702,11 @@ export default function JobMatchPage() {
                               {selectedJob.initial}
                             </div>
                             <div>
-                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold mb-1.5 border ${
-                                selectedJob.status === 'Urgente'
-                                  ? 'bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30'
-                                  : 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/30'
-                              }`}>
-                                <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${selectedJob.status === 'Urgente' ? 'bg-red-500 animate-pulse' : 'bg-emerald-500'}`} />
+                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold mb-1.5 border ${selectedJob.status === 'Urgente'
+                                  ? 'bg-error/10 text-error border-error/20'
+                                  : 'bg-success/10 text-success border-success/20'
+                                }`}>
+                                <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${selectedJob.status === 'Urgente' ? 'bg-error animate-pulse' : 'bg-success'}`} />
                                 {selectedJob.status}
                               </span>
                               <h3 className="text-lg font-extrabold text-base-content leading-tight">
@@ -1743,11 +1731,10 @@ export default function JobMatchPage() {
                                 setMatchedJobs(prev => [...prev, selectedJob])
                               }
                             }}
-                            className={`rounded-full p-2.5 border transition-all cursor-pointer ${
-                              matchedJobs.some(m => m.id === selectedJob.id)
+                            className={`rounded-full p-2.5 border transition-all cursor-pointer ${matchedJobs.some(m => m.id === selectedJob.id)
                                 ? 'bg-rose-500/15 border-rose-500/30 text-rose-500 fill-rose-500'
                                 : 'bg-base-200 border-base-300 text-base-content/40 hover:text-rose-500 hover:border-rose-200'
-                            }`}
+                              }`}
                             title={matchedJobs.some(m => m.id === selectedJob.id) ? "Quitar de matches" : "Guardar en Matches"}
                           >
                             <Heart className="h-4.5 w-4.5" />
@@ -1760,7 +1747,7 @@ export default function JobMatchPage() {
                             <div className="relative flex items-center justify-center h-12 w-12 flex-shrink-0">
                               <svg className="w-full h-full transform -rotate-90">
                                 <circle cx="24" cy="24" r="20" className="stroke-base-200" strokeWidth="4.5" fill="transparent" />
-                                <circle cx="24" cy="24" r="20" className={getMatchColorStroke(selectedJob.matchPercent)} strokeWidth="4.5" fill="transparent" 
+                                <circle cx="24" cy="24" r="20" className={getMatchColorStroke(selectedJob.matchPercent)} strokeWidth="4.5" fill="transparent"
                                   strokeDasharray={2 * Math.PI * 20}
                                   strokeDashoffset={2 * Math.PI * 20 * (1 - selectedJob.matchPercent / 100)}
                                   strokeLinecap="round"
@@ -1777,7 +1764,7 @@ export default function JobMatchPage() {
                               </p>
                             </div>
                           </div>
-                          
+
                           <div className="space-y-2 text-xs">
                             <div className="bg-base-200/80 p-3 rounded-xl border border-base-250 text-base-content/80">
                               <strong className="text-base-content block mb-0.5 text-[11px]">¿Por qué este match?</strong>
@@ -1868,16 +1855,15 @@ export default function JobMatchPage() {
                                 setMatchedJobs(prev => [...prev, selectedJob])
                               }
                             }}
-                            className={`flex-1 rounded-2xl py-3 text-xs font-bold border transition-all cursor-pointer flex items-center justify-center gap-2 ${
-                              matchedJobs.some(m => m.id === selectedJob.id)
+                            className={`flex-1 rounded-2xl py-3 text-xs font-bold border transition-all cursor-pointer flex items-center justify-center gap-2 ${matchedJobs.some(m => m.id === selectedJob.id)
                                 ? 'bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-450'
                                 : 'bg-base-200 border-base-300 text-base-content/80 hover:bg-base-300'
-                            }`}
+                              }`}
                           >
                             <Heart className={`h-4 w-4 ${matchedJobs.some(m => m.id === selectedJob.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
                             {matchedJobs.some(m => m.id === selectedJob.id) ? 'Quitar Match' : 'Hacer Match'}
                           </button>
-                          
+
                           <button
                             type="button"
                             onClick={() => alert(`Redirigiendo a postular en ${selectedJob.source}...`)}
@@ -1980,7 +1966,7 @@ export default function JobMatchPage() {
                       <span className="font-semibold">{currentQuickJob.location}</span>
                     </div>
                   </div>
-                  
+
                   <div>
                     <h4 className="text-xs font-bold text-base-content mb-1.5 flex items-center gap-1.5">
                       <Briefcase className="h-3.5 w-3.5 text-base-content/40" /> Sobre el puesto
@@ -2013,7 +1999,7 @@ export default function JobMatchPage() {
                       <p className="border-t border-success-content/20 pt-2 mt-2 text-warning-content leading-relaxed"><strong>Para mejorar:</strong> {currentQuickJob.matchMissing}</p>
                     </div>
                   </div>
-                  
+
                   <div>
                     <h4 className="text-xs font-bold text-base-content mb-2 flex items-center gap-1.5">
                       <Sparkles className="h-3.5 w-3.5 text-base-content/40" /> Habilidades
@@ -2186,7 +2172,7 @@ export default function JobMatchPage() {
             </div>
 
             <div className="sticky bottom-0 border-t border-base-200 bg-base-100/95 px-6 py-4 flex gap-3">
-              <button 
+              <button
                 onClick={() => {
                   if (matchedJobs.some((m) => m.id === selectedJobDetail.id)) {
                     setMatchedJobs((prev) => prev.filter((m) => m.id !== selectedJobDetail.id))
@@ -2195,16 +2181,15 @@ export default function JobMatchPage() {
                   }
                   setSelectedJobDetail(null)
                 }}
-                className={`flex-1 rounded-xl py-3 text-xs font-bold transition flex items-center justify-center gap-1.5 border cursor-pointer ${
-                  matchedJobs.some(m => m.id === selectedJobDetail.id)
+                className={`flex-1 rounded-xl py-3 text-xs font-bold transition flex items-center justify-center gap-1.5 border cursor-pointer ${matchedJobs.some(m => m.id === selectedJobDetail.id)
                     ? 'bg-rose-500/10 border-rose-500/20 text-rose-600'
                     : 'bg-base-200 border-base-300 text-base-content/80 hover:bg-base-300'
-                }`}
+                  }`}
               >
                 <Heart className={`h-4.5 w-4.5 ${matchedJobs.some(m => m.id === selectedJobDetail.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
                 {matchedJobs.some(m => m.id === selectedJobDetail.id) ? 'Quitar Match' : 'Hacer Match'}
               </button>
-              <button 
+              <button
                 onClick={() => {
                   alert(`Redirigiendo a postular en ${selectedJobDetail.source}...`)
                 }}
@@ -2217,19 +2202,17 @@ export default function JobMatchPage() {
         </div>
       )}
 
-      {/* Mis Matches Floating Bubble (Global) */}
-      <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3">
-        <button
-          onClick={() => setMatchesDrawerOpen(true)}
-          className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-xl hover:scale-105 transition-all hover:shadow-primary/30 cursor-pointer"
-        >
-          <Heart className="h-6 w-6 fill-white/20" />
-          {matchedJobs.length > 0 && (
-            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-black text-white ring-2 ring-base-100 animate-bounce">
-              {matchedJobs.length}
-            </span>
-          )}
-        </button>
+      {/* Mis Matches Floating Bubble (Local Warning Toggle) */}
+      <div className="fixed bottom-[96px] right-6 z-40 flex flex-col items-end gap-3">
+        {!showDisclaimer && (
+          <button
+            onClick={() => setShowDisclaimer(true)}
+            className="group relative flex h-10 w-10 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 shadow-lg hover:scale-105 transition-all hover:bg-amber-100 dark:hover:bg-amber-900 border border-amber-200 dark:border-amber-700 cursor-pointer animate-fadeIn"
+            title="Mostrar advertencia sobre el Match"
+          >
+            <Info className="h-5 w-5" />
+          </button>
+        )}
       </div>
 
       {/* Removed Job Bubble */}
@@ -2250,59 +2233,6 @@ export default function JobMatchPage() {
             <button onClick={() => setLastRemovedJob(null)} className="p-1 hover:bg-white/10 rounded-full transition cursor-pointer">
               <X className="h-4 w-4" />
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* Mis Matches Drawer */}
-      {matchesDrawerOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-base-content/20 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-md bg-base-100 shadow-2xl h-full flex flex-col animate-slideLeft">
-            <div className="flex items-center justify-between p-6 border-b border-base-200">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500">
-                  <Heart className="h-5 w-5 fill-rose-500/20" />
-                </div>
-                <h2 className="text-xl font-extrabold text-base-content">Mis Matches</h2>
-              </div>
-              <button onClick={() => setMatchesDrawerOpen(false)} className="rounded-full p-2 hover:bg-base-200 text-base-content/50 transition cursor-pointer">
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto p-6">
-              {matchedJobs.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-center opacity-60">
-                  <Heart className="h-16 w-16 text-base-300 mb-4" />
-                  <p className="text-sm font-medium">Aún no tienes matches guardados.</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {matchedJobs.map(job => (
-                    <div key={job.id} className="relative rounded-2xl border border-base-200 p-4 bg-base-100 shadow-sm flex items-start gap-4">
-                      <div className={`${job.avatarColor} flex h-12 w-12 items-center justify-center rounded-xl text-white font-bold flex-shrink-0`}>
-                        {job.initial}
-                      </div>
-                      <div className="flex-1 pr-8">
-                        <h4 className="text-sm font-bold text-base-content">{job.title}</h4>
-                        <p className="text-xs text-base-content/60">{job.company}</p>
-                        <div className="mt-2 flex items-center gap-2">
-                          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-bold border ${getMatchColorBg(job.matchPercent)}`}>
-                            {job.matchPercent}% match
-                          </span>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={() => setMatchedJobs(prev => prev.filter(m => m.id !== job.id))}
-                        className="absolute top-4 right-4 p-1.5 text-base-content/30 hover:text-rose-500 hover:bg-rose-50 rounded-full transition cursor-pointer"
-                        title="Quitar"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
         </div>
       )}
