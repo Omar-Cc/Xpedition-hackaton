@@ -207,3 +207,19 @@ body {
   animation: float 4s ease-in-out infinite;
 }
 
+@keyframes pulse-cta {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 91, 255, 0.45);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 0 0 8px rgba(0, 91, 255, 0);
+  }
+}
+
+.animate-pulse-cta {
+  animation: pulse-cta 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+
