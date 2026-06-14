@@ -11,8 +11,14 @@ export default function MailModal({ isOpen, isSending, onClose, onSend }: Props)
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl w-full max-w-md shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div 
+      onClick={onClose}
+      className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+    >
+      <div 
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-2xl w-full max-w-md shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+      >
         <div className="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50/50">
           <h3 className="font-semibold text-slate-800">Enviar CV a Reclutador</h3>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">

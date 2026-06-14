@@ -1,4 +1,5 @@
 export interface MentorProfile {
+  id: string
   name: string
   career: string
   semester: string
@@ -7,6 +8,7 @@ export interface MentorProfile {
   bio: string
   rating: number
   sessions: number
+  sessionsBooked: number
   avatarInitial: string
   avatarColor: string
   isOnline: boolean

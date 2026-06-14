@@ -1090,8 +1090,14 @@ export default function KanbanBoard({
 
       {/* Task Detail Modal */}
       {selectedTask && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
+        <div 
+          onClick={() => setSelectedTask(null)}
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in zoom-in-95 duration-200"
+          >
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 bg-slate-50/50">
               <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase ${getCategoryBadgeClass(selectedTask.category)}`}>
@@ -1265,8 +1271,14 @@ export default function KanbanBoard({
 
       {/* Drag confirmation complete modal */}
       {confirmDragAction?.type === 'complete' && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-sm w-full shadow-2xl border border-slate-200 p-5 space-y-4 animate-in zoom-in-95 duration-150">
+        <div 
+          onClick={() => setConfirmDragAction(null)}
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl max-w-sm w-full shadow-2xl border border-slate-200 p-5 space-y-4 animate-in zoom-in-95 duration-150"
+          >
             <div className="flex items-center gap-2 text-emerald-600">
               <CheckCircle2 className="w-5 h-5 animate-bounce" />
               <h4 className="text-base font-extrabold text-slate-800">
@@ -1298,8 +1310,14 @@ export default function KanbanBoard({
 
       {/* Drag confirmation reopen modal */}
       {confirmDragAction?.type === 'reopen' && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-sm w-full shadow-2xl border border-slate-200 p-5 space-y-4 animate-in zoom-in-95 duration-150">
+        <div 
+          onClick={() => setConfirmDragAction(null)}
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl max-w-sm w-full shadow-2xl border border-slate-200 p-5 space-y-4 animate-in zoom-in-95 duration-150"
+          >
             <div className="flex items-center gap-2 text-blue-600">
               <RefreshCw className="w-5 h-5 animate-spin duration-3000" />
               <h4 className="text-base font-extrabold text-slate-800">
@@ -1331,8 +1349,14 @@ export default function KanbanBoard({
 
       {/* Advance Tarea Flow Dialog */}
       {taskToAdvance && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-sm w-full shadow-2xl border border-slate-200 p-5 space-y-4 animate-in zoom-in-95 duration-150">
+        <div 
+          onClick={() => setTaskToAdvance(null)}
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl max-w-sm w-full shadow-2xl border border-slate-200 p-5 space-y-4 animate-in zoom-in-95 duration-150"
+          >
             <div className="flex items-center gap-2 text-blue-600">
               <Calendar className="w-5 h-5" />
               <h4 className="text-base font-extrabold text-slate-800">
@@ -1370,8 +1394,14 @@ export default function KanbanBoard({
 
       {/* Recalculate Plan Dialog */}
       {showRecalculateDialog && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-sm w-full shadow-2xl border border-slate-200 p-5 space-y-4 animate-in zoom-in-95 duration-150">
+        <div 
+          onClick={() => setShowRecalculateDialog(false)}
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl max-w-sm w-full shadow-2xl border border-slate-200 p-5 space-y-4 animate-in zoom-in-95 duration-150"
+          >
             <div className="flex items-center gap-2 text-violet-600">
               <RefreshCw className="w-5 h-5 animate-spin duration-1000" />
               <h4 className="text-base font-extrabold text-slate-800">
