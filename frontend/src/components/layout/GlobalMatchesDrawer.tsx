@@ -116,7 +116,7 @@ export default function GlobalMatchesDrawer() {
                             <div className="flex gap-2">
                               <Link href={`/cv-builder?jobId=${job.id}`} onClick={() => setMatchesDrawerOpen(false)} className="flex-1">
                                 <button className="w-full bg-base-200 hover:bg-base-300 text-base-content text-[11px] font-bold py-2 rounded-lg transition-colors cursor-pointer">
-                                  Constructor CV
+                                  Analizar CV
                                 </button>
                               </Link>
                               <Link href="/plan-30d" onClick={() => setMatchesDrawerOpen(false)} className="flex-1">
