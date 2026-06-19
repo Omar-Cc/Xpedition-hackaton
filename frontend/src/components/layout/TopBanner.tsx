@@ -50,35 +50,7 @@ export default function TopBanner({ onMenuClick }: Readonly<TopBannerProps>) {
 
         <div className="w-px h-6 bg-base-300 mx-1 hidden xl:block"></div>
 
-        <div
-          className="radial-progress text-primary flex-shrink-0 hidden lg:inline-grid"
-          style={
-            {
-              "--value": String(pct),
-              "--size": "2.6rem",
-              "--thickness": "3px",
-            } as React.CSSProperties
-          }
-          aria-valuenow={pct}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          role="progressbar"
-          aria-label={`Perfil completado al ${pct}%`}
-        >
-          <span className="text-[10px] font-bold text-base-content">{pct}%</span>
-        </div>
 
-        <div className="min-w-0 hidden md:block">
-          <p className="text-[9px] text-base-content/50 uppercase tracking-wider mb-0.5 font-bold">
-            Bienvenido de vuelta
-          </p>
-          <div className="flex items-center gap-3">
-            <h2 className="text-sm font-bold">Hola, {firstName}</h2>
-            <span className="text-xs text-base-content/60 border-l border-base-300 pl-3">
-              Tu perfil está al {pct}% — complétalo para destacar
-            </span>
-          </div>
-        </div>
       </div>
 
       {/* Lado derecho: Botones, Tema, Notificaciones y Perfil */}
