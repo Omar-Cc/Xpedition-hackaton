@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useState, useEffect } from 'react'
 
 export type JobItem = {
   id: string
@@ -43,6 +43,27 @@ const JobMatchContext = createContext<JobMatchContextType | undefined>(undefined
 export function JobMatchProvider({ children }: { children: React.ReactNode }) {
   const [matchedJobs, setMatchedJobs] = useState<JobItem[]>([])
   const [matchesDrawerOpen, setMatchesDrawerOpen] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('xpedition_matched_jobs')
+      if (stored) {
+        try {
+          setMatchedJobs(JSON.parse(stored))
+        } catch (e) {
+          console.error('Error parsing xpedition_matched_jobs from localStorage', e)
+        }
+      }
+      setIsLoaded(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isLoaded && typeof window !== 'undefined') {
+      localStorage.setItem('xpedition_matched_jobs', JSON.stringify(matchedJobs))
+    }
+  }, [matchedJobs, isLoaded])
 
   return (
     <JobMatchContext.Provider value={{ matchedJobs, setMatchedJobs, matchesDrawerOpen, setMatchesDrawerOpen }}>

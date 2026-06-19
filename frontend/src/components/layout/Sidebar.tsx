@@ -40,12 +40,14 @@ interface SidebarProps {
   isOpen?: boolean;
   onOpen?: () => void;
   onClose?: () => void;
+  activeTutorialHref?: string | null;
 }
 
 interface SidebarLinkProps extends NavItem {
   isActive: boolean;
   variant: "compact" | "drawer";
   onClick?: () => void;
+  isHighlighted?: boolean;
 }
 
 /**
@@ -59,17 +61,22 @@ function SidebarLink({
   isActive,
   variant,
   onClick,
+  isHighlighted = false,
 }: Readonly<SidebarLinkProps>) {
   if (variant === "compact") {
     return (
       <Link
         href={href}
         className={`relative flex flex-col items-center justify-center text-center py-4.5 px-1 text-xs transition-all ${
-          isActive ? "bg-[#eff6ff] text-navy border-l-4 border-[#e30613]" : "text-white"
+          isHighlighted
+            ? "bg-violet-600 text-white ring-4 ring-violet-500 ring-offset-2 ring-offset-[#000f37] animate-pulse"
+            : isActive 
+              ? "bg-[#eff6ff] text-navy border-l-4 border-[#e30613]" 
+              : "text-white hover:bg-white/5"
         }`}
       >
         <div className="flex flex-col items-center">
-          <Icon className={`w-6 h-6 ${isActive ? "text-navy" : "text-white"}`} />
+          <Icon className={`w-6 h-6 ${isHighlighted ? "text-white" : isActive ? "text-navy" : "text-white"}`} />
           <span className="leading-tight mt-1">{label}</span>
         </div>
       </Link>
@@ -81,16 +88,25 @@ function SidebarLink({
       href={href}
       onClick={onClick}
       className={`h-20 flex items-center gap-10 px-5 py-5 text-sm transition-all ${
-        isActive ? "bg-[#eff6ff] text-navy border-l-4 border-[#e30613]" : "text-white"
+        isHighlighted
+          ? "bg-violet-700 text-white ring-4 ring-violet-500 ring-offset-2 ring-offset-[#000f37] animate-pulse"
+          : isActive 
+            ? "bg-[#eff6ff] text-navy border-l-4 border-[#e30613]" 
+            : "text-white hover:bg-white/5"
       }`}
     >
-      <Icon className={`w-6 h-6 ${isActive ? "text-navy" : "text-white"}`} />
+      <Icon className={`w-6 h-6 ${isHighlighted ? "text-white" : isActive ? "text-navy" : "text-white"}`} />
       <span>{label}</span>
     </Link>
   );
 }
 
-export default function Sidebar({ isOpen, onOpen, onClose }: Readonly<SidebarProps>) {
+export default function Sidebar({ 
+  isOpen, 
+  onOpen, 
+  onClose,
+  activeTutorialHref = null
+}: Readonly<SidebarProps>) {
   const pathname = usePathname();
   const fullName = studentProfile.name ?? "Estudiante";
   const email = studentProfile.email ?? "estudiante@utp.edu.pe";
@@ -115,6 +131,7 @@ export default function Sidebar({ isOpen, onOpen, onClose }: Readonly<SidebarPro
               {...item}
               isActive={pathname === item.href}
               variant="compact"
+              isHighlighted={activeTutorialHref === item.href}
             />
           ))}
         </nav>
@@ -132,7 +149,7 @@ export default function Sidebar({ isOpen, onOpen, onClose }: Readonly<SidebarPro
 
       {/* 3. EXPANDED SIDEBAR DRAWER (Mobile & Desktop Overlay) */}
       <aside
-        className={`fixed inset-y-0 left-0 z-120 flex h-dvh w-72 shrink-0 flex-col overflow-hidden bg-navy text-white transition-transform duration-300 ${
+        className={`fixed inset-y-0 left-0 z-[130] flex h-dvh w-72 shrink-0 flex-col overflow-hidden bg-navy text-white transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -187,6 +204,7 @@ export default function Sidebar({ isOpen, onOpen, onClose }: Readonly<SidebarPro
               isActive={pathname === item.href}
               variant="drawer"
               onClick={onClose}
+              isHighlighted={activeTutorialHref === item.href}
             />
           ))}
                {/* Drawer Footer - MOBILE ONLY (Cerrar Sesion button) */}
