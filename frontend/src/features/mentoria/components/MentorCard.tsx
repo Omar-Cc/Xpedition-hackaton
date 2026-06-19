@@ -1,4 +1,5 @@
-import { Heart, Calendar, X, Star } from 'lucide-react'
+import { useState } from 'react'
+import { Heart, Calendar, X, Star, ShieldCheck } from 'lucide-react'
 import { featuredMentor } from '../data/mock-data'
 import type { MentorProfile } from '../types'
 
@@ -26,6 +27,7 @@ export default function MentorCard({
   reviews = [],
 }: MentorCardProps) {
   const m = mentor || featuredMentor
+  const [showVerifiedTooltip, setShowVerifiedTooltip] = useState(false)
 
   return (
     <div className="card bg-base-100 shadow-sm border border-slate-100">
@@ -42,8 +44,28 @@ export default function MentorCard({
                 <span className="absolute bottom-1 right-1 w-4 h-4 bg-success rounded-full border-2 border-white animate-pulse" />
               )}
             </div>
+
+            {/* Verification Button & Popover Tooltip */}
+            <div className="relative mb-3.5">
+              <button
+                type="button"
+                onClick={() => setShowVerifiedTooltip(!showVerifiedTooltip)}
+                className="btn btn-xs bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/20 dark:hover:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 rounded-full px-3 gap-1 cursor-pointer font-extrabold flex items-center shadow-2xs transition-all hover:scale-105"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                Verificado
+              </button>
+              
+              {showVerifiedTooltip && (
+                <div className="absolute left-1/2 -translate-x-1/2 mt-1.5 w-56 bg-white dark:bg-slate-900 text-slate-800 dark:text-white text-[11px] p-3 rounded-xl shadow-md border border-slate-200 dark:border-slate-800 z-20 text-center animate-fadeIn">
+                  <p className="font-semibold text-slate-500 dark:text-slate-400">Verificado por:</p>
+                  <p className="text-emerald-600 dark:text-emerald-450 font-extrabold text-[12.5px] mt-0.5">Cynthia Rosales</p>
+                  <p className="text-slate-450 dark:text-slate-400 text-[10px] mt-0.5 font-medium">Coordinadora de Empleabilidad</p>
+                </div>
+              )}
+            </div>
+
             <h2 className="text-lg font-bold">{m.name}</h2>
-            <p className="text-sm text-base-content/60">{m.career} — {m.semester}</p>
             <span className="badge badge-soft badge-primary mt-2 text-xs">En: {m.company}</span>
             <div className="flex flex-wrap gap-1.5 justify-center mt-3">
               {m.skills.map((s) => (
@@ -75,13 +97,6 @@ export default function MentorCard({
               </p>
             </div>
             <div className="flex flex-col gap-2 mt-4">
-              <button 
-                onClick={onConnect}
-                className={`btn gap-2 text-white transition-all duration-200 ${isConnected ? 'btn-neutral' : 'btn-success'}`}
-              >
-                <Heart className={`w-4 h-4 ${isConnected ? 'fill-white' : ''}`} /> 
-                {isConnected ? 'Conectado' : 'Conectar'}
-              </button>
               <button 
                 onClick={onSchedule}
                 className="btn btn-primary text-white gap-2 transition-all duration-200"

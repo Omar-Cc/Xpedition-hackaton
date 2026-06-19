@@ -1,13 +1,13 @@
 "use client"
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import PageShell from '@/src/components/layout/PageShell'
 import PageHeader from '@/src/components/layout/PageHeader'
 import MentorCard from '@/src/features/mentoria/components/MentorCard'
 import MoreMentors from '@/src/features/mentoria/components/MoreMentors'
-import ConnectionsPanel from '@/src/features/mentoria/components/ConnectionsPanel'
 import HowItWorksPanel from '@/src/features/mentoria/components/HowItWorksPanel'
 import { mentorsByCompany } from '@/src/features/mentoria/data/mock-data'
+import { useJobMatch } from '@/src/contexts/JobMatchContext'
 import type { MentorProfile, Connection } from '@/src/features/mentoria/types'
 import { 
   Calendar, 
@@ -28,7 +28,10 @@ import {
   Video,
   AlertTriangle,
   Star,
-  Heart
+  Heart,
+  Users,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react'
 
 type JobItem = {
@@ -232,13 +235,56 @@ const getDayFromDateString = (dateStr: string): number => {
   return match ? parseInt(match[0], 10) : 0
 }
 
+// Helper to clean and normalize company names for comparison
+const cleanCompanyName = (name: string): string => {
+  if (!name) return ''
+  return name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // remove accents/diacritics
+    .replace(/\b(peru|seguros|s\.a|s\.a\.c|digital|group|corporation|per\uFFFD)\b/g, '') // remove common suffixes
+    .replace(/[^a-z0-9]/g, '') // keep only alphanumeric characters
+    .trim()
+}
+
+// Helper to get mentors for a company using fuzzy matching
+const getMentorsForCompany = (companyName: string): MentorProfile[] => {
+  if (!companyName) return []
+  const cleanTarget = cleanCompanyName(companyName)
+  if (!cleanTarget) return []
+
+  // Try exact match after cleaning
+  for (const key of Object.keys(mentorsByCompany)) {
+    if (cleanCompanyName(key) === cleanTarget) {
+      return mentorsByCompany[key]
+    }
+  }
+
+  // Try substring match (e.g. "BBVA" contains/is-contained-in "BBVA Perú")
+  for (const key of Object.keys(mentorsByCompany)) {
+    const cleanKey = cleanCompanyName(key)
+    if (cleanKey.includes(cleanTarget) || cleanTarget.includes(cleanKey)) {
+      return mentorsByCompany[key]
+    }
+  }
+
+  return []
+}
+
 export default function MentoriaPage() {
-  const [matchedJobs, setMatchedJobs] = useState<JobItem[]>([])
-  const [selectedJob, setSelectedJob] = useState<JobItem | null>(null)
+  const { matchedJobs } = useJobMatch()
+  const [selectedJob, setSelectedJob] = useState<any | null>(null)
   const [selectedMentor, setSelectedMentor] = useState<MentorProfile | null>(null)
-  const [connections, setConnections] = useState<Connection[]>([])
   const [isLoaded, setIsLoaded] = useState(false)
-  const [showFallbackNotice, setShowFallbackNotice] = useState(false)
+
+  const carouselRef = useRef<HTMLDivElement>(null)
+
+  const scrollCarousel = (direction: 'left' | 'right') => {
+    if (carouselRef.current) {
+      const scrollAmount = direction === 'left' ? -320 : 320
+      carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' })
+    }
+  }
 
   // Calendar Tabs
   const [activeStudentTab, setActiveStudentTab] = useState<'buscar' | 'agenda'>('buscar')
@@ -278,8 +324,30 @@ export default function MentoriaPage() {
   const [step2, setStep2] = useState<'locked' | 'pending' | 'verifying' | 'completed'>('locked')
   const [step3, setStep3] = useState<'locked' | 'pending' | 'completed'>('locked')
   
+  // 3 Certificates status
+  const [practicasCert, setPracticasCert] = useState<'pending' | 'uploading' | 'completed'>('pending')
+  const [practicasFileName, setPracticasFileName] = useState('')
+  
+  const [topCert, setTopCert] = useState<'pending' | 'uploading' | 'completed'>('pending')
+  const [topFileName, setTopFileName] = useState('')
+  
+  const [impulsaCert, setImpulsaCert] = useState<'pending' | 'uploading' | 'completed'>('pending')
+  const [impulsaFileName, setImpulsaFileName] = useState('')
+  
   const [uploadFileName, setUploadFileName] = useState('')
   const [verificationTime, setVerificationTime] = useState(3)
+
+  // Auto-complete step 1 when all 3 certificates are completed
+  useEffect(() => {
+    if (practicasCert === 'completed' && topCert === 'completed' && impulsaCert === 'completed') {
+      setStep1('completed')
+      if (step2 === 'locked') {
+        setStep2('pending')
+      }
+    } else {
+      setStep1('pending')
+    }
+  }, [practicasCert, topCert, impulsaCert])
 
   // User Profile as Mentor
   const [userMentorSkills, setUserMentorSkills] = useState<string[]>(['Python', 'SQL', 'React', 'Análisis de Datos'])
@@ -312,48 +380,9 @@ export default function MentoriaPage() {
   // Track booked sessions counts for each mentor dynamically
   const [mentorBookedCounts, setMentorBookedCounts] = useState<Record<string, number>>({})
 
-  // Load state from localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Load matched jobs
-      const storedJobs = localStorage.getItem('xpedition_matched_jobs')
-      if (storedJobs) {
-        try {
-          const parsedJobs = JSON.parse(storedJobs)
-          if (parsedJobs.length > 0) {
-            setMatchedJobs(parsedJobs)
-            setSelectedJob(parsedJobs[0])
-          } else {
-            setMatchedJobs(FALLBACK_JOBS)
-            setSelectedJob(FALLBACK_JOBS[0])
-            setShowFallbackNotice(true)
-          }
-        } catch (e) {
-          console.error(e)
-          setMatchedJobs(FALLBACK_JOBS)
-          setSelectedJob(FALLBACK_JOBS[0])
-        }
-      } else {
-        setMatchedJobs(FALLBACK_JOBS)
-        setSelectedJob(FALLBACK_JOBS[0])
-        setShowFallbackNotice(true)
-      }
-
-      // Load connections
-      const storedConnections = localStorage.getItem('xpedition_connections')
-      if (storedConnections) {
-        try {
-          setConnections(JSON.parse(storedConnections))
-        } catch (e) {
-          console.error(e)
-        }
-      } else {
-        const defaultConn = [
-          { id: 'entel-1', name: 'Rosa Díaz', company: 'Entel', avatarInitial: 'R', avatarColor: 'bg-red-500' }
-        ]
-        setConnections(defaultConn)
-        localStorage.setItem('xpedition_connections', JSON.stringify(defaultConn))
-      }
+      // Load Mentor Mode details
 
       // Load Mentor Mode details
       const storedVerified = localStorage.getItem('xpedition_is_mentor_verified')
@@ -455,13 +484,14 @@ export default function MentoriaPage() {
   // Auto-select first mentor when selected job changes
   useEffect(() => {
     if (selectedJob && viewMode === 'student') {
-      const companyMentors = mentorsByCompany[selectedJob.company] || []
+      const companyMentors = getMentorsForCompany(selectedJob.company)
       if (companyMentors.length > 0) {
         setSelectedMentor(companyMentors[0])
       } else {
-        const allAvailable = Object.values(mentorsByCompany).flat()
-        setSelectedMentor(allAvailable[0] || null)
+        setSelectedMentor(null)
       }
+    } else if (!selectedJob) {
+      setSelectedMentor(null)
     }
   }, [selectedJob, viewMode])
 
@@ -473,35 +503,10 @@ export default function MentoriaPage() {
     }, 4500)
   }
 
-  // Handle Connect / Disconnect in student view
-  const handleConnect = () => {
-    if (!selectedMentor) return
-    const isAlreadyConnected = connections.some((c) => c.name === selectedMentor.name)
-
-    let updatedConnections: Connection[] = []
-    if (isAlreadyConnected) {
-      updatedConnections = connections.filter((c) => c.name !== selectedMentor.name)
-      triggerToast(`Conexión removida con ${selectedMentor.name}`, 'info')
-    } else {
-      const newConn: Connection = {
-        id: selectedMentor.id,
-        name: selectedMentor.name,
-        company: selectedMentor.company,
-        avatarInitial: selectedMentor.avatarInitial,
-        avatarColor: selectedMentor.avatarColor,
-      }
-      updatedConnections = [...connections, newConn]
-      triggerToast(`¡Conexión establecida con ${selectedMentor.name}!`, 'success')
-    }
-
-    setConnections(updatedConnections)
-    localStorage.setItem('xpedition_connections', JSON.stringify(updatedConnections))
-  }
-
   // Handle Skip
   const handleSkip = () => {
     if (!selectedJob || !selectedMentor) return
-    const companyMentors = mentorsByCompany[selectedJob.company] || []
+    const companyMentors = getMentorsForCompany(selectedJob.company)
     if (companyMentors.length <= 1) {
       triggerToast(`No hay más mentores disponibles para ${selectedJob.company}`, 'info')
       return
@@ -519,20 +524,6 @@ export default function MentoriaPage() {
       triggerToast("Solicitud denegada: Tu cuenta está suspendida por acumular 2 inasistencias en el ciclo.", "info")
       setShowScheduleModal(false)
       return
-    }
-    
-    const isAlreadyConnected = connections.some((c) => c.name === selectedMentor.name)
-    if (!isAlreadyConnected) {
-      const newConn: Connection = {
-        id: selectedMentor.id,
-        name: selectedMentor.name,
-        company: selectedMentor.company,
-        avatarInitial: selectedMentor.avatarInitial,
-        avatarColor: selectedMentor.avatarColor,
-      }
-      const updatedConnections = [...connections, newConn]
-      setConnections(updatedConnections)
-      localStorage.setItem('xpedition_connections', JSON.stringify(updatedConnections))
     }
 
     // Increment booked count for this mentor
@@ -703,19 +694,36 @@ export default function MentoriaPage() {
   }
 
   // Verification step handlers
-  const handleStep1Upload = () => {
-    setStep1('uploading')
+  const handlePracticasUpload = () => {
+    setPracticasCert('uploading')
     setTimeout(() => {
-      setUploadFileName('certificado_practicas_alicorp.pdf')
-      setStep1('completed')
-      setStep2('pending')
-      triggerToast('Certificado subido con éxito.', 'success')
-    }, 1200)
+      setPracticasFileName('cert_practicas_preprofesionales.pdf')
+      setPracticasCert('completed')
+      triggerToast('Certificado de Prácticas subido con éxito.', 'success')
+    }, 1000)
+  }
+
+  const handleTopUpload = () => {
+    setTopCert('uploading')
+    setTimeout(() => {
+      setTopFileName('diploma_generacion_top.pdf')
+      setTopCert('completed')
+      triggerToast('Certificado de Generación Top subido con éxito.', 'success')
+    }, 1000)
+  }
+
+  const handleImpulsaUpload = () => {
+    setImpulsaCert('uploading')
+    setTimeout(() => {
+      setImpulsaFileName('certificado_impulsa_utp.pdf')
+      setImpulsaCert('completed')
+      triggerToast('Certificado de Impulsa subido con éxito.', 'success')
+    }, 1000)
   }
 
   const handleStep2Verify = () => {
     setStep2('verifying')
-    setVerificationTime(3)
+    setVerificationTime(4)
     
     const interval = setInterval(() => {
       setVerificationTime((prev) => {
@@ -723,7 +731,7 @@ export default function MentoriaPage() {
           clearInterval(interval)
           setStep2('completed')
           setStep3('pending')
-          triggerToast('Verificación universitaria satisfactoria.', 'success')
+          triggerToast('Proceso de seguimiento completado. Documentación validada.', 'success')
           return 0
         }
         return prev - 1
@@ -733,7 +741,20 @@ export default function MentoriaPage() {
 
   const handleStep3Email = () => {
     setStep3('completed')
-    triggerToast('Código de confirmación verificado. Revisa tu correo UTP.', 'success')
+    triggerToast('Respuesta de la universidad recibida y verificada.', 'success')
+  }
+
+  const resetVerificationState = () => {
+    setStep1('pending')
+    setStep2('locked')
+    setStep3('locked')
+    setPracticasCert('pending')
+    setPracticasFileName('')
+    setTopCert('pending')
+    setTopFileName('')
+    setImpulsaCert('pending')
+    setImpulsaFileName('')
+    setUploadFileName('')
   }
 
   const handleCompleteVerification = () => {
@@ -746,10 +767,7 @@ export default function MentoriaPage() {
     
     triggerToast('¡Felicidades! Tu perfil de Mentor UTP ha sido verificado y activado.', 'success')
     
-    setStep1('pending')
-    setStep2('locked')
-    setStep3('locked')
-    setUploadFileName('')
+    resetVerificationState()
   }
 
   const handleToggleViewMode = () => {
@@ -865,7 +883,7 @@ export default function MentoriaPage() {
   // Get other mentors with dynamic capacity count mapping
   const otherMentors = useMemo(() => {
     if (!selectedJob || !selectedMentor) return []
-    const companyMentors = mentorsByCompany[selectedJob.company] || []
+    const companyMentors = getMentorsForCompany(selectedJob.company)
     return companyMentors
       .filter((m) => m.id !== selectedMentor.id)
       .map((m) => ({
@@ -876,7 +894,7 @@ export default function MentoriaPage() {
 
   const currentJobMentorsCount = useMemo(() => {
     if (!selectedJob) return 0
-    return mentorsByCompany[selectedJob.company]?.length || 0
+    return getMentorsForCompany(selectedJob.company).length
   }, [selectedJob])
 
   // Map active mentor with dynamic count
@@ -991,23 +1009,30 @@ export default function MentoriaPage() {
           {/* ========================================== */}
           {viewMode === 'student' && (
             <>
-              {/* Fallback Notice */}
-              {showFallbackNotice && (
-                <div className="alert alert-info bg-violet-50/80 border border-violet-200 text-violet-800 text-xs py-3 rounded-2xl flex items-center justify-between shadow-sm animate-fadeIn">
-                  <div className="flex items-center gap-2.5">
-                    <Info className="w-4 h-4 text-violet-600 flex-shrink-0" />
-                    <span>Aún no tienes puestos guardados en <strong>Job Match</strong>. Te mostramos puestos sugeridos de UTP para que explores los mentores.</span>
-                  </div>
-                  <button 
-                    onClick={() => setShowFallbackNotice(false)} 
-                    className="btn btn-ghost btn-xs text-violet-700 hover:bg-violet-100"
-                  >
-                    Entendido
-                  </button>
-                </div>
-              )}
 
-              <>
+              {matchedJobs.length === 0 ? (
+                <div className="card bg-base-100 shadow-xl border border-slate-100 overflow-hidden relative p-8 text-center max-w-2xl mx-auto my-12 animate-fadeIn">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-500 via-primary to-emerald-500" />
+                  <div className="flex flex-col items-center gap-5">
+                    <div className="w-16 h-16 rounded-2xl bg-violet-100 flex items-center justify-center text-violet-600 shadow-inner">
+                      <Sparkles className="w-8 h-8 animate-pulse" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-extrabold text-slate-800 mb-2">Comienza tu Mentoría Profesional</h3>
+                      <p className="text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+                        Para conectar con estudiantes de ciclos superiores de la UTP que ya están realizando prácticas, primero debes guardar puestos que se alineen a tu perfil en <strong>Job Match</strong>.
+                      </p>
+                    </div>
+                    <a 
+                      href="/job-match" 
+                      className="btn btn-primary text-white px-8 rounded-xl shadow-md shadow-primary/20 hover:shadow-primary/30 transition-all font-semibold"
+                    >
+                      Ir a Job Match
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                <>
                   {/* Job Matches Gallery */}
                   <div className="card bg-base-100 shadow-sm border border-slate-100">
                     <div className="card-body p-6">
@@ -1029,45 +1054,70 @@ export default function MentoriaPage() {
                         </a>
                       </div>
 
-                      {/* Grid of jobs */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        {matchedJobs.map((job) => {
-                          const isSelected = selectedJob?.id === job.id
-                          const mentorsCount = mentorsByCompany[job.company] ? mentorsByCompany[job.company].length : 0
-                          return (
-                            <div
-                              key={job.id}
-                              onClick={() => setSelectedJob(job)}
-                              className={`p-4 rounded-2xl border-2 transition-all duration-200 cursor-pointer relative overflow-hidden ${
-                                isSelected
-                                  ? 'border-violet-600 bg-violet-50/20 shadow-md ring-1 ring-violet-600 scale-[1.01]'
-                                  : 'border-slate-100 bg-white hover:border-slate-300 hover:shadow-sm'
-                              }`}
+                      {/* Carousel Wrapper */}
+                      <div className="relative group/carousel">
+                        {matchedJobs.length > 3 && (
+                          <>
+                            <button 
+                              onClick={() => scrollCarousel('left')}
+                              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 btn btn-circle btn-sm bg-white hover:bg-slate-50 border border-slate-200 shadow-md text-slate-600 hover:text-slate-800 transition-all opacity-0 group-hover/carousel:opacity-100 duration-200 cursor-pointer"
+                              aria-label="Anterior"
                             >
-                              <div className="flex items-start gap-3">
-                                <div className={`avatar avatar-placeholder`}>
-                                  <div className={`${job.avatarColor || 'bg-slate-500'} text-white w-9 h-9 rounded-xl`}>
-                                    <span className="text-sm font-bold">{job.initial}</span>
+                              <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            <button 
+                              onClick={() => scrollCarousel('right')}
+                              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 btn btn-circle btn-sm bg-white hover:bg-slate-50 border border-slate-200 shadow-md text-slate-600 hover:text-slate-800 transition-all opacity-0 group-hover/carousel:opacity-100 duration-200 cursor-pointer"
+                              aria-label="Siguiente"
+                            >
+                              <ChevronRight className="w-5 h-5" />
+                            </button>
+                          </>
+                        )}
+
+                        <div 
+                          ref={carouselRef}
+                          className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2 px-1 scrollbar-none"
+                          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                        >
+                          {matchedJobs.map((job) => {
+                            const isSelected = selectedJob?.id === job.id
+                            const mentorsCount = getMentorsForCompany(job.company).length
+                            return (
+                              <div
+                                key={job.id}
+                                onClick={() => setSelectedJob(job)}
+                                className={`w-72 flex-shrink-0 snap-start p-4 rounded-2xl border-2 transition-all duration-200 cursor-pointer relative overflow-hidden ${
+                                  isSelected
+                                    ? 'border-violet-600 bg-violet-50/20 shadow-md ring-1 ring-violet-600 scale-[1.01]'
+                                    : 'border-slate-100 bg-white hover:border-slate-300 hover:shadow-sm'
+                                }`}
+                              >
+                                <div className="flex items-start gap-3">
+                                  <div className="avatar avatar-placeholder">
+                                    <div className={`${job.avatarColor || 'bg-slate-500'} text-white w-9 h-9 rounded-xl`}>
+                                      <span className="text-sm font-bold">{job.initial}</span>
+                                    </div>
+                                  </div>
+                                  <div className="min-w-0 flex-1">
+                                    <h4 className="text-sm font-bold text-slate-800 truncate">{job.title}</h4>
+                                    <p className="text-xs text-slate-500 truncate">{job.company}</p>
+                                    <p className="text-[10px] text-slate-400 mt-0.5">{job.location}</p>
                                   </div>
                                 </div>
-                                <div className="min-w-0 flex-1">
-                                  <h4 className="text-sm font-bold text-slate-800 truncate">{job.title}</h4>
-                                  <p className="text-xs text-slate-500 truncate">{job.company}</p>
-                                  <p className="text-[10px] text-slate-400 mt-0.5">{job.location}</p>
+                                
+                                <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-100/80">
+                                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                    {job.matchPercent}% match
+                                  </span>
+                                  <span className={`text-[11px] font-bold ${mentorsCount > 0 ? 'text-violet-600' : 'text-slate-400'}`}>
+                                    {mentorsCount} {mentorsCount === 1 ? 'mentor disponible' : 'mentores disponibles'}
+                                  </span>
                                 </div>
                               </div>
-                              
-                              <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-100/80">
-                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                  {job.matchPercent}% match
-                                </span>
-                                <span className={`text-[11px] font-bold ${mentorsCount > 0 ? 'text-violet-600' : 'text-slate-400'}`}>
-                                  {mentorsCount} {mentorsCount === 1 ? 'mentor disponible' : 'mentores disponibles'}
-                                </span>
-                              </div>
-                            </div>
-                          )
-                        })}
+                            )
+                          })}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1077,72 +1127,69 @@ export default function MentoriaPage() {
                     
                     {/* Left Column: Selected Mentor Profile & Alternative Mentors */}
                     <div className="flex flex-col gap-6">
-                      {selectedMentor ? (
-                        <>
-                          <div className="bg-violet-600 text-white rounded-2xl p-4 flex items-center justify-between shadow-sm">
-                            <div className="flex items-center gap-3">
-                              <GraduationCap className="w-5 h-5 flex-shrink-0" />
-                              <div>
-                                <h4 className="text-sm font-bold">Mentores para {selectedJob?.company}</h4>
-                                <p className="text-xs text-violet-100">Mostrando a {selectedMentor.name} de {currentJobMentorsCount} mentor(es) disponibles.</p>
+                      {selectedJob ? (
+                        selectedMentor ? (
+                          <>
+                            <div className="bg-violet-600 text-white rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                              <div className="flex items-center gap-3">
+                                <GraduationCap className="w-5 h-5 flex-shrink-0" />
+                                <div>
+                                  <h4 className="text-sm font-bold">Mentores para {selectedJob?.company}</h4>
+                                  <p className="text-xs text-violet-100">Mostrando a {selectedMentor.name} de {currentJobMentorsCount} mentor(es) disponibles.</p>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          
-                          <MentorCard
-                            mentor={activeMentorWithUpdatedCount || selectedMentor}
-                            isConnected={connections.some((c) => c.name === selectedMentor.name)}
-                            onConnect={handleConnect}
-                            onSchedule={() => {
-                              if (studentAbsences >= 2) {
-                                triggerToast("Cuenta suspendida por acumular 2 inasistencias. No puedes agendar sesiones.", "info")
-                              } else {
-                                setShowScheduleModal(true)
-                              }
-                            }}
-                            onSkip={handleSkip}
-                            reviews={selectedMentorReviews}
-                          />
-
-                          {otherMentors.length > 0 && (
-                            <MoreMentors
-                              mentors={otherMentors}
-                              selectedMentorId={selectedMentor.id}
-                              onSelectMentor={(mentor) => setSelectedMentor(mentor)}
+                            
+                            <MentorCard
+                              mentor={activeMentorWithUpdatedCount || selectedMentor}
+                              onSchedule={() => {
+                                if (studentAbsences >= 2) {
+                                  triggerToast("Cuenta suspendida por acumular 2 inasistencias. No puedes agendar sesiones.", "info")
+                                } else {
+                                  setShowScheduleModal(true)
+                                }
+                              }}
+                              onSkip={handleSkip}
+                              reviews={selectedMentorReviews}
                             />
-                          )}
-                        </>
+
+                            {otherMentors.length > 0 && (
+                              <MoreMentors
+                                mentors={otherMentors}
+                                selectedMentorId={selectedMentor.id}
+                                onSelectMentor={(mentor) => setSelectedMentor(mentor)}
+                              />
+                            )}
+                          </>
+                        ) : (
+                          <div className="card bg-base-100 shadow-sm border border-slate-100 p-8 text-center">
+                            <p className="text-sm text-base-content/60">No se encontraron mentores para este puesto.</p>
+                          </div>
+                        )
                       ) : (
-                        <div className="card bg-base-100 shadow-sm border border-slate-100 p-8 text-center">
-                          <p className="text-sm text-base-content/60">No se encontraron mentores para este puesto.</p>
+                        <div className="card bg-base-100 shadow-sm border border-slate-100 p-10 text-center animate-fadeIn">
+                          <div className="flex flex-col items-center gap-4 max-w-lg mx-auto">
+                            <div className="w-14 h-14 rounded-full bg-violet-50 flex items-center justify-center text-violet-500">
+                              <Users className="w-7 h-7" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-slate-800 text-lg mb-1">Explora Mentores por Puesto</h3>
+                              <p className="text-sm text-slate-500 leading-relaxed">
+                                Haz clic en uno de los puestos de tu <strong>Job Match</strong> arriba para ver los alumnos destacados que trabajan en esa empresa y agendar una sesión de guía.
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
 
-                    {/* Right Column: Connection Panel & Instructions */}
+                    {/* Right Column: Instructions */}
                     <div className="flex flex-col gap-6">
-                      <ConnectionsPanel
-                        connections={connections}
-                        onChat={(c) => triggerToast(`Abriendo chat privado con ${c.name}...`, 'info')}
-                        onSchedule={(c) => {
-                          if (studentAbsences >= 2) {
-                            triggerToast("Cuenta suspendida por acumular 2 inasistencias. No puedes agendar sesiones.", "info")
-                            return
-                          }
-                          const companyMentors = Object.values(mentorsByCompany).flat()
-                          const found = companyMentors.find((m) => m.name === c.name)
-                          if (found) {
-                            setSelectedMentor(found)
-                            setShowScheduleModal(true)
-                          } else {
-                            triggerToast(`No se pudo cargar el perfil para agendar con ${c.name}`, 'info')
-                          }
-                        }}
-                      />
                       <HowItWorksPanel />
                     </div>
                   </div>
                 </>
+              )}
             </>
           )}
 
@@ -1638,122 +1685,322 @@ export default function MentoriaPage() {
           </div>
         </div>
       )}
-
-      {/* MODAL: MENTOR VERIFICATION PROCESS */}
+              {/* MODAL: MENTOR VERIFICATION PROCESS */}
       {showVerifyModal && (
         <div 
           onClick={() => {
             setShowVerifyModal(false)
-            setStep1('pending')
-            setStep2('locked')
-            setStep3('locked')
-            setUploadFileName('')
+            resetVerificationState()
           }}
-          className="modal modal-open fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-fadeIn"
+          className="modal modal-open fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 animate-fadeIn"
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="modal-box max-w-2xl w-full bg-white rounded-3xl p-6 shadow-2xl border border-slate-100 relative max-h-[96vh] overflow-y-auto [&::-webkit-scrollbar]:hidden"
+            className="modal-box max-w-4xl w-full bg-white rounded-3xl p-8 shadow-2xl border border-slate-100 relative max-h-[96vh] overflow-y-auto [&::-webkit-scrollbar]:hidden"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             
             {/* Header */}
-            <h3 className="font-bold text-xl text-slate-800 flex items-center gap-2 mb-1">
-              <Award className="w-6 h-6 text-violet-600" />
+            <h3 className="font-extrabold text-2xl text-slate-900 flex items-center gap-2.5 mb-1.5">
+              <Award className="w-7 h-7 text-violet-600" />
               Conviértete en Mentor UTP
             </h3>
-            <p className="text-xs font-semibold text-slate-500 mb-6">
+            <p className="text-sm font-medium text-slate-600 mb-8 leading-relaxed">
               Sigue los 3 pasos reglamentarios para certificar tu perfil de mentor. Al finalizar, contarás con tu insignia de verificación de la UTP.
             </p>
 
             {/* Step Timeline/Process */}
-            <div className="space-y-5">
+            <div className="space-y-6">
               
-              {/* PROCESS 1: UPLOAD CERTIFICATE */}
-              <div className={`p-4 rounded-2xl border transition-all duration-200 ${
+              {/* PROCESS 1: UPLOAD 3 CERTIFICATES */}
+              <div className={`p-6 rounded-3xl border transition-all duration-205 bg-white ${
                 step1 === 'completed'
-                  ? 'border-emerald-200 bg-emerald-50/20'
-                  : 'border-slate-100 bg-slate-50/30'
+                  ? 'border-emerald-200 bg-emerald-50/10'
+                  : 'border-slate-200 shadow-sm'
               }`}>
-                <div className="flex items-start justify-between gap-3 mb-2.5">
-                  <div className="flex items-center gap-2.5">
-                    <span className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl font-black flex-shrink-0 ${
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 border-b border-slate-100 pb-4">
+                  <div className="flex items-center gap-3">
+                    <span className={`w-11 h-11 rounded-full flex items-center justify-center text-xl font-black flex-shrink-0 ${
                       step1 === 'completed' ? 'bg-emerald-600 text-white' : 'bg-violet-600 text-white'
                     }`}>
                       1
                     </span>
-                    <h4 className="text-sm font-black text-slate-800">Enviar Certificado de Prácticas Preprofesionales</h4>
+                    <div>
+                      <h4 className="text-base font-extrabold text-slate-900">Validar Certificados Requeridos</h4>
+                      <p className="text-xs font-semibold text-slate-500">Debes subir los 3 documentos para desbloquear la validación</p>
+                    </div>
                   </div>
-                  <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${
+                  <span className={`text-xs font-extrabold px-3 py-1 rounded-full self-start sm:self-center ${
                     step1 === 'completed' 
                       ? 'bg-emerald-100 text-emerald-800' 
-                      : step1 === 'uploading'
-                        ? 'bg-violet-100 text-violet-800'
-                        : 'bg-slate-200 text-slate-600'
+                      : 'bg-slate-100 text-slate-600'
                   }`}>
-                    {step1 === 'completed' ? 'Completado' : step1 === 'uploading' ? 'Subiendo...' : 'Pendiente'}
+                    {step1 === 'completed' ? 'Completado ✓' : 'Pendiente'}
                   </span>
                 </div>
                 
-                <p className="text-xs font-semibold text-slate-500 leading-relaxed mb-3">
-                  Para ser mentor debes validar que estás haciendo o has concluido prácticas. Sube tu certificado, constancia o convenio de prácticas.
-                </p>
-
-                {step1 === 'pending' && (
-                  <button
-                    onClick={handleStep1Upload}
-                    className="btn btn-primary btn-sm text-white rounded-xl text-xs font-bold gap-1.5"
+                {/* 3 Sub-steps for Uploading (CARDS in COLUMNS) */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  {/* Card A: Prácticas Preprofesionales */}
+                  <div 
+                    onClick={() => {
+                      if (practicasCert === 'pending') {
+                        handlePracticasUpload();
+                      }
+                    }}
+                    className={`flex flex-col items-center justify-between p-6 rounded-2xl border-2 transition-all duration-205 min-h-[250px] text-center ${
+                      practicasCert === 'pending'
+                        ? 'border-dashed border-slate-200 bg-white hover:border-violet-500 hover:bg-violet-50/20 cursor-pointer group shadow-sm'
+                        : practicasCert === 'uploading'
+                          ? 'border-violet-300 bg-violet-50/10 animate-pulse'
+                          : 'border-emerald-300 bg-emerald-50/10'
+                    }`}
                   >
-                    <UploadCloud className="w-4 h-4" />
-                    Subir Certificado UTP (PDF/PNG)
-                  </button>
-                )}
+                    <div className="flex flex-col items-center flex-1 justify-center w-full">
+                      {practicasCert === 'pending' && (
+                        <>
+                          <div className="w-14 h-14 rounded-full bg-violet-50 flex items-center justify-center mb-3.5 group-hover:scale-110 transition-transform">
+                            <UploadCloud className="w-7 h-7 text-violet-600" />
+                          </div>
+                          <h5 className="text-sm font-extrabold text-slate-900 leading-snug mb-1">
+                            1. Certificado de Prácticas Preprofesionales
+                          </h5>
+                          <p className="text-xs text-slate-500 mt-1 leading-normal max-w-[190px]">
+                            Constancia de prácticas vigentes o concluidas.
+                          </p>
+                          <span className="mt-4 px-3.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-black text-violet-700 shadow-sm group-hover:bg-violet-600 group-hover:text-white group-hover:border-violet-600 transition-colors">
+                            Subir Archivo
+                          </span>
+                        </>
+                      )}
 
-                {step1 === 'uploading' && (
-                  <div className="flex items-center gap-2 text-xs text-violet-700 font-bold">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Subiendo documento certificado...</span>
-                  </div>
-                )}
+                      {practicasCert === 'uploading' && (
+                        <>
+                          <div className="w-14 h-14 rounded-full bg-violet-100 flex items-center justify-center mb-3.5 animate-spin">
+                            <Loader2 className="w-7 h-7 text-violet-600" />
+                          </div>
+                          <h5 className="text-sm font-extrabold text-slate-900 leading-snug mb-1">
+                            1. Certificado de Prácticas
+                          </h5>
+                          <p className="text-xs text-violet-600 font-extrabold mt-1">
+                            Subiendo documento...
+                          </p>
+                          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-4 max-w-[130px]">
+                            <div className="bg-violet-600 h-full w-2/3 animate-pulse" />
+                          </div>
+                        </>
+                      )}
 
-                {step1 === 'completed' && (
-                  <div className="flex items-center gap-2 text-xs text-emerald-700 font-bold bg-emerald-50 p-2.5 rounded-xl border border-emerald-100">
-                    <Check className="w-4 h-4" />
-                    <span>Documento cargado con éxito: <strong>{uploadFileName}</strong></span>
+                      {practicasCert === 'completed' && (
+                        <>
+                          <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center mb-3.5 border border-emerald-100 shadow-sm">
+                            <Check className="w-7 h-7 text-emerald-600" />
+                          </div>
+                          <h5 className="text-sm font-extrabold text-slate-900 leading-snug mb-1">
+                            1. Certificado de Prácticas Preprofesionales
+                          </h5>
+                          <div className="mt-3 flex items-center gap-1.5 bg-emerald-50 text-emerald-700 p-2 rounded-lg text-xs font-bold w-full justify-center border border-emerald-100 max-w-[190px]">
+                            <span className="truncate">{practicasFileName}</span>
+                          </div>
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPracticasCert('pending');
+                            }}
+                            className="mt-4 text-xs font-bold text-slate-400 hover:text-red-500 cursor-pointer transition-colors underline decoration-dotted"
+                          >
+                            Reemplazar archivo
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
-                )}
+
+                  {/* Card B: Generación Top */}
+                  <div 
+                    onClick={() => {
+                      if (topCert === 'pending') {
+                        handleTopUpload();
+                      }
+                    }}
+                    className={`flex flex-col items-center justify-between p-6 rounded-2xl border-2 transition-all duration-205 min-h-[250px] text-center ${
+                      topCert === 'pending'
+                        ? 'border-dashed border-slate-200 bg-white hover:border-violet-500 hover:bg-violet-50/20 cursor-pointer group shadow-sm'
+                        : topCert === 'uploading'
+                          ? 'border-violet-300 bg-violet-50/10 animate-pulse'
+                          : 'border-emerald-300 bg-emerald-50/10'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center flex-1 justify-center w-full">
+                      {topCert === 'pending' && (
+                        <>
+                          <div className="w-14 h-14 rounded-full bg-violet-50 flex items-center justify-center mb-3.5 group-hover:scale-110 transition-transform">
+                            <UploadCloud className="w-7 h-7 text-violet-600" />
+                          </div>
+                          <h5 className="text-sm font-extrabold text-slate-900 leading-snug mb-1">
+                            2. Certificado de Generación Top
+                          </h5>
+                          <p className="text-xs text-slate-500 mt-1 leading-normal max-w-[190px]">
+                            Acreditación del programa de alto rendimiento UTP.
+                          </p>
+                          <span className="mt-4 px-3.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-black text-violet-700 shadow-sm group-hover:bg-violet-600 group-hover:text-white group-hover:border-violet-600 transition-colors">
+                            Subir Archivo
+                          </span>
+                        </>
+                      )}
+
+                      {topCert === 'uploading' && (
+                        <>
+                          <div className="w-14 h-14 rounded-full bg-violet-100 flex items-center justify-center mb-3.5 animate-spin">
+                            <Loader2 className="w-7 h-7 text-violet-600" />
+                          </div>
+                          <h5 className="text-sm font-extrabold text-slate-900 leading-snug mb-1">
+                            2. Certificado de Generación Top
+                          </h5>
+                          <p className="text-xs text-violet-600 font-extrabold mt-1">
+                            Subiendo documento...
+                          </p>
+                          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-4 max-w-[130px]">
+                            <div className="bg-violet-600 h-full w-2/3 animate-pulse" />
+                          </div>
+                        </>
+                      )}
+
+                      {topCert === 'completed' && (
+                        <>
+                          <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center mb-3.5 border border-emerald-100 shadow-sm">
+                            <Check className="w-7 h-7 text-emerald-600" />
+                          </div>
+                          <h5 className="text-sm font-extrabold text-slate-900 leading-snug mb-1">
+                            2. Certificado de Generación Top
+                          </h5>
+                          <div className="mt-3 flex items-center gap-1.5 bg-emerald-50 text-emerald-700 p-2 rounded-lg text-xs font-bold w-full justify-center border border-emerald-100 max-w-[190px]">
+                            <span className="truncate">{topFileName}</span>
+                          </div>
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setTopCert('pending');
+                            }}
+                            className="mt-4 text-xs font-bold text-slate-400 hover:text-red-500 cursor-pointer transition-colors underline decoration-dotted"
+                          >
+                            Reemplazar archivo
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Card C: Impulsa */}
+                  <div 
+                    onClick={() => {
+                      if (impulsaCert === 'pending') {
+                        handleImpulsaUpload();
+                      }
+                    }}
+                    className={`flex flex-col items-center justify-between p-6 rounded-2xl border-2 transition-all duration-205 min-h-[250px] text-center ${
+                      impulsaCert === 'pending'
+                        ? 'border-dashed border-slate-200 bg-white hover:border-violet-500 hover:bg-violet-50/20 cursor-pointer group shadow-sm'
+                        : impulsaCert === 'uploading'
+                          ? 'border-violet-300 bg-violet-50/10 animate-pulse'
+                          : 'border-emerald-300 bg-emerald-50/10'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center flex-1 justify-center w-full">
+                      {impulsaCert === 'pending' && (
+                        <>
+                          <div className="w-14 h-14 rounded-full bg-violet-50 flex items-center justify-center mb-3.5 group-hover:scale-110 transition-transform">
+                            <UploadCloud className="w-7 h-7 text-violet-600" />
+                          </div>
+                          <h5 className="text-sm font-extrabold text-slate-900 leading-snug mb-1">
+                            3. Certificado de Impulsa
+                          </h5>
+                          <p className="text-xs text-slate-500 mt-1 leading-normal max-w-[190px]">
+                            Constancia del programa de empleabilidad Impulsa UTP.
+                          </p>
+                          <span className="mt-4 px-3.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-black text-violet-700 shadow-sm group-hover:bg-violet-600 group-hover:text-white group-hover:border-violet-600 transition-colors">
+                            Subir Archivo
+                          </span>
+                        </>
+                      )}
+
+                      {impulsaCert === 'uploading' && (
+                        <>
+                          <div className="w-14 h-14 rounded-full bg-violet-100 flex items-center justify-center mb-3.5 animate-spin">
+                            <Loader2 className="w-7 h-7 text-violet-600" />
+                          </div>
+                          <h5 className="text-sm font-extrabold text-slate-900 leading-snug mb-1">
+                            3. Certificado de Impulsa
+                          </h5>
+                          <p className="text-xs text-violet-600 font-extrabold mt-1">
+                            Subiendo documento...
+                          </p>
+                          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mt-4 max-w-[130px]">
+                            <div className="bg-violet-600 h-full w-2/3 animate-pulse" />
+                          </div>
+                        </>
+                      )}
+
+                      {impulsaCert === 'completed' && (
+                        <>
+                          <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center mb-3.5 border border-emerald-100 shadow-sm">
+                            <Check className="w-7 h-7 text-emerald-600" />
+                          </div>
+                          <h5 className="text-sm font-extrabold text-slate-900 leading-snug mb-1">
+                            3. Certificado de Impulsa
+                          </h5>
+                          <div className="mt-3 flex items-center gap-1.5 bg-emerald-50 text-emerald-700 p-2 rounded-lg text-xs font-bold w-full justify-center border border-emerald-100 max-w-[190px]">
+                            <span className="truncate">{impulsaFileName}</span>
+                          </div>
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setImpulsaCert('pending');
+                            }}
+                            className="mt-4 text-xs font-bold text-slate-400 hover:text-red-500 cursor-pointer transition-colors underline decoration-dotted"
+                          >
+                            Reemplazar archivo
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* PROCESS 2: UNIVERSITY VERIFICATION */}
-              <div className={`p-4 rounded-2xl border transition-all duration-200 ${
+              {/* PROCESS 2: SEGUIMIENTO Y VALIDACIÓN DE DOCUMENTOS */}
+              <div className={`p-6 rounded-3xl border transition-all duration-200 bg-white ${
                 step2 === 'locked' 
-                  ? 'border-slate-100 bg-slate-100/50 opacity-55' 
+                  ? 'border-slate-200 bg-slate-50/50 opacity-60' 
                   : step2 === 'completed'
-                    ? 'border-emerald-200 bg-emerald-50/20'
-                    : 'border-slate-100 bg-slate-50/30'
+                    ? 'border-emerald-200 bg-emerald-50/10'
+                    : 'border-slate-200 shadow-sm'
               }`}>
-                <div className="flex items-start justify-between gap-3 mb-2.5">
-                  <div className="flex items-center gap-2.5">
-                    <span className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl font-black flex-shrink-0 ${
-                      step2 === 'completed' ? 'bg-emerald-600 text-white' : step2 === 'locked' ? 'bg-slate-300 text-slate-600' : 'bg-violet-600 text-white'
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                  <div className="flex items-center gap-3">
+                    <span className={`w-11 h-11 rounded-full flex items-center justify-center text-xl font-black flex-shrink-0 ${
+                      step2 === 'completed' ? 'bg-emerald-600 text-white' : step2 === 'locked' ? 'bg-slate-200 text-slate-400' : 'bg-violet-600 text-white'
                     }`}>
                       2
                     </span>
-                    <h4 className="text-sm font-black text-slate-800">Verificación de la Universidad</h4>
+                    <div>
+                      <h4 className="text-base font-extrabold text-slate-900">Proceso de Seguimiento y Validación</h4>
+                      <p className="text-xs font-semibold text-slate-500">Verificación de tus 3 certificados en los registros académicos UTP</p>
+                    </div>
                   </div>
-                  <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${
+                  <span className={`text-xs font-extrabold px-3 py-1 rounded-full self-start sm:self-center ${
                     step2 === 'completed' 
                       ? 'bg-emerald-100 text-emerald-800' 
                       : step2 === 'verifying'
                         ? 'bg-amber-100 text-amber-800'
                         : step2 === 'locked'
                           ? 'bg-slate-200 text-slate-400'
-                          : 'bg-slate-200 text-slate-600'
+                          : 'bg-slate-100 text-slate-600'
                   }`}>
                     {step2 === 'completed' 
-                      ? 'Completado' 
+                      ? 'Completado ✓' 
                       : step2 === 'verifying' 
-                        ? 'Verificando...' 
+                        ? 'En proceso...' 
                         : step2 === 'locked' 
                           ? 'Bloqueado' 
                           : 'Pendiente'
@@ -1761,85 +2008,107 @@ export default function MentoriaPage() {
                   </span>
                 </div>
                 
-                <p className="text-xs font-semibold text-slate-500 leading-relaxed mb-3">
-                  Consultaremos la validez académica de tu certificado y tu estado de matrícula regular con los sistemas de registros de UTP.
+                <p className="text-sm font-medium text-slate-600 leading-relaxed mb-4">
+                  Registros Académicos validará que tu certificado de prácticas preprofesionales, tu constancia de Generación Top y tu diploma de Impulsa sean auténticos y vigentes.
                 </p>
 
                 {step2 === 'pending' && (
                   <button
                     onClick={handleStep2Verify}
-                    className="btn btn-primary btn-sm text-white rounded-xl text-xs font-bold gap-1.5"
+                    className="btn btn-primary btn-md text-white rounded-xl text-xs font-extrabold gap-2 cursor-pointer shadow-sm px-5"
                   >
-                    Iniciar Verificación Universitaria
+                    Iniciar Seguimiento y Validación
                   </button>
                 )}
 
                 {step2 === 'verifying' && (
-                  <div className="flex items-center gap-2 text-xs text-amber-700 font-bold bg-amber-50 p-2.5 rounded-xl border border-amber-100">
-                    <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
-                    <span>Validando con registros académicos UTP... Simulación activa ({verificationTime}s)</span>
+                  <div className="space-y-3 mt-4">
+                    <div className="flex items-center gap-2.5 text-sm text-amber-800 font-extrabold bg-amber-50 p-3 rounded-xl border border-amber-100">
+                      <Loader2 className="w-5 h-5 animate-spin text-amber-600 shrink-0" />
+                      <span>Validando récord y certificados con UTP... ({verificationTime}s)</span>
+                    </div>
+                    {/* Simulated live tracking checks */}
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs space-y-2.5 font-bold text-slate-700">
+                      <div className="flex items-center gap-2 text-emerald-600">
+                        <Check className="w-4 h-4" /> 1. Certificados cargados e integrados
+                      </div>
+                      <div className="flex items-center gap-2 text-emerald-600">
+                        <Check className="w-4 h-4" /> 2. Estatus de alumno regular UTP verificado
+                      </div>
+                      <div className="flex items-center gap-2 text-amber-600">
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" /> 3. Firma y sello de constancias en revisión
+                      </div>
+                    </div>
                   </div>
                 )}
 
                 {step2 === 'completed' && (
-                  <div className="flex items-center gap-2 text-xs text-emerald-700 font-bold bg-emerald-50 p-2.5 rounded-xl border border-emerald-100">
-                    <Check className="w-4 h-4" />
-                    <span>Registro académico verificado. Alumno regular con prácticas vigentes.</span>
+                  <div className="flex flex-col gap-2 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 mt-2 text-sm text-emerald-800">
+                    <div className="flex items-center gap-2 font-extrabold text-emerald-700 text-sm">
+                      <Check className="w-4 h-4" />
+                      <span>Seguimiento finalizado con éxito</span>
+                    </div>
+                    <p className="text-xs text-emerald-600 font-semibold">Los 3 certificados fueron aprobados por registros y transferidos para respuesta oficial.</p>
                   </div>
                 )}
               </div>
 
-              {/* PROCESS 3: EMAIL APPROVAL */}
-              <div className={`p-4 rounded-2xl border transition-all duration-200 ${
+              {/* PROCESS 3: RESPUESTA DE LA UNIVERSIDAD */}
+              <div className={`p-6 rounded-3xl border transition-all duration-200 bg-white ${
                 step3 === 'locked' 
-                  ? 'border-slate-100 bg-slate-100/50 opacity-55' 
+                  ? 'border-slate-200 bg-slate-50/50 opacity-60' 
                   : step3 === 'completed'
-                    ? 'border-emerald-200 bg-emerald-50/20'
-                    : 'border-slate-100 bg-slate-50/30'
+                    ? 'border-emerald-200 bg-emerald-50/10'
+                    : 'border-slate-200 shadow-sm'
               }`}>
-                <div className="flex items-start justify-between gap-3 mb-2.5">
-                  <div className="flex items-center gap-2.5">
-                    <span className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl font-black flex-shrink-0 ${
-                      step3 === 'completed' ? 'bg-emerald-600 text-white' : step3 === 'locked' ? 'bg-slate-300 text-slate-600' : 'bg-violet-600 text-white'
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                  <div className="flex items-center gap-3">
+                    <span className={`w-11 h-11 rounded-full flex items-center justify-center text-xl font-black flex-shrink-0 ${
+                      step3 === 'completed' ? 'bg-emerald-600 text-white' : step3 === 'locked' ? 'bg-slate-200 text-slate-400' : 'bg-violet-600 text-white'
                     }`}>
                       3
                     </span>
-                    <h4 className="text-sm font-black text-slate-800">Respuesta de la Universidad</h4>
+                    <div>
+                      <h4 className="text-base font-extrabold text-slate-900">Respuesta Oficial y Aprobación</h4>
+                      <p className="text-xs font-semibold text-slate-500">Notificación oficial emitida por la Universidad en tu correo institucional</p>
+                    </div>
                   </div>
-                  <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${
+                  <span className={`text-xs font-extrabold px-3 py-1 rounded-full self-start sm:self-center ${
                     step3 === 'completed' 
                       ? 'bg-emerald-100 text-emerald-800' 
                       : step3 === 'locked'
                         ? 'bg-slate-200 text-slate-400'
-                        : 'bg-slate-200 text-slate-600'
+                        : 'bg-slate-100 text-slate-600'
                   }`}>
                     {step3 === 'completed' ? 'Completado ✓' : step3 === 'locked' ? 'Bloqueado' : 'Pendiente'}
                   </span>
                 </div>
                 
-                <p className="text-xs font-semibold text-slate-500 leading-relaxed mb-3">
-                  Para culminar el proceso, solicitamos la firma digital del director de carrera. Recibirás una respuesta en tu bandeja institucional de UTP.
+                <p className="text-sm font-medium text-slate-600 leading-relaxed mb-4">
+                  Una vez validado el seguimiento, recibirás un dictamen del Director de Carrera. Puedes consultar la respuesta oficial para habilitar tu cuenta.
                 </p>
 
                 {step3 === 'pending' && (
                   <button
                     onClick={handleStep3Email}
-                    className="btn btn-primary btn-sm text-white rounded-xl text-xs font-bold gap-1.5"
+                    className="btn btn-primary btn-md text-white rounded-xl text-xs font-extrabold gap-2 cursor-pointer shadow-sm px-5"
                   >
                     <Mail className="w-4 h-4" />
-                    Consultar Aprobación (Revise su correo)
+                    Consultar Respuesta Institucional
                   </button>
                 )}
 
                 {step3 === 'completed' && (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-xs text-emerald-700 font-bold bg-emerald-50 p-2.5 rounded-xl border border-emerald-100">
-                      <Check className="w-4 h-4" />
-                      <span>UTP aprobó tu solicitud. Correo verificado con éxito.</span>
+                  <div className="space-y-3">
+                    <div className="flex flex-col gap-2.5 bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 mt-2">
+                      <div className="flex items-center gap-2 font-extrabold text-emerald-700 text-sm">
+                        <Check className="w-4 h-4" />
+                        <span>Aprobado por Dirección de Carrera UTP</span>
+                      </div>
+                      <p className="text-xs font-bold text-slate-700 bg-amber-50 text-amber-900 p-3.5 rounded-xl border border-amber-100 leading-relaxed">
+                        <strong>Dictamen Oficial:</strong> "Se otorga la habilitación oficial al alumno para desempeñarse como Mentor UTP tras validar sus 3 certificados y récord de matrícula regular. Se han enviado las pautas de mentor y código de ética a [U21422102@utp.edu.pe]."
+                      </p>
                     </div>
-                    <p className="text-[11px] font-bold text-slate-700 bg-amber-50 text-amber-900 p-2.5 rounded-lg border border-amber-100">
-                      <strong>Mensaje UTP:</strong> "Por favor, revise su correo institucional [U21422102@utp.edu.pe] donde se le enviaron las pautas de mentor y el código ético."
-                    </p>
                   </div>
                 )}
               </div>
@@ -1847,23 +2116,20 @@ export default function MentoriaPage() {
             </div>
 
             {/* Actions */}
-            <div className="modal-action flex justify-end gap-2 mt-6 pt-4 border-t border-slate-100">
+            <div className="modal-action flex justify-end gap-3 mt-8 pt-5 border-t border-slate-100">
               <button
                 onClick={() => {
                   setShowVerifyModal(false)
-                  setStep1('pending')
-                  setStep2('locked')
-                  setStep3('locked')
-                  setUploadFileName('')
+                  resetVerificationState()
                 }}
-                className="btn btn-ghost rounded-xl text-xs font-bold"
+                className="btn btn-ghost rounded-xl text-sm font-extrabold text-slate-500 hover:bg-slate-100"
               >
                 Cerrar
               </button>
               <button
                 disabled={step1 !== 'completed' || step2 !== 'completed' || step3 !== 'completed'}
                 onClick={handleCompleteVerification}
-                className="btn btn-primary text-white rounded-xl text-xs font-bold px-6 disabled:bg-slate-100 disabled:text-slate-400"
+                className="btn btn-primary text-white rounded-xl text-sm font-extrabold px-7 disabled:bg-slate-100 disabled:text-slate-400 cursor-pointer transition-all"
               >
                 Verificar y Activar Perfil
               </button>
