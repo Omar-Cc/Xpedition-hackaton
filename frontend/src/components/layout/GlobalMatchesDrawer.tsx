@@ -1,13 +1,14 @@
 "use client"
 
-import React from 'react'
-import { Heart, X } from 'lucide-react'
+import React, { useState } from 'react'
+import { Heart, X, Sparkles } from 'lucide-react'
+import Link from 'next/link'
 import { useJobMatch } from '@/src/contexts/JobMatchContext'
 
 const getMatchColorBg = (percent: number) => {
-  if (percent >= 80) return 'bg-emerald-100/40 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 border-emerald-200/60 dark:border-emerald-800/40'
-  if (percent >= 75) return 'bg-amber-100/40 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border-amber-200/60 dark:border-amber-800/40'
-  return 'bg-orange-100/40 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 border-orange-200/60 dark:border-orange-800/40'
+  if (percent >= 80) return 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
+  if (percent >= 75) return 'bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800'
+  return 'bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-800'
 }
 
 const getMatchDotColor = (percent: number) => {
@@ -18,6 +19,7 @@ const getMatchDotColor = (percent: number) => {
 
 export default function GlobalMatchesDrawer() {
   const { matchedJobs, setMatchedJobs, matchesDrawerOpen, setMatchesDrawerOpen } = useJobMatch()
+  const [expandedMatchId, setExpandedMatchId] = useState<string | null>(null)
 
   return (
     <>
@@ -60,30 +62,69 @@ export default function GlobalMatchesDrawer() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {matchedJobs.map(job => (
-                    <div key={job.id} className="relative rounded-2xl border border-base-200 p-4 bg-base-100 shadow-sm flex items-start gap-4">
-                      <div className={`${job.avatarColor} flex h-12 w-12 items-center justify-center rounded-xl text-white font-bold flex-shrink-0`}>
-                        {job.initial}
-                      </div>
-                      <div className="flex-1 pr-8">
-                        <h4 className="text-sm font-bold text-base-content">{job.title}</h4>
-                        <p className="text-xs text-base-content/60">{job.company}</p>
-                        <div className="mt-2 flex items-center gap-2">
-                          <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[9px] font-bold border ${getMatchColorBg(job.matchPercent)}`}>
-                            <span className={`h-1 w-1 rounded-full ${getMatchDotColor(job.matchPercent)}`} />
-                            {job.matchPercent}% match
-                          </span>
-                        </div>
-                      </div>
-                      <button 
-                        onClick={() => setMatchedJobs(prev => prev.filter(m => m.id !== job.id))}
-                        className="absolute top-4 right-4 p-1.5 text-base-content/30 hover:text-rose-500 hover:bg-rose-50 rounded-full transition cursor-pointer"
-                        title="Quitar"
+                  {matchedJobs.map(job => {
+                    const isExpanded = expandedMatchId === job.id
+                    return (
+                      <div 
+                        key={job.id} 
+                        className={`relative rounded-2xl border ${isExpanded ? 'border-primary/40 shadow-md bg-primary/5' : 'border-base-200 bg-base-100 shadow-sm'} p-4 transition-all cursor-pointer`}
+                        onClick={() => setExpandedMatchId(prev => prev === job.id ? null : job.id)}
                       >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  ))}
+                        <div className="flex items-start gap-4">
+                          <div className={`${job.avatarColor} flex h-12 w-12 items-center justify-center rounded-xl text-white font-bold flex-shrink-0`}>
+                            {job.initial}
+                          </div>
+                          <div className="flex-1 pr-8">
+                            <h4 className="text-sm font-bold text-base-content">{job.title}</h4>
+                            <p className="text-xs text-base-content/60">{job.company}</p>
+                            <div className="mt-2 flex items-center gap-2">
+                              <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[9px] font-bold border ${getMatchColorBg(job.matchPercent)}`}>
+                                <span className={`h-1 w-1 rounded-full ${getMatchDotColor(job.matchPercent)}`} />
+                                {job.matchPercent}% match
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Expanded Content */}
+                        {isExpanded && (
+                          <div className="mt-4 pt-4 border-t border-base-200/60 animate-fadeIn" onClick={(e) => e.stopPropagation()}>
+                            <div className="bg-white dark:bg-base-100 rounded-xl p-3 border border-base-200 mb-3 shadow-xs">
+                              <p className="text-[11px] text-base-content/80 leading-relaxed">
+                                <span className="font-extrabold text-primary flex items-center gap-1 mb-1.5">
+                                  <Sparkles className="h-3 w-3" /> Análisis
+                                </span>
+                                Tu perfil se alinea bastante bien con el puesto de <strong>{job.title}</strong>, pero aún te faltan algunas habilidades clave. {job.matchMissing.replace(/aumentar[íi]as al 100% mejorando/i, 'Te sugerimos mejorar')} Por ello, te recomendamos crear una <strong>Planificación</strong> para cerrar estas brechas rápidamente.
+                              </p>
+                            </div>
+                            <div className="flex gap-2">
+                              <Link href={`/cv-builder?jobId=${job.id}`} onClick={() => setMatchesDrawerOpen(false)} className="flex-1">
+                                <button className="w-full bg-base-200 hover:bg-base-300 text-base-content text-[11px] font-bold py-2 rounded-lg transition-colors cursor-pointer">
+                                  Constructor CV
+                                </button>
+                              </Link>
+                              <Link href="/plan-30d" onClick={() => setMatchesDrawerOpen(false)} className="flex-1">
+                                <button className="w-full bg-primary hover:bg-primary/90 text-white text-[11px] font-bold py-2 rounded-lg transition-colors cursor-pointer shadow-sm shadow-primary/20">
+                                  Planificación
+                                </button>
+                              </Link>
+                            </div>
+                          </div>
+                        )}
+
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setMatchedJobs(prev => prev.filter(m => m.id !== job.id))
+                          }}
+                          className="absolute top-4 right-4 p-1.5 text-base-content/30 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-full transition cursor-pointer"
+                          title="Quitar"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    )
+                  })}
                 </div>
               )}
             </div>

@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import PageShell from '@/src/components/layout/PageShell'
 import PageHeader from '@/src/components/layout/PageHeader'
 import { CheckCircle2, AlertCircle } from 'lucide-react'
+import { useJobMatch } from '@/src/contexts/JobMatchContext'
 
 // Importación de Tipos y Componentes Modulares
 import { AtsSummary, TemplateType } from '@/src/features/cv-builder/types'
@@ -215,6 +216,21 @@ export default function CVBuilderPage() {
   const [atsText, setAtsText] = useState('')
   const [atsScore, setAtsScore] = useState<number | null>(null)
   const [atsSummary, setAtsSummary] = useState<AtsSummary | null>(null)
+
+  const { matchedJobs } = useJobMatch()
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const jobId = urlParams.get('jobId')
+      if (jobId && matchedJobs.length > 0) {
+        const job = matchedJobs.find(j => j.id === jobId)
+        if (job && !atsText) {
+          setAtsText(`Puesto: ${job.title}\nEmpresa: ${job.company}\n\nDescripción:\n${job.description}\n\nFunciones Principales:\n- ${job.functions.join('\n- ')}\n\nHabilidades Clave:\n${job.skills.join(', ')}`)
+        }
+      }
+    }
+  }, [matchedJobs])
 
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [isDownloadingPdf, setIsDownloadingPdf] = useState(false)

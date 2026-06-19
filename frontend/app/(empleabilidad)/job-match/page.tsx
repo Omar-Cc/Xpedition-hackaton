@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import PageShell from '@/src/components/layout/PageShell'
 import PageHeader from '@/src/components/layout/PageHeader'
 import { useJobMatch, type JobItem } from '@/src/contexts/JobMatchContext'
@@ -1217,6 +1217,9 @@ export default function JobMatchPage() {
   const [selectedJobDetail, setSelectedJobDetail] = useState<JobItem | null>(null)
   const [expandedFeedbackId, setExpandedFeedbackId] = useState<string | null>(null)
 
+  const topFiltersRef = useRef<HTMLDivElement>(null)
+  const [isTopFiltersVisible, setIsTopFiltersVisible] = useState(true)
+
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6
   const [showDisclaimer, setShowDisclaimer] = useState(true)
@@ -1331,9 +1334,9 @@ export default function JobMatchPage() {
   }
 
   const getMatchColorBg = (percent: number) => {
-    if (percent >= 80) return 'bg-success/10 text-success border-success/20'
-    if (percent >= 75) return 'bg-warning/10 text-warning border-warning/20'
-    return 'bg-error/10 text-error border-error/20'
+    if (percent >= 80) return 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
+    if (percent >= 75) return 'bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800'
+    return 'bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-800'
   }
 
   const getMatchDotColor = (percent: number) => {
@@ -1419,6 +1422,40 @@ export default function JobMatchPage() {
   }, [quickOpen])
 
   useEffect(() => {
+    const checkVisibility = () => {
+      if (topFiltersRef.current) {
+        const rect = topFiltersRef.current.getBoundingClientRect()
+        // Está visible si su parte inferior es mayor a 0 (no se ha ocultado por arriba)
+        setIsTopFiltersVisible(rect.bottom > 0)
+      }
+    }
+
+    // Escuchar scroll en la ventana
+    window.addEventListener('scroll', checkVisibility, { passive: true })
+    window.addEventListener('resize', checkVisibility, { passive: true })
+
+    // También creamos un observer por si acaso el contenedor cambia de tamaño o scroll interno
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsTopFiltersVisible(entry.isIntersecting)
+      },
+      { threshold: 0 }
+    )
+
+    if (topFiltersRef.current) {
+      observer.observe(topFiltersRef.current)
+    }
+
+    checkVisibility()
+
+    return () => {
+      window.removeEventListener('scroll', checkVisibility)
+      window.removeEventListener('resize', checkVisibility)
+      observer.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
     if (quickIndex >= filteredJobs.length) {
       setQuickIndex(0)
     }
@@ -1488,10 +1525,18 @@ export default function JobMatchPage() {
         maxWidthClassName="max-w-[1600px]"
       />
 
-      <div className="flex-1 overflow-y-auto bg-transparent">
+      <div 
+        className="flex-1 overflow-y-auto bg-transparent"
+        onScroll={(e) => {
+          if (topFiltersRef.current) {
+            const rect = topFiltersRef.current.getBoundingClientRect()
+            setIsTopFiltersVisible(rect.bottom > 0)
+          }
+        }}
+      >
         <main className="max-w-[1600px] mx-auto px-6 pb-12 pt-2">
           {/* Card de Filtros de Búsqueda Rápida */}
-          <div className="bg-base-100 border border-base-200 rounded-3xl p-6 mb-6 shadow-sm">
+          <div ref={topFiltersRef} className="bg-base-100 border border-base-200 rounded-3xl p-6 mb-6 shadow-sm">
             <div className="grid gap-4 md:grid-cols-[1.2fr_1.2fr_auto] items-end">
               <label className="relative flex flex-col gap-1.5 flex-1">
                 <span className="text-xs font-bold text-base-content/60">Puesto o empresa</span>
@@ -1909,15 +1954,7 @@ export default function JobMatchPage() {
                                   </div>
                                 </div>
 
-                                {/* Recommended & Difficulty Tags */}
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                  <span className="inline-flex items-center justify-center px-3 py-1 text-[10px] font-bold text-success border border-success/20 bg-success/10 rounded-full">
-                                    Recomendado
-                                  </span>
-                                  <span className="inline-flex items-center justify-center px-3 py-1 text-[10px] font-bold text-warning border border-warning/20 bg-warning/10 rounded-full">
-                                    Dificultad: {job.level === 'Junior' || job.level === 'Trainee' || job.level === 'Practicante' ? 'Baja' : job.level === 'Senior' ? 'Alta' : 'Media'}
-                                  </span>
-                                </div>
+                                {/* Removed Recommended & Difficulty Tags as requested */}
 
                                 {/* Mid section description */}
                                 <p className="text-xs text-base-content/65 line-clamp-2 mb-3 leading-relaxed">
@@ -1974,16 +2011,7 @@ export default function JobMatchPage() {
                                     >
                                       Detalles
                                     </button>
-                                    <button
-                                      type="button"
-                                      onClick={(e) => {
-                                        e.stopPropagation()
-                                        alert(`Redirigiendo a postular en ${job.source}...`)
-                                      }}
-                                      className="inline-flex items-center justify-center gap-1 rounded-lg bg-primary hover:bg-primary/90 px-4 py-2 text-[10px] font-bold text-white shadow-xs transition cursor-pointer"
-                                    >
-                                      Postular
-                                    </button>
+
                                   </div>
                                 </div>
                               </div>
@@ -2033,12 +2061,12 @@ export default function JobMatchPage() {
                               {displayedJob.initial}
                             </div>
                             <div>
-                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold mb-1.5 border ${displayedJob.status === 'Urgente'
-                                  ? 'bg-error/10 text-error border-error/20'
-                                  : 'bg-success/10 text-success border-success/20'
+                              <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold mb-1.5 border ${selectedJob.status === 'Urgente'
+                                  ? 'bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800'
+                                  : 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
                                 }`}>
-                                <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${displayedJob.status === 'Urgente' ? 'bg-error animate-pulse' : 'bg-success'}`} />
-                                {displayedJob.status}
+                                <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${selectedJob.status === 'Urgente' ? 'bg-rose-500 animate-pulse' : 'bg-emerald-500'}`} />
+                                {selectedJob.status}
                               </span>
                               <h3 className="text-lg font-extrabold text-base-content leading-tight">
                                 {displayedJob.title}
@@ -2221,15 +2249,17 @@ export default function JobMatchPage() {
           </div>
 
           {/* Floating Actions on Mobile */}
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center bg-base-100 border border-base-300 text-base-content backdrop-blur-md px-6 py-3 rounded-full shadow-lg xl:hidden">
-            <button
-              onClick={() => setFiltersOpen(true)}
-              className="flex items-center gap-2 text-base-content text-xs font-bold hover:text-primary transition cursor-pointer"
-            >
-              <Filter className="h-4 w-4 text-base-content/40" />
-              Filtros
-            </button>
-          </div>
+          {!isTopFiltersVisible && (
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center bg-base-100 border border-base-300 text-base-content backdrop-blur-md px-6 py-3 rounded-full shadow-lg xl:hidden animate-fadeIn">
+              <button
+                onClick={() => setFiltersOpen(true)}
+                className="flex items-center gap-2 text-base-content text-xs font-bold hover:text-primary transition cursor-pointer"
+              >
+                <Filter className="h-4 w-4 text-base-content/40" />
+                Filtros
+              </button>
+            </div>
+          )}
         </main>
       </div>
 
@@ -2260,24 +2290,28 @@ export default function JobMatchPage() {
 
             {currentQuickJob ? (
               <div className="rounded-2xl bg-base-100 p-5 shadow-xs border border-base-200">
-                <div className="mb-4 flex items-start justify-between">
-                  <div className={`${currentQuickJob.avatarColor} flex h-14 w-14 items-center justify-center rounded-xl text-white shadow-xs font-extrabold text-lg`}>
+                <div className="mb-4 flex items-start gap-4">
+                  <div className={`${currentQuickJob.avatarColor} flex h-14 w-14 items-center justify-center rounded-xl text-white shadow-xs font-extrabold text-lg shrink-0`}>
                     {currentQuickJob.initial}
                   </div>
-                  <span className="inline-flex items-center rounded-full bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30">
-                    {currentQuickJob.matchPercent}% match
-                  </span>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="text-lg font-black text-base-content leading-tight">
+                        {currentQuickJob.title}
+                      </h3>
+                      <span className="shrink-0 inline-flex items-center rounded-full bg-emerald-100 dark:bg-emerald-900 px-2.5 py-0.5 text-[10px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                        {currentQuickJob.matchPercent}% match
+                      </span>
+                    </div>
+                    <p className="mt-1.5 flex items-center gap-2 text-xs font-semibold text-base-content/75">
+                      <span className="truncate">{currentQuickJob.company}</span>
+                      <span className={`shrink-0 text-[9px] px-2 py-0.5 rounded-full font-bold border ${getSourceBadgeStyle(currentQuickJob.source)}`}>
+                        {currentQuickJob.source}
+                      </span>
+                    </p>
+                  </div>
                 </div>
-
-                <h3 className="text-lg font-black text-base-content leading-tight">
-                  {currentQuickJob.title}
-                </h3>
-                <p className="mt-1.5 flex items-center gap-2 text-xs font-semibold text-base-content/75">
-                  {currentQuickJob.company}
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold border ${getSourceBadgeStyle(currentQuickJob.source)}`}>
-                    {currentQuickJob.source}
-                  </span>
-                </p>
 
                 <div className="mt-3 flex flex-wrap gap-1">
                   {currentQuickJob.tags.slice(0, 3).map((tag) => (
@@ -2372,11 +2406,6 @@ export default function JobMatchPage() {
                 <p className="mt-1.5 text-xs text-base-content/60 leading-relaxed">No hay más vacantes que coincidan con tu criterio actual. Ajusta los filtros para recargar.</p>
               </div>
             )}
-
-            <p className="mt-4 text-center text-xs text-base-content/40">← saltar (X) · hacer match (✓) →</p>
-            <p className="mt-1 text-center text-[10px] font-black text-base-content/50">
-              {filteredJobs.length === 0 ? '0 vacantes' : `${quickIndex + 1} de ${filteredJobs.length}`}
-            </p>
           </div>
         </div>
       )}
@@ -2416,25 +2445,6 @@ export default function JobMatchPage() {
             </div>
 
             <div className="p-6 space-y-6">
-              {/* Match overview */}
-              <div className="rounded-2xl bg-gradient-to-r from-primary/5 to-success/5 p-4.5 border border-primary/10">
-                <div className="flex items-center justify-between mb-3.5">
-                  <span className="text-xs font-bold text-base-content flex items-center gap-1">
-                    <Sparkles className="h-4 w-4 text-emerald-500" /> Compatibilidad de Perfil: <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">{selectedJobDetail.matchPercent}% match</span>
-                  </span>
-                </div>
-                <div className="space-y-2 text-xs">
-                  <div className="bg-base-200/85 p-3 rounded-xl border border-base-250 text-base-content/80">
-                    <strong className="text-base-content block mb-0.5">¿Por qué?</strong>
-                    <p className="leading-relaxed">{selectedJobDetail.matchFeedback}</p>
-                  </div>
-                  <div className="bg-warning/5 p-3 rounded-xl border border-warning/15 text-warning-content">
-                    <strong className="text-base-content block mb-0.5">¿Qué falta?</strong>
-                    <p className="leading-relaxed">{selectedJobDetail.matchMissing}</p>
-                  </div>
-                </div>
-              </div>
-
               {/* Description */}
               <section>
                 <h4 className="flex items-center gap-1.5 font-bold text-base-content uppercase tracking-wider text-xs mb-2">
@@ -2459,6 +2469,25 @@ export default function JobMatchPage() {
                   ))}
                 </ul>
               </section>
+
+              {/* Match overview */}
+              <div className="rounded-2xl bg-gradient-to-r from-primary/5 to-success/5 p-4.5 border border-primary/10">
+                <div className="flex items-center justify-between mb-3.5">
+                  <span className="text-xs font-bold text-base-content flex items-center gap-1">
+                    <Sparkles className="h-4 w-4 text-emerald-500" /> Compatibilidad de Perfil: <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">{selectedJobDetail.matchPercent}% match</span>
+                  </span>
+                </div>
+                <div className="space-y-2 text-xs">
+                  <div className="bg-base-200/85 p-3 rounded-xl border border-base-250 text-base-content/80">
+                    <strong className="text-base-content block mb-0.5">¿Por qué?</strong>
+                    <p className="leading-relaxed">{selectedJobDetail.matchFeedback}</p>
+                  </div>
+                  <div className="bg-warning/5 p-3 rounded-xl border border-warning/15 text-warning-content">
+                    <strong className="text-base-content block mb-0.5">¿Qué falta?</strong>
+                    <p className="leading-relaxed">{selectedJobDetail.matchMissing}</p>
+                  </div>
+                </div>
+              </div>
 
               {/* Skills */}
               <section>
@@ -2533,19 +2562,6 @@ export default function JobMatchPage() {
           </div>
         </div>
       )}
-
-      {/* Mis Matches Floating Bubble (Local Warning Toggle) */}
-      <div className="fixed bottom-[96px] right-6 z-40 flex flex-col items-end gap-3">
-        {!showDisclaimer && (
-          <button
-            onClick={() => setShowDisclaimer(true)}
-            className="group relative flex h-10 w-10 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 shadow-lg hover:scale-105 transition-all hover:bg-amber-100 dark:hover:bg-amber-900 border border-amber-200 dark:border-amber-700 cursor-pointer animate-fadeIn"
-            title="Mostrar advertencia sobre el Match"
-          >
-            <Info className="h-5 w-5" />
-          </button>
-        )}
-      </div>
 
       {/* Removed Job Bubble */}
       {lastRemovedJob && (
