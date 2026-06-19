@@ -27,8 +27,8 @@ interface NavItem {
 const navItems: NavItem[] = [
   { href: "/dashboard", label: "Inicio", icon: Home },
   { href: "/mi-perfil", label: "Mi Perfil", icon: UserCircle },
-  { href: "/job-match", label: "Job match", icon: Search },
   { href: "/cv-builder", label: "CV Builder", icon: FileText },
+  { href: "/job-match", label: "Job match", icon: Search },
   { href: "/simulator", label: "Entrevistas", icon: Mic },
   { href: "/plan-30d", label: "Planificación", icon: Calendar },
   { href: "/cursos", label: "Aprende +", icon: BookOpen },

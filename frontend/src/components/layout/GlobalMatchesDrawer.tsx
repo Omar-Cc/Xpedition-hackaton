@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react'
-import { Heart, X, Sparkles } from 'lucide-react'
+import { X, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { useJobMatch } from '@/src/contexts/JobMatchContext'
 
@@ -10,6 +10,22 @@ const getMatchColorBg = (percent: number) => {
   if (percent >= 75) return 'bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800'
   return 'bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-800'
 }
+
+const TieIcon = ({ className }: { className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <path d="M15 2H9l-1.5 5 4.5 3.5L16.5 7z" />
+    <path d="M10 8.5 6.5 18 12 23l5.5-5-3.5-9.5Z" />
+  </svg>
+)
 
 const getMatchDotColor = (percent: number) => {
   if (percent >= 80) return 'bg-emerald-500'
@@ -30,7 +46,7 @@ export default function GlobalMatchesDrawer() {
           onClick={() => setMatchesDrawerOpen(true)}
           className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-xl hover:scale-105 transition-all hover:shadow-primary/30 cursor-pointer"
         >
-          <Heart className="h-6 w-6 fill-white/20" />
+          <TieIcon className="h-6 w-6 fill-white/20" />
           {matchedJobs.length > 0 && (
             <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-black text-white ring-2 ring-base-100 animate-bounce">
               {matchedJobs.length}
@@ -46,7 +62,7 @@ export default function GlobalMatchesDrawer() {
             <div className="flex items-center justify-between p-6 border-b border-base-200">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-500">
-                  <Heart className="h-5 w-5 fill-rose-500/20" />
+                  <TieIcon className="h-5 w-5 fill-rose-500/20" />
                 </div>
                 <h2 className="text-xl font-extrabold text-base-content">Mis Matches</h2>
               </div>
@@ -57,7 +73,7 @@ export default function GlobalMatchesDrawer() {
             <div className="flex-1 overflow-y-auto p-6">
               {matchedJobs.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center opacity-60">
-                  <Heart className="h-16 w-16 text-base-300 mb-4" />
+                  <TieIcon className="h-16 w-16 text-base-300 mb-4" />
                   <p className="text-sm font-medium">Aún no tienes matches guardados.</p>
                 </div>
               ) : (

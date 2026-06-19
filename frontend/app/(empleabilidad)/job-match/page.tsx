@@ -15,7 +15,7 @@ import {
   DollarSign,
   Filter,
   GraduationCap,
-  Heart,
+
   Info,
   MapPin,
   Plus,
@@ -30,6 +30,22 @@ import {
 } from 'lucide-react'
 import { useFakeFetch } from './_hooks/useFakeFetch'
 import JobOfferSkeleton from './_components/JobOfferSkeleton'
+
+const TieIcon = ({ className }: { className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <path d="M15 2H9l-1.5 5 4.5 3.5L16.5 7z" />
+    <path d="M10 8.5 6.5 18 12 23l5.5-5-3.5-9.5Z" />
+  </svg>
+)
 
 type AppliedFilters = {
   query: string
@@ -1865,7 +1881,7 @@ export default function JobMatchPage() {
               ) : activeJobsList.length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-base-300 bg-base-100 p-12 text-center shadow-xs">
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-base-200 text-base-content/60 mb-4">
-                    {activeTab === 'explorar' ? <Search className="h-6 w-6" /> : <Heart className="h-6 w-6" />}
+                    {activeTab === 'explorar' ? <Search className="h-6 w-6" /> : <TieIcon className="h-6 w-6" />}
                   </div>
                   <h3 className="text-base font-bold text-base-content">
                     {activeTab === 'explorar' ? 'No se encontraron resultados' : 'Aún no tienes matches'}
@@ -1889,7 +1905,7 @@ export default function JobMatchPage() {
                 /* Split Screen Layout (Cards on Left, Details on Right) */
                 <div className="lg:grid lg:grid-cols-[1.1fr_1.3fr] gap-6 items-start">
                   {/* Left Pane: Job list */}
-                  <div className="flex flex-col h-[calc(100vh-130px)]">
+                  <div className="flex flex-col h-[calc(100vh-130px)] pb-14 lg:pb-0">
                     <div className="flex-1 min-h-0 overflow-y-auto pr-3 space-y-4 pb-4 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-base-300 [&::-webkit-scrollbar-thumb]:rounded-full">
                       <div className="grid grid-cols-1 gap-4">
                         {paginatedJobs.map((job, index) => {
@@ -1949,7 +1965,7 @@ export default function JobMatchPage() {
                                         }`}
                                       title={isMatched ? "Quitar de matches" : "Guardar en Matches"}
                                     >
-                                      <Heart className="h-4.5 w-4.5" />
+                                      <TieIcon className="h-4.5 w-4.5" />
                                     </button>
                                   </div>
                                 </div>
@@ -2096,7 +2112,7 @@ export default function JobMatchPage() {
                               }`}
                             title={matchedJobs.some(m => m.id === displayedJob.id) ? "Quitar de matches" : "Guardar en Matches"}
                           >
-                            <Heart className="h-4.5 w-4.5" />
+                            <TieIcon className="h-4.5 w-4.5" />
                           </button>
                         </div>
 
@@ -2219,7 +2235,7 @@ export default function JobMatchPage() {
                                 : 'bg-base-200 border-base-300 text-base-content/80 hover:bg-base-300'
                               }`}
                           >
-                            <Heart className={`h-4 w-4 ${matchedJobs.some(m => m.id === displayedJob.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
+                            <TieIcon className={`h-4 w-4 ${matchedJobs.some(m => m.id === displayedJob.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
                             {matchedJobs.some(m => m.id === displayedJob.id) ? 'Quitar Match' : 'Hacer Match'}
                           </button>
 
@@ -2547,7 +2563,7 @@ export default function JobMatchPage() {
                     : 'bg-base-200 border-base-300 text-base-content/80 hover:bg-base-300'
                   }`}
               >
-                <Heart className={`h-4.5 w-4.5 ${matchedJobs.some(m => m.id === selectedJobDetail.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
+                <TieIcon className={`h-4.5 w-4.5 ${matchedJobs.some(m => m.id === selectedJobDetail.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
                 {matchedJobs.some(m => m.id === selectedJobDetail.id) ? 'Quitar Match' : 'Hacer Match'}
               </button>
               <button
