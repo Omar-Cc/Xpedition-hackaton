@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import PageShell from '@/src/components/layout/PageShell'
 import PageHeader from '@/src/components/layout/PageHeader'
 import { useJobMatch, type JobItem } from '@/src/contexts/JobMatchContext'
@@ -15,7 +15,7 @@ import {
   DollarSign,
   Filter,
   GraduationCap,
-  Heart,
+
   Info,
   MapPin,
   Plus,
@@ -28,6 +28,24 @@ import {
   Trash2,
   X,
 } from 'lucide-react'
+import { useFakeFetch } from './_hooks/useFakeFetch'
+import JobOfferSkeleton from './_components/JobOfferSkeleton'
+
+const TieIcon = ({ className }: { className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <path d="M15 2H9l-1.5 5 4.5 3.5L16.5 7z" />
+    <path d="M10 8.5 6.5 18 12 23l5.5-5-3.5-9.5Z" />
+  </svg>
+)
 
 type AppliedFilters = {
   query: string
@@ -884,6 +902,286 @@ const jobCatalog: JobItem[] = [
     contractType: 'Tiempo Completo',
     postedDate: 'Hace 4 días',
   },
+  {
+    id: '31',
+    initial: 'Y',
+    avatarColor: 'bg-yellow-500',
+    matchPercent: 86,
+    title: 'Practicante Product Manager',
+    company: 'Yape',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Remoto',
+    mode: 'Remoto',
+    salaryMin: 1400,
+    salaryMax: 1700,
+    level: 'Practicante',
+    ageMin: 19,
+    ageMax: 26,
+    tags: ['Product Management', 'Métricas', 'Agile'],
+    highlight: 'La billetera del Perú',
+    requirement: 'Orientado al usuario y datos',
+    description: 'Apoya al equipo de producto en la definición, priorización y seguimiento de nuevas funcionalidades de la app Yape.',
+    functions: ['Análisis de métricas de producto con Amplitude y SQL.', 'Redacción de historias de usuario y criterios de aceptación.', 'Participación en sprints y revisión de roadmap.'],
+    skills: ['SQL', 'Amplitude', 'Jira', 'Google Slides'],
+    matchFeedback: 'Tu orientación al usuario y habilidades analíticas encajan con la cultura de producto de Yape.',
+    matchMissing: 'Conocer A/B testing y experimentación potenciará tu perfil.',
+    source: 'LinkedIn',
+    contractType: 'Prácticas',
+    postedDate: 'Hace 1 día',
+  },
+  {
+    id: '32',
+    initial: 'ML',
+    avatarColor: 'bg-yellow-400',
+    matchPercent: 80,
+    title: 'Junior Full Stack Developer',
+    company: 'Mercado Libre',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Remoto',
+    mode: 'Remoto',
+    salaryMin: 3200,
+    salaryMax: 4500,
+    level: 'Junior',
+    ageMin: 21,
+    ageMax: 30,
+    tags: ['React', 'Node.js', 'PostgreSQL'],
+    highlight: 'Mayor e-commerce de LATAM',
+    requirement: 'Proyectos fullstack demostrables',
+    description: 'Desarrolla y mantiene funcionalidades del marketplace para millones de usuarios en América Latina.',
+    functions: ['Desarrollo de vistas React conectadas a APIs internas.', 'Construcción de microservicios backend en Node.js.', 'Escritura de pruebas unitarias e integración.'],
+    skills: ['React', 'Node.js', 'PostgreSQL', 'Docker'],
+    matchFeedback: 'Tu stack React + Node.js es exactamente lo que busca el equipo de sellers.',
+    matchMissing: 'Aprender sobre arquitectura de microservicios escalaría tu perfil.',
+    source: 'LinkedIn',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 3 días',
+  },
+  {
+    id: '33',
+    initial: 'B',
+    avatarColor: 'bg-indigo-700',
+    matchPercent: 73,
+    title: 'Analista E-commerce Junior',
+    company: 'Belcorp',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Surco, Lima',
+    mode: 'Híbrido',
+    salaryMin: 2000,
+    salaryMax: 2800,
+    level: 'Junior',
+    ageMin: 20,
+    ageMax: 29,
+    tags: ['E-commerce', 'Google Analytics', 'Excel'],
+    highlight: 'Marca de belleza líder',
+    requirement: 'Experiencia en plataformas digitales',
+    description: 'Analiza el desempeño del canal digital de ventas directas para las marcas L\'Bel, Ésika y Cyzone.',
+    functions: ['Seguimiento de KPIs del canal digital (conversión, tráfico, ticket promedio).', 'Elaboración de reportes de ventas e-commerce semanales.', 'Coordinación con agencias digitales para optimizar campañas.'],
+    skills: ['Google Analytics', 'Excel avanzado', 'Meta Ads', 'Shopify'],
+    matchFeedback: 'Tu conocimiento en analítica web y métricas de venta online es valorado en el equipo.',
+    matchMissing: 'Tener experiencia directa con plataformas Shopify o Vtex suma mucho.',
+    source: 'Bumeran',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 5 días',
+  },
+  {
+    id: '34',
+    initial: 'SAP',
+    avatarColor: 'bg-blue-500',
+    matchPercent: 69,
+    title: 'Consultor Junior SAP FI',
+    company: 'SAP Perú',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'San Isidro, Lima',
+    mode: 'Presencial',
+    salaryMin: 3000,
+    salaryMax: 4000,
+    level: 'Junior',
+    ageMin: 22,
+    ageMax: 32,
+    tags: ['SAP', 'Contabilidad', 'Finanzas'],
+    highlight: 'ERP líder global',
+    requirement: 'Conocimientos de finanzas o contabilidad',
+    description: 'Apoya en implementaciones del módulo financiero SAP FI para clientes del sector bancario y retail en Perú.',
+    functions: ['Configuración básica de módulos financieros SAP FI/CO.', 'Levantamiento de requerimientos con usuarios clave de finanzas.', 'Documentación de pruebas funcionales y manuales de usuario.'],
+    skills: ['SAP FI', 'Contabilidad', 'Excel', 'Finanzas corporativas'],
+    matchFeedback: 'Tu base en contabilidad y finanzas es la puerta de entrada al mundo SAP.',
+    matchMissing: 'Certificarte en SAP FI Associate elevaría significativamente tu candidatura.',
+    source: 'LinkedIn',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 2 días',
+  },
+  {
+    id: '35',
+    initial: 'KW',
+    avatarColor: 'bg-green-600',
+    matchPercent: 77,
+    title: 'Practicante Ciberseguridad Ofensiva',
+    company: 'Kibernum Perú',
+    status: 'Urgente',
+    statusColor: 'warning',
+    location: 'San Borja, Lima',
+    mode: 'Híbrido',
+    salaryMin: 1500,
+    salaryMax: 1800,
+    level: 'Practicante',
+    ageMin: 19,
+    ageMax: 26,
+    tags: ['Pentesting', 'Linux', 'Kali Linux'],
+    highlight: 'Seguridad ofensiva real',
+    requirement: 'Conocimientos de redes y Linux',
+    description: 'Participa en ejercicios de red team y evaluación de vulnerabilidades para clientes del sector financiero.',
+    functions: ['Reconocimiento y análisis de superficie de ataque.', 'Ejecución de pruebas de penetración en aplicaciones web.', 'Elaboración de reportes técnicos de hallazgos.'],
+    skills: ['Kali Linux', 'Burp Suite', 'OWASP', 'Nmap'],
+    matchFeedback: 'Tu base en redes y entusiasmo por la seguridad ofensiva es un buen punto de partida.',
+    matchMissing: 'Practicar en plataformas como HackTheBox o TryHackMe potenciará tu perfil.',
+    source: 'Computrabajo',
+    contractType: 'Prácticas',
+    postedDate: 'Hace 1 día',
+  },
+  {
+    id: '36',
+    initial: 'PE',
+    avatarColor: 'bg-red-500',
+    matchPercent: 81,
+    title: 'Junior Frontend React Developer',
+    company: 'PedidosYa Perú',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Remoto',
+    mode: 'Remoto',
+    salaryMin: 2800,
+    salaryMax: 3800,
+    level: 'Junior',
+    ageMin: 20,
+    ageMax: 29,
+    tags: ['React', 'TypeScript', 'Figma'],
+    highlight: 'Delivery tech en expansión',
+    requirement: 'Dominio de React y TypeScript',
+    description: 'Construye componentes de la interfaz de la app de delivery más rápida de Latinoamérica.',
+    functions: ['Desarrollo de componentes React reutilizables con TypeScript.', 'Implementación de diseños Figma con pixel-perfect accuracy.', 'Optimización de rendimiento y accesibilidad (a11y).'],
+    skills: ['React', 'TypeScript', 'Tailwind CSS', 'Jest'],
+    matchFeedback: 'Tu manejo de React con TypeScript y atención al detalle de UI es exactamente lo que busca el equipo.',
+    matchMissing: 'Aprender testing con React Testing Library fortalecería tu posición.',
+    source: 'LinkedIn',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 4 días',
+  },
+  {
+    id: '37',
+    initial: 'PRO',
+    avatarColor: 'bg-violet-600',
+    matchPercent: 74,
+    title: 'Practicante UX Research',
+    company: 'Promart',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Miraflores, Lima',
+    mode: 'Presencial',
+    salaryMin: 1300,
+    salaryMax: 1600,
+    level: 'Practicante',
+    ageMin: 18,
+    ageMax: 25,
+    tags: ['UX Research', 'Figma', 'Entrevistas'],
+    highlight: 'Retail mejoramiento del hogar',
+    requirement: 'Interés genuino en psicología del usuario',
+    description: 'Investiga comportamientos de compradores para mejorar la experiencia en la app y tiendas digitales de Promart.',
+    functions: ['Planificación y conducción de entrevistas con usuarios.', 'Análisis de datos cualitativos y síntesis de hallazgos.', 'Elaboración de mapas de empatía y journey maps.'],
+    skills: ['Figma', 'Miro', 'UX Research', 'Análisis cualitativo'],
+    matchFeedback: 'Tu perfil analítico y capacidad de escucha activa es clave para el research de usuarios.',
+    matchMissing: 'Aprender métodos de investigación cuantitativa (encuestas, estadística) te diferenciaría.',
+    source: 'UTP Bolsa Laboral',
+    contractType: 'Prácticas',
+    postedDate: 'Hace 6 días',
+  },
+  {
+    id: '38',
+    initial: 'IZI',
+    avatarColor: 'bg-cyan-600',
+    matchPercent: 88,
+    title: 'Junior Python Developer',
+    company: 'Izipay',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'San Isidro, Lima',
+    mode: 'Híbrido',
+    salaryMin: 2800,
+    salaryMax: 3600,
+    level: 'Junior',
+    ageMin: 21,
+    ageMax: 30,
+    tags: ['Python', 'FastAPI', 'PostgreSQL'],
+    highlight: 'Fintech de pagos en crecimiento',
+    requirement: 'Python con orientación a servicios',
+    description: 'Desarrolla microservicios de procesamiento de pagos y conciliación bancaria para el ecosistema Izipay.',
+    functions: ['Construcción de APIs REST con FastAPI y Python.', 'Integración con pasarelas de pago (Visa, Mastercard).', 'Diseño de modelos de base de datos en PostgreSQL.'],
+    skills: ['Python', 'FastAPI', 'PostgreSQL', 'Redis'],
+    matchFeedback: 'Tu sólido conocimiento en Python y APIs REST es exactamente el stack del equipo backend.',
+    matchMissing: 'Familiarizarte con conceptos de PCI DSS (seguridad en pagos) suma mucho.',
+    source: 'LinkedIn',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 2 días',
+  },
+  {
+    id: '39',
+    initial: 'BC',
+    avatarColor: 'bg-fuchsia-600',
+    matchPercent: 76,
+    title: 'Analista de Riesgo Crediticio Jr',
+    company: 'BanBif',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'San Isidro, Lima',
+    mode: 'Híbrido',
+    salaryMin: 2200,
+    salaryMax: 3000,
+    level: 'Junior',
+    ageMin: 21,
+    ageMax: 30,
+    tags: ['Riesgo', 'Excel', 'SAS'],
+    highlight: 'Banca boutique con crecimiento',
+    requirement: 'Formación en finanzas o economía',
+    description: 'Evalúa solicitudes de crédito y monitorea la cartera para minimizar el riesgo de mora en segmento PYME.',
+    functions: ['Análisis de estados financieros de empresas solicitantes.', 'Modelado de scoring crediticio en Excel y SAS.', 'Elaboración de informes de riesgo para el comité de créditos.'],
+    skills: ['Excel avanzado', 'SAS básico', 'Finanzas', 'Riesgo crediticio'],
+    matchFeedback: 'Tu formación en finanzas y análisis cuantitativo encaja con el perfil de riesgo.',
+    matchMissing: 'Conocer herramientas como Python para scoring automatizado te diferenciaría.',
+    source: 'Bumeran',
+    contractType: 'Tiempo Completo',
+    postedDate: 'Hace 3 días',
+  },
+  {
+    id: '40',
+    initial: 'KON',
+    avatarColor: 'bg-orange-700',
+    matchPercent: 70,
+    title: 'Practicante Business Intelligence',
+    company: 'Konecta BPO',
+    status: 'Postulación abierta',
+    statusColor: 'success',
+    location: 'Surco, Lima',
+    mode: 'Híbrido',
+    salaryMin: 1200,
+    salaryMax: 1500,
+    level: 'Practicante',
+    ageMin: 18,
+    ageMax: 25,
+    tags: ['Power BI', 'SQL', 'Excel'],
+    highlight: 'BPO con presencia en 20 países',
+    requirement: 'Interés en datos y reporting',
+    description: 'Apoya en la construcción de dashboards operativos y análisis de KPIs del contact center para múltiples clientes.',
+    functions: ['Diseño de reportes de KPIs operativos en Power BI.', 'Extracción y transformación de datos con SQL.', 'Soporte en el análisis de tendencias de llamadas y satisfacción.'],
+    skills: ['Power BI', 'SQL', 'Excel', 'DAX básico'],
+    matchFeedback: 'Tu manejo de Power BI y SQL te da base sólida para el análisis operativo.',
+    matchMissing: 'Aprender Python para automatizar reportes sería una ventaja competitiva.',
+    source: 'UTP Bolsa Laboral',
+    contractType: 'Prácticas',
+    postedDate: 'Hace 2 días',
+  },
 ]
 
 const defaultFilters: AppliedFilters = {
@@ -935,6 +1233,9 @@ export default function JobMatchPage() {
   const [selectedJobDetail, setSelectedJobDetail] = useState<JobItem | null>(null)
   const [expandedFeedbackId, setExpandedFeedbackId] = useState<string | null>(null)
 
+  const topFiltersRef = useRef<HTMLDivElement>(null)
+  const [isTopFiltersVisible, setIsTopFiltersVisible] = useState(true)
+
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6
   const [showDisclaimer, setShowDisclaimer] = useState(true)
@@ -946,6 +1247,12 @@ export default function JobMatchPage() {
   const [removedJobs, setRemovedJobs] = useState<string[]>([])
   const [lastRemovedJob, setLastRemovedJob] = useState<string | null>(null)
   const [removedUndoTimer, setRemovedUndoTimer] = useState<NodeJS.Timeout | null>(null)
+
+  const { data: catalogData, isLoading: isCatalogLoading } = useFakeFetch(jobCatalog)
+  const effectiveCatalog = catalogData ?? []
+
+  const [displayedJob, setDisplayedJob] = useState<JobItem | null>(null)
+  const [panelAnimClass, setPanelAnimClass] = useState('animate__backInRight')
 
   const filterCounts = useMemo(() => {
     const query = filters.query.trim().toLowerCase()
@@ -962,7 +1269,7 @@ export default function JobMatchPage() {
     const allSources = ['LinkedIn', 'Bumeran', 'Computrabajo', 'UTP Bolsa Laboral']
     allSources.forEach(s => counts.sources[s] = 0)
 
-    jobCatalog.forEach(job => {
+    effectiveCatalog.forEach(job => {
       const matchesQuery =
         !query ||
         job.title.toLowerCase().includes(query) ||
@@ -979,7 +1286,8 @@ export default function JobMatchPage() {
     })
 
     return counts
-  }, [filters.query, filters.address])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.query, filters.address, effectiveCatalog])
 
   const filteredJobs = useMemo(() => {
     const query = filters.query.trim().toLowerCase()
@@ -989,7 +1297,7 @@ export default function JobMatchPage() {
     const ageMin = filters.ageMin ? Number(filters.ageMin) : null
     const ageMax = filters.ageMax ? Number(filters.ageMax) : null
 
-    return jobCatalog.filter((job) => {
+    return effectiveCatalog.filter((job) => {
       const matchesQuery =
         !query ||
         job.title.toLowerCase().includes(query) ||
@@ -1014,7 +1322,8 @@ export default function JobMatchPage() {
       if (b.id === '1') return 1
       return b.matchPercent - a.matchPercent
     })
-  }, [filters, removedJobs])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters, removedJobs, effectiveCatalog])
 
   const activeJobsList = useMemo(() => {
     return activeTab === 'explorar' ? filteredJobs : matchedJobs
@@ -1041,9 +1350,9 @@ export default function JobMatchPage() {
   }
 
   const getMatchColorBg = (percent: number) => {
-    if (percent >= 80) return 'bg-success/10 text-success border-success/20'
-    if (percent >= 75) return 'bg-warning/10 text-warning border-warning/20'
-    return 'bg-error/10 text-error border-error/20'
+    if (percent >= 80) return 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
+    if (percent >= 75) return 'bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800'
+    return 'bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-800'
   }
 
   const getMatchDotColor = (percent: number) => {
@@ -1129,6 +1438,40 @@ export default function JobMatchPage() {
   }, [quickOpen])
 
   useEffect(() => {
+    const checkVisibility = () => {
+      if (topFiltersRef.current) {
+        const rect = topFiltersRef.current.getBoundingClientRect()
+        // Está visible si su parte inferior es mayor a 0 (no se ha ocultado por arriba)
+        setIsTopFiltersVisible(rect.bottom > 0)
+      }
+    }
+
+    // Escuchar scroll en la ventana
+    window.addEventListener('scroll', checkVisibility, { passive: true })
+    window.addEventListener('resize', checkVisibility, { passive: true })
+
+    // También creamos un observer por si acaso el contenedor cambia de tamaño o scroll interno
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsTopFiltersVisible(entry.isIntersecting)
+      },
+      { threshold: 0 }
+    )
+
+    if (topFiltersRef.current) {
+      observer.observe(topFiltersRef.current)
+    }
+
+    checkVisibility()
+
+    return () => {
+      window.removeEventListener('scroll', checkVisibility)
+      window.removeEventListener('resize', checkVisibility)
+      observer.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
     if (quickIndex >= filteredJobs.length) {
       setQuickIndex(0)
     }
@@ -1171,6 +1514,25 @@ export default function JobMatchPage() {
     advanceQuick()
   }
 
+  useEffect(() => {
+    if (!selectedJob) {
+      setDisplayedJob(null)
+      return
+    }
+    if (!displayedJob || displayedJob.id === selectedJob.id) {
+      setDisplayedJob(selectedJob)
+      setPanelAnimClass('animate__backInRight')
+      return
+    }
+    setPanelAnimClass('animate__backOutRight')
+    const timer = setTimeout(() => {
+      setDisplayedJob(selectedJob)
+      setPanelAnimClass('animate__backInRight')
+    }, 380)
+    return () => clearTimeout(timer)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedJob?.id])
+
   return (
     <PageShell>
       <PageHeader
@@ -1179,10 +1541,18 @@ export default function JobMatchPage() {
         maxWidthClassName="max-w-[1600px]"
       />
 
-      <div className="flex-1 overflow-y-auto bg-transparent">
+      <div 
+        className="flex-1 overflow-y-auto bg-transparent"
+        onScroll={(e) => {
+          if (topFiltersRef.current) {
+            const rect = topFiltersRef.current.getBoundingClientRect()
+            setIsTopFiltersVisible(rect.bottom > 0)
+          }
+        }}
+      >
         <main className="max-w-[1600px] mx-auto px-6 pb-12 pt-2">
           {/* Card de Filtros de Búsqueda Rápida */}
-          <div className="bg-base-100 border border-base-200 rounded-3xl p-6 mb-6 shadow-sm">
+          <div ref={topFiltersRef} className="bg-base-100 border border-base-200 rounded-3xl p-6 mb-6 shadow-sm">
             <div className="grid gap-4 md:grid-cols-[1.2fr_1.2fr_auto] items-end">
               <label className="relative flex flex-col gap-1.5 flex-1">
                 <span className="text-xs font-bold text-base-content/60">Puesto o empresa</span>
@@ -1221,11 +1591,16 @@ export default function JobMatchPage() {
               <div className="flex gap-3 w-full md:w-auto">
                 <button
                   type="button"
-                  onClick={() => setFiltersOpen(true)}
-                  className="inline-flex h-[48px] items-center justify-center gap-2 rounded-2xl bg-base-200 hover:bg-base-300 border border-base-300 px-6 text-sm font-bold text-base-content transition cursor-pointer flex-1 md:flex-none"
+                  onClick={() => setFiltersOpen(prev => !prev)}
+                  className={`inline-flex h-[48px] items-center justify-center gap-2 rounded-2xl border px-6 text-sm font-bold transition cursor-pointer flex-1 md:flex-none ${
+                    filtersOpen
+                      ? 'bg-primary/10 border-primary/30 text-primary'
+                      : 'bg-base-200 hover:bg-base-300 border-base-300 text-base-content'
+                  }`}
                 >
                   <Filter className="h-4.5 w-4.5" />
                   Filtros
+                  {filtersOpen ? <ChevronUp className="h-4 w-4 ml-0.5" /> : <ChevronDown className="h-4 w-4 ml-0.5" />}
                 </button>
                 <button
                   type="button"
@@ -1465,10 +1840,48 @@ export default function JobMatchPage() {
               </div>
 
               {/* Empty state when no jobs found */}
-              {activeJobsList.length === 0 ? (
+              {isCatalogLoading ? (
+                <div className="lg:grid lg:grid-cols-[1.1fr_1.3fr] gap-6 items-start">
+                  {/* Skeleton list */}
+                  <div className="flex flex-col h-[calc(100vh-200px)]">
+                    <div className="flex-1 overflow-y-auto pr-3 space-y-4 pb-10 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-base-300 [&::-webkit-scrollbar-thumb]:rounded-full">
+                      <div className="grid grid-cols-1 gap-4">
+                        {Array.from({ length: 4 }).map((_, i) => (
+                          <JobOfferSkeleton key={i} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Skeleton detail panel */}
+                  <div className="sticky top-6 hidden lg:block">
+                    <div className="border border-base-200 rounded-3xl bg-base-100 p-6 shadow-sm space-y-4">
+                      <div className="flex items-center gap-4 border-b border-base-200 pb-5">
+                        <div className="skeleton h-14 w-14 rounded-2xl flex-shrink-0" />
+                        <div className="flex flex-col gap-2 flex-1">
+                          <div className="skeleton h-5 w-3/4" />
+                          <div className="skeleton h-3 w-1/2" />
+                        </div>
+                      </div>
+                      <div className="skeleton h-28 w-full rounded-2xl" />
+                      <div className="grid grid-cols-2 gap-2.5">
+                        {Array.from({ length: 4 }).map((_, i) => (
+                          <div key={i} className="skeleton h-16 rounded-xl" />
+                        ))}
+                      </div>
+                      <div className="skeleton h-20 w-full rounded-xl" />
+                      <div className="skeleton h-16 w-full rounded-xl" />
+                      <div className="border-t border-base-200 pt-4 flex gap-3">
+                        <div className="skeleton flex-1 h-12 rounded-2xl" />
+                        <div className="skeleton flex-1 h-12 rounded-2xl" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : activeJobsList.length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-base-300 bg-base-100 p-12 text-center shadow-xs">
                   <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-base-200 text-base-content/60 mb-4">
-                    {activeTab === 'explorar' ? <Search className="h-6 w-6" /> : <Heart className="h-6 w-6" />}
+                    {activeTab === 'explorar' ? <Search className="h-6 w-6" /> : <TieIcon className="h-6 w-6" />}
                   </div>
                   <h3 className="text-base font-bold text-base-content">
                     {activeTab === 'explorar' ? 'No se encontraron resultados' : 'Aún no tienes matches'}
@@ -1492,8 +1905,8 @@ export default function JobMatchPage() {
                 /* Split Screen Layout (Cards on Left, Details on Right) */
                 <div className="lg:grid lg:grid-cols-[1.1fr_1.3fr] gap-6 items-start">
                   {/* Left Pane: Job list */}
-                  <div className="flex flex-col h-[calc(100vh-200px)]">
-                    <div className="flex-1 overflow-y-auto pr-3 space-y-4 pb-10 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-base-300 [&::-webkit-scrollbar-thumb]:rounded-full">
+                  <div className="flex flex-col h-[calc(100vh-130px)] pb-14 lg:pb-0">
+                    <div className="flex-1 min-h-0 overflow-y-auto pr-3 space-y-4 pb-4 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-base-300 [&::-webkit-scrollbar-thumb]:rounded-full">
                       <div className="grid grid-cols-1 gap-4">
                         {paginatedJobs.map((job, index) => {
                           const isMatched = matchedJobs.some((m) => m.id === job.id)
@@ -1508,11 +1921,11 @@ export default function JobMatchPage() {
                                   setSelectedJobId(job.id)
                                 }
                               }}
-                              className={`group relative flex flex-col justify-between h-full rounded-2xl border bg-base-100 p-5 shadow-xs transition-all duration-350 cursor-pointer hover:border-base-300 hover:shadow-md hover:scale-[1.005] ${isSelected
+                              className={`animate__animated animate__fadeInUp animate__faster group relative flex flex-col justify-between h-full rounded-2xl border bg-base-100 p-5 shadow-xs transition-all duration-350 cursor-pointer hover:border-base-300 hover:shadow-md hover:scale-[1.005] ${isSelected
                                   ? 'border-primary bg-primary/5 ring-1 ring-primary/20'
                                   : 'border-base-200'
                                 }`}
-                              style={{ animationDelay: `${index * 50}ms` }}
+                              style={{ animationDelay: `${index * 80}ms` }}
                             >
                               <div className="flex flex-col h-full">
                                 {/* Top Bar of the Card */}
@@ -1552,20 +1965,12 @@ export default function JobMatchPage() {
                                         }`}
                                       title={isMatched ? "Quitar de matches" : "Guardar en Matches"}
                                     >
-                                      <Heart className="h-4.5 w-4.5" />
+                                      <TieIcon className="h-4.5 w-4.5" />
                                     </button>
                                   </div>
                                 </div>
 
-                                {/* Recommended & Difficulty Tags */}
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                  <span className="inline-flex items-center justify-center px-3 py-1 text-[10px] font-bold text-success border border-success/20 bg-success/10 rounded-full">
-                                    Recomendado
-                                  </span>
-                                  <span className="inline-flex items-center justify-center px-3 py-1 text-[10px] font-bold text-warning border border-warning/20 bg-warning/10 rounded-full">
-                                    Dificultad: {job.level === 'Junior' || job.level === 'Trainee' || job.level === 'Practicante' ? 'Baja' : job.level === 'Senior' ? 'Alta' : 'Media'}
-                                  </span>
-                                </div>
+                                {/* Removed Recommended & Difficulty Tags as requested */}
 
                                 {/* Mid section description */}
                                 <p className="text-xs text-base-content/65 line-clamp-2 mb-3 leading-relaxed">
@@ -1622,16 +2027,7 @@ export default function JobMatchPage() {
                                     >
                                       Detalles
                                     </button>
-                                    <button
-                                      type="button"
-                                      onClick={(e) => {
-                                        e.stopPropagation()
-                                        alert(`Redirigiendo a postular en ${job.source}...`)
-                                      }}
-                                      className="inline-flex items-center justify-center gap-1 rounded-lg bg-primary hover:bg-primary/90 px-4 py-2 text-[10px] font-bold text-white shadow-xs transition cursor-pointer"
-                                    >
-                                      Postular
-                                    </button>
+
                                   </div>
                                 </div>
                               </div>
@@ -1640,59 +2036,62 @@ export default function JobMatchPage() {
                         })}
                       </div>
 
-                      {/* Pagination */}
-                      {totalPages > 1 && (
-                        <div className="mt-6 flex items-center justify-center gap-4">
-                          <button
-                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                            disabled={currentPage === 1}
-                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-base-250 bg-base-100 text-base-content/75 transition hover:bg-base-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-                            aria-label="Página anterior"
-                          >
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
-                          </button>
-                          <span className="text-xs font-bold text-base-content/70">
-                            Página {currentPage} de {totalPages}
-                          </span>
-                          <button
-                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                            disabled={currentPage === totalPages}
-                            className="flex h-9 w-9 items-center justify-center rounded-xl border border-base-250 bg-base-100 text-base-content/75 transition hover:bg-base-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-                            aria-label="Página siguiente"
-                          >
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
-                          </button>
-                        </div>
-                      )}
                     </div>
+
+                    {/* Pagination — outside scroll, pinned at bottom of left pane */}
+                    {totalPages > 1 && (
+                      <div className="flex items-center justify-center gap-4 pt-3 border-t border-base-200 bg-base-50/80">
+                        <button
+                          onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                          disabled={currentPage === 1}
+                          className="flex h-9 w-9 items-center justify-center rounded-xl border border-base-250 bg-base-100 text-base-content/75 transition hover:bg-base-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                          aria-label="Página anterior"
+                        >
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+                        </button>
+                        <span className="text-xs font-bold text-base-content/70">
+                          Página <strong className="text-base-content">{currentPage}</strong> de {totalPages}
+                        </span>
+                        <button
+                          onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                          disabled={currentPage === totalPages}
+                          className="flex h-9 w-9 items-center justify-center rounded-xl border border-base-250 bg-base-100 text-base-content/75 transition hover:bg-base-200 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                          aria-label="Página siguiente"
+                        >
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6" /></svg>
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {/* Right Pane: Sticky detailed panel */}
-                  <div className="sticky top-6 hidden lg:block h-[calc(100vh-48px)]">
-                    {selectedJob ? (
-                      <div className="border border-base-200 rounded-3xl bg-base-100 p-6 shadow-sm h-full overflow-y-auto flex flex-col [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-base-300 [&::-webkit-scrollbar-thumb]:rounded-full animate-fadeIn">
+                  <div className="sticky top-6 hidden lg:block h-[calc(100vh-130px)]">
+                    {displayedJob ? (
+                      <div className="border border-base-200 rounded-3xl bg-base-100 p-6 shadow-sm h-full overflow-y-auto overflow-x-hidden flex flex-col [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-base-300 [&::-webkit-scrollbar-thumb]:rounded-full">
+                        {/* Animated content wrapper — backInRight on select, backOutRight on deselect */}
+                        <div className={`animate__animated animate__faster ${panelAnimClass} flex flex-col flex-1`}>
                         {/* Header details */}
                         <div className="flex items-start justify-between border-b border-base-200 pb-5 mb-5">
                           <div className="flex items-center gap-4">
-                            <div className={`${selectedJob.avatarColor} flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-xs font-extrabold text-xl flex-shrink-0`}>
-                              {selectedJob.initial}
+                            <div className={`${displayedJob.avatarColor} flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-xs font-extrabold text-xl flex-shrink-0`}>
+                              {displayedJob.initial}
                             </div>
                             <div>
                               <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold mb-1.5 border ${selectedJob.status === 'Urgente'
-                                  ? 'bg-error/10 text-error border-error/20'
-                                  : 'bg-success/10 text-success border-success/20'
+                                  ? 'bg-rose-100 dark:bg-rose-900 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800'
+                                  : 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
                                 }`}>
-                                <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${selectedJob.status === 'Urgente' ? 'bg-error animate-pulse' : 'bg-success'}`} />
+                                <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${selectedJob.status === 'Urgente' ? 'bg-rose-500 animate-pulse' : 'bg-emerald-500'}`} />
                                 {selectedJob.status}
                               </span>
                               <h3 className="text-lg font-extrabold text-base-content leading-tight">
-                                {selectedJob.title}
+                                {displayedJob.title}
                               </h3>
                               <p className="text-xs text-base-content/70 mt-1 flex items-center gap-2">
-                                <span className="font-semibold text-base-content/90">{selectedJob.company}</span>
+                                <span className="font-semibold text-base-content/90">{displayedJob.company}</span>
                                 <span>•</span>
-                                <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold border ${getSourceBadgeStyle(selectedJob.source)}`}>
-                                  {selectedJob.source}
+                                <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold border ${getSourceBadgeStyle(displayedJob.source)}`}>
+                                  {displayedJob.source}
                                 </span>
                               </p>
                             </div>
@@ -1701,19 +2100,19 @@ export default function JobMatchPage() {
                           <button
                             type="button"
                             onClick={() => {
-                              if (matchedJobs.some(m => m.id === selectedJob.id)) {
-                                setMatchedJobs(prev => prev.filter(m => m.id !== selectedJob.id))
+                              if (matchedJobs.some(m => m.id === displayedJob.id)) {
+                                setMatchedJobs(prev => prev.filter(m => m.id !== displayedJob.id))
                               } else {
-                                setMatchedJobs(prev => [...prev, selectedJob])
+                                setMatchedJobs(prev => [...prev, displayedJob])
                               }
                             }}
-                            className={`rounded-full p-2.5 border transition-all cursor-pointer ${matchedJobs.some(m => m.id === selectedJob.id)
+                            className={`rounded-full p-2.5 border transition-all cursor-pointer ${matchedJobs.some(m => m.id === displayedJob.id)
                                 ? 'bg-rose-500/15 border-rose-500/30 text-rose-500 fill-rose-500'
                                 : 'bg-base-200 border-base-300 text-base-content/40 hover:text-rose-500 hover:border-rose-200'
                               }`}
-                            title={matchedJobs.some(m => m.id === selectedJob.id) ? "Quitar de matches" : "Guardar en Matches"}
+                            title={matchedJobs.some(m => m.id === displayedJob.id) ? "Quitar de matches" : "Guardar en Matches"}
                           >
-                            <Heart className="h-4.5 w-4.5" />
+                            <TieIcon className="h-4.5 w-4.5" />
                           </button>
                         </div>
 
@@ -1723,17 +2122,17 @@ export default function JobMatchPage() {
                             <div className="relative flex items-center justify-center h-12 w-12 flex-shrink-0">
                               <svg className="w-full h-full transform -rotate-90">
                                 <circle cx="24" cy="24" r="20" className="stroke-base-200" strokeWidth="4.5" fill="transparent" />
-                                <circle cx="24" cy="24" r="20" className={getMatchColorStroke(selectedJob.matchPercent)} strokeWidth="4.5" fill="transparent"
+                                <circle cx="24" cy="24" r="20" className={getMatchColorStroke(displayedJob.matchPercent)} strokeWidth="4.5" fill="transparent"
                                   strokeDasharray={2 * Math.PI * 20}
-                                  strokeDashoffset={2 * Math.PI * 20 * (1 - selectedJob.matchPercent / 100)}
+                                  strokeDashoffset={2 * Math.PI * 20 * (1 - displayedJob.matchPercent / 100)}
                                   strokeLinecap="round"
                                 />
                               </svg>
-                              <span className="absolute text-xs font-black text-base-content">{selectedJob.matchPercent}%</span>
+                              <span className="absolute text-xs font-black text-base-content">{displayedJob.matchPercent}%</span>
                             </div>
                             <div>
                               <h4 className="text-xs font-bold text-base-content flex items-center gap-1">
-                                <Sparkles className={`h-3.5 w-3.5 ${getMatchColorText(selectedJob.matchPercent)}`} /> Compatibilidad de Perfil
+                                <Sparkles className={`h-3.5 w-3.5 ${getMatchColorText(displayedJob.matchPercent)}`} /> Compatibilidad de Perfil
                               </h4>
                               <p className="text-[10px] text-base-content/60 mt-0.5">
                                 Comparación automatizada con las habilidades de tu perfil de egreso.
@@ -1744,7 +2143,7 @@ export default function JobMatchPage() {
                           <div className="space-y-2 text-xs">
                             <div className="bg-base-200/80 p-3 rounded-xl border border-base-250 text-base-content/80">
                               <strong className="text-base-content block mb-0.5 text-[11px]">¿Por qué este match?</strong>
-                              <p className="leading-relaxed">{selectedJob.matchFeedback}</p>
+                              <p className="leading-relaxed">{displayedJob.matchFeedback}</p>
                             </div>
                           </div>
                         </div>
@@ -1755,40 +2154,40 @@ export default function JobMatchPage() {
                             <MapPin className="h-4 w-4 text-base-content/50 flex-shrink-0 mt-0.5" />
                             <div>
                               <span className="block text-[9px] text-base-content/50 font-bold uppercase tracking-wider">Ubicación</span>
-                              <span className="font-semibold text-base-content">{selectedJob.location}</span>
+                              <span className="font-semibold text-base-content">{displayedJob.location}</span>
                             </div>
                           </div>
                           <div className="rounded-xl border border-base-200 bg-base-200/40 p-3 flex items-start gap-2">
                             <Clock3 className="h-4 w-4 text-base-content/50 flex-shrink-0 mt-0.5" />
                             <div>
                               <span className="block text-[9px] text-base-content/50 font-bold uppercase tracking-wider">Modalidad</span>
-                              <span className="font-semibold text-base-content">{selectedJob.mode}</span>
+                              <span className="font-semibold text-base-content">{displayedJob.mode}</span>
                             </div>
                           </div>
                           <div className="rounded-xl border border-base-200 bg-base-200/40 p-3 flex items-start gap-2">
                             <Briefcase className="h-4 w-4 text-base-content/50 flex-shrink-0 mt-0.5" />
                             <div>
                               <span className="block text-[9px] text-base-content/50 font-bold uppercase tracking-wider">Contrato</span>
-                              <span className="font-semibold text-base-content">{selectedJob.contractType}</span>
+                              <span className="font-semibold text-base-content">{displayedJob.contractType}</span>
                             </div>
                           </div>
                           <div className="rounded-xl border border-base-200 bg-base-200/40 p-3 flex items-start gap-2">
                             <DollarSign className="h-4 w-4 text-base-content/50 flex-shrink-0 mt-0.5" />
                             <div>
                               <span className="block text-[9px] text-base-content/50 font-bold uppercase tracking-wider">Sueldo Estimado</span>
-                              <span className="font-semibold text-base-content">S/ {selectedJob.salaryMin} - {selectedJob.salaryMax}</span>
+                              <span className="font-semibold text-base-content">S/ {displayedJob.salaryMin} - {displayedJob.salaryMax}</span>
                             </div>
                           </div>
                         </div>
 
                         {/* Content parts */}
-                        <div className="space-y-5 flex-1 pr-1">
+                        <div className="space-y-5 pr-1">
                           <div>
                             <h4 className="text-xs font-bold text-base-content uppercase tracking-wider mb-2 flex items-center gap-1.5">
                               <Briefcase className="h-4 w-4 text-base-content/50" /> Sobre el puesto
                             </h4>
                             <p className="text-xs sm:text-sm text-base-content/80 leading-relaxed">
-                              {selectedJob.description}
+                              {displayedJob.description}
                             </p>
                           </div>
 
@@ -1797,7 +2196,7 @@ export default function JobMatchPage() {
                               <CheckCircle2 className="h-4 w-4 text-base-content/50" /> Funciones Principales
                             </h4>
                             <ul className="space-y-1.5">
-                              {selectedJob.functions.map((fn, idx) => (
+                              {displayedJob.functions.map((fn, idx) => (
                                 <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-base-content/85">
                                   <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
                                   <span className="leading-relaxed">{fn}</span>
@@ -1811,7 +2210,7 @@ export default function JobMatchPage() {
                               <Sparkles className="h-4 w-4 text-base-content/50" /> Habilidades Requeridas
                             </h4>
                             <div className="flex flex-wrap gap-1.5">
-                              {selectedJob.skills.map((skill, idx) => (
+                              {displayedJob.skills.map((skill, idx) => (
                                 <span key={idx} className="rounded-lg bg-base-200 border border-base-300 px-2.5 py-1.5 text-xs font-medium text-base-content/80">
                                   {skill}
                                 </span>
@@ -1821,32 +2220,33 @@ export default function JobMatchPage() {
                         </div>
 
                         {/* Sticky Action Footer */}
-                        <div className="border-t border-base-200 pt-4 mt-6 flex gap-3">
+                        <div className="border-t border-base-200 pt-4 mt-4 flex gap-3">
                           <button
                             type="button"
                             onClick={() => {
-                              if (matchedJobs.some(m => m.id === selectedJob.id)) {
-                                setMatchedJobs(prev => prev.filter(m => m.id !== selectedJob.id))
+                              if (matchedJobs.some(m => m.id === displayedJob.id)) {
+                                setMatchedJobs(prev => prev.filter(m => m.id !== displayedJob.id))
                               } else {
-                                setMatchedJobs(prev => [...prev, selectedJob])
+                                setMatchedJobs(prev => [...prev, displayedJob])
                               }
                             }}
-                            className={`flex-1 rounded-2xl py-3 text-xs font-bold border transition-all cursor-pointer flex items-center justify-center gap-2 ${matchedJobs.some(m => m.id === selectedJob.id)
+                            className={`flex-1 rounded-2xl py-3 text-xs font-bold border transition-all cursor-pointer flex items-center justify-center gap-2 ${matchedJobs.some(m => m.id === displayedJob.id)
                                 ? 'bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-450'
                                 : 'bg-base-200 border-base-300 text-base-content/80 hover:bg-base-300'
                               }`}
                           >
-                            <Heart className={`h-4 w-4 ${matchedJobs.some(m => m.id === selectedJob.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
-                            {matchedJobs.some(m => m.id === selectedJob.id) ? 'Quitar Match' : 'Hacer Match'}
+                            <TieIcon className={`h-4 w-4 ${matchedJobs.some(m => m.id === displayedJob.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
+                            {matchedJobs.some(m => m.id === displayedJob.id) ? 'Quitar Match' : 'Hacer Match'}
                           </button>
 
                           <button
                             type="button"
-                            onClick={() => alert(`Redirigiendo a postular en ${selectedJob.source}...`)}
+                            onClick={() => alert(`Redirigiendo a postular en ${displayedJob.source}...`)}
                             className="flex-1 rounded-2xl bg-primary hover:bg-primary/90 py-3 text-xs font-bold text-white shadow-md shadow-primary/20 transition-all hover:-translate-y-0.5 cursor-pointer"
                           >
                             Postular ahora
                           </button>
+                        </div>
                         </div>
                       </div>
                     ) : (
@@ -1865,15 +2265,17 @@ export default function JobMatchPage() {
           </div>
 
           {/* Floating Actions on Mobile */}
-          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center bg-base-100 border border-base-300 text-base-content backdrop-blur-md px-6 py-3 rounded-full shadow-lg xl:hidden">
-            <button
-              onClick={() => setFiltersOpen(true)}
-              className="flex items-center gap-2 text-base-content text-xs font-bold hover:text-primary transition cursor-pointer"
-            >
-              <Filter className="h-4 w-4 text-base-content/40" />
-              Filtros
-            </button>
-          </div>
+          {!isTopFiltersVisible && (
+            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center bg-base-100 border border-base-300 text-base-content backdrop-blur-md px-6 py-3 rounded-full shadow-lg xl:hidden animate-fadeIn">
+              <button
+                onClick={() => setFiltersOpen(true)}
+                className="flex items-center gap-2 text-base-content text-xs font-bold hover:text-primary transition cursor-pointer"
+              >
+                <Filter className="h-4 w-4 text-base-content/40" />
+                Filtros
+              </button>
+            </div>
+          )}
         </main>
       </div>
 
@@ -1904,24 +2306,28 @@ export default function JobMatchPage() {
 
             {currentQuickJob ? (
               <div className="rounded-2xl bg-base-100 p-5 shadow-xs border border-base-200">
-                <div className="mb-4 flex items-start justify-between">
-                  <div className={`${currentQuickJob.avatarColor} flex h-14 w-14 items-center justify-center rounded-xl text-white shadow-xs font-extrabold text-lg`}>
+                <div className="mb-4 flex items-start gap-4">
+                  <div className={`${currentQuickJob.avatarColor} flex h-14 w-14 items-center justify-center rounded-xl text-white shadow-xs font-extrabold text-lg shrink-0`}>
                     {currentQuickJob.initial}
                   </div>
-                  <span className="inline-flex items-center rounded-full bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30">
-                    {currentQuickJob.matchPercent}% match
-                  </span>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="text-lg font-black text-base-content leading-tight">
+                        {currentQuickJob.title}
+                      </h3>
+                      <span className="shrink-0 inline-flex items-center rounded-full bg-emerald-100 dark:bg-emerald-900 px-2.5 py-0.5 text-[10px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                        {currentQuickJob.matchPercent}% match
+                      </span>
+                    </div>
+                    <p className="mt-1.5 flex items-center gap-2 text-xs font-semibold text-base-content/75">
+                      <span className="truncate">{currentQuickJob.company}</span>
+                      <span className={`shrink-0 text-[9px] px-2 py-0.5 rounded-full font-bold border ${getSourceBadgeStyle(currentQuickJob.source)}`}>
+                        {currentQuickJob.source}
+                      </span>
+                    </p>
+                  </div>
                 </div>
-
-                <h3 className="text-lg font-black text-base-content leading-tight">
-                  {currentQuickJob.title}
-                </h3>
-                <p className="mt-1.5 flex items-center gap-2 text-xs font-semibold text-base-content/75">
-                  {currentQuickJob.company}
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold border ${getSourceBadgeStyle(currentQuickJob.source)}`}>
-                    {currentQuickJob.source}
-                  </span>
-                </p>
 
                 <div className="mt-3 flex flex-wrap gap-1">
                   {currentQuickJob.tags.slice(0, 3).map((tag) => (
@@ -2016,11 +2422,6 @@ export default function JobMatchPage() {
                 <p className="mt-1.5 text-xs text-base-content/60 leading-relaxed">No hay más vacantes que coincidan con tu criterio actual. Ajusta los filtros para recargar.</p>
               </div>
             )}
-
-            <p className="mt-4 text-center text-xs text-base-content/40">← saltar (X) · hacer match (✓) →</p>
-            <p className="mt-1 text-center text-[10px] font-black text-base-content/50">
-              {filteredJobs.length === 0 ? '0 vacantes' : `${quickIndex + 1} de ${filteredJobs.length}`}
-            </p>
           </div>
         </div>
       )}
@@ -2060,25 +2461,6 @@ export default function JobMatchPage() {
             </div>
 
             <div className="p-6 space-y-6">
-              {/* Match overview */}
-              <div className="rounded-2xl bg-gradient-to-r from-primary/5 to-success/5 p-4.5 border border-primary/10">
-                <div className="flex items-center justify-between mb-3.5">
-                  <span className="text-xs font-bold text-base-content flex items-center gap-1">
-                    <Sparkles className="h-4 w-4 text-emerald-500" /> Compatibilidad de Perfil: <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">{selectedJobDetail.matchPercent}% match</span>
-                  </span>
-                </div>
-                <div className="space-y-2 text-xs">
-                  <div className="bg-base-200/85 p-3 rounded-xl border border-base-250 text-base-content/80">
-                    <strong className="text-base-content block mb-0.5">¿Por qué?</strong>
-                    <p className="leading-relaxed">{selectedJobDetail.matchFeedback}</p>
-                  </div>
-                  <div className="bg-warning/5 p-3 rounded-xl border border-warning/15 text-warning-content">
-                    <strong className="text-base-content block mb-0.5">¿Qué falta?</strong>
-                    <p className="leading-relaxed">{selectedJobDetail.matchMissing}</p>
-                  </div>
-                </div>
-              </div>
-
               {/* Description */}
               <section>
                 <h4 className="flex items-center gap-1.5 font-bold text-base-content uppercase tracking-wider text-xs mb-2">
@@ -2103,6 +2485,25 @@ export default function JobMatchPage() {
                   ))}
                 </ul>
               </section>
+
+              {/* Match overview */}
+              <div className="rounded-2xl bg-gradient-to-r from-primary/5 to-success/5 p-4.5 border border-primary/10">
+                <div className="flex items-center justify-between mb-3.5">
+                  <span className="text-xs font-bold text-base-content flex items-center gap-1">
+                    <Sparkles className="h-4 w-4 text-emerald-500" /> Compatibilidad de Perfil: <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">{selectedJobDetail.matchPercent}% match</span>
+                  </span>
+                </div>
+                <div className="space-y-2 text-xs">
+                  <div className="bg-base-200/85 p-3 rounded-xl border border-base-250 text-base-content/80">
+                    <strong className="text-base-content block mb-0.5">¿Por qué?</strong>
+                    <p className="leading-relaxed">{selectedJobDetail.matchFeedback}</p>
+                  </div>
+                  <div className="bg-warning/5 p-3 rounded-xl border border-warning/15 text-warning-content">
+                    <strong className="text-base-content block mb-0.5">¿Qué falta?</strong>
+                    <p className="leading-relaxed">{selectedJobDetail.matchMissing}</p>
+                  </div>
+                </div>
+              </div>
 
               {/* Skills */}
               <section>
@@ -2162,7 +2563,7 @@ export default function JobMatchPage() {
                     : 'bg-base-200 border-base-300 text-base-content/80 hover:bg-base-300'
                   }`}
               >
-                <Heart className={`h-4.5 w-4.5 ${matchedJobs.some(m => m.id === selectedJobDetail.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
+                <TieIcon className={`h-4.5 w-4.5 ${matchedJobs.some(m => m.id === selectedJobDetail.id) ? 'fill-rose-500 text-rose-500' : ''}`} />
                 {matchedJobs.some(m => m.id === selectedJobDetail.id) ? 'Quitar Match' : 'Hacer Match'}
               </button>
               <button
@@ -2177,19 +2578,6 @@ export default function JobMatchPage() {
           </div>
         </div>
       )}
-
-      {/* Mis Matches Floating Bubble (Local Warning Toggle) */}
-      <div className="fixed bottom-[96px] right-6 z-40 flex flex-col items-end gap-3">
-        {!showDisclaimer && (
-          <button
-            onClick={() => setShowDisclaimer(true)}
-            className="group relative flex h-10 w-10 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 shadow-lg hover:scale-105 transition-all hover:bg-amber-100 dark:hover:bg-amber-900 border border-amber-200 dark:border-amber-700 cursor-pointer animate-fadeIn"
-            title="Mostrar advertencia sobre el Match"
-          >
-            <Info className="h-5 w-5" />
-          </button>
-        )}
-      </div>
 
       {/* Removed Job Bubble */}
       {lastRemovedJob && (

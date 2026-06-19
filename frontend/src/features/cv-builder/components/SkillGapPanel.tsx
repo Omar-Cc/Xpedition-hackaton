@@ -24,12 +24,12 @@ export default function SkillGapPanel({ atsScore, atsSummary }: Props) {
       {atsSummary && (
         <div className="mt-4 space-y-3 animate-in fade-in duration-300">
           <div>
-            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 mb-1.5 uppercase tracking-wide">
-              <Check size={12} /> Encaja con tu perfil
+            <span className="flex items-center gap-1.5 text-[11px] font-bold text-success mb-2 uppercase tracking-wide">
+              <Check size={14} className="stroke-[3]" /> Encaja con tu perfil
             </span>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1.5">
               {atsSummary.fit.map((kw, i) => (
-                <span key={i} className="px-1.5 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded text-[10px] font-medium">
+                <span key={i} className="px-2 py-1 bg-base-200 text-base-content border-l-2 border-success rounded shadow-sm text-[10px] font-bold">
                   {kw}
                 </span>
               ))}
@@ -37,23 +37,23 @@ export default function SkillGapPanel({ atsScore, atsSummary }: Props) {
           </div>
           
           <div>
-            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-rose-600 dark:text-rose-400 mb-1.5 uppercase tracking-wide">
-              <AlertTriangle size={12} /> Brechas (No encaja / Falta)
+            <span className="flex items-center gap-1.5 text-[11px] font-bold text-error mb-2 uppercase tracking-wide">
+              <AlertTriangle size={14} className="stroke-[2.5]" /> Brechas (No encaja / Falta)
             </span>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1.5">
               {atsSummary.gap.map((kw, i) => (
-                <span key={i} className="px-1.5 py-0.5 bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 rounded text-[10px] font-medium">
+                <span key={i} className="px-2 py-1 bg-base-200 text-base-content border-l-2 border-error rounded shadow-sm text-[10px] font-bold">
                   {kw}
                 </span>
               ))}
             </div>
           </div>
 
-          <div className="p-2.5 bg-amber-500/10 rounded-lg border border-amber-500/20 mt-2">
-            <span className="flex items-center gap-1.5 text-[11px] font-bold text-amber-700 dark:text-amber-400 mb-1">
-              <Lightbulb size={12} className="text-amber-500" /> Estrategia recomendada
+          <div className="p-3.5 bg-base-200 rounded-xl border border-base-300 border-l-4 border-l-warning mt-3 shadow-sm">
+            <span className="flex items-center gap-1.5 text-[11px] font-black text-base-content mb-1.5 uppercase tracking-wide">
+              <Lightbulb size={14} className="text-warning stroke-[2.5]" /> Estrategia recomendada
             </span>
-            <p className="text-[11px] text-amber-800 dark:text-amber-200 leading-relaxed">
+            <p className="text-[11.5px] text-base-content/80 font-medium leading-relaxed">
               {atsSummary.suggestion}
             </p>
           </div>

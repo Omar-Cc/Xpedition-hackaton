@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bell, Moon, Sun, ExternalLink, ChevronDown, Menu, LogOut, User } from "lucide-react";
+import { Bell, Moon, Sun, ExternalLink, ChevronDown, Menu, LogOut, User, Sparkles } from "lucide-react";
 import { studentProfile } from "@/src/features/dashboard/data/mock-data";
 import Link from "next/link";
 import UtpEmpleaLogo from "./UtpEmpleaLogo";
@@ -9,9 +9,10 @@ import StudentAvatar from "./StudentAvatar";
 
 interface TopBannerProps {
   onMenuClick?: () => void;
+  onStartTutorial?: () => void;
 }
 
-export default function TopBanner({ onMenuClick }: Readonly<TopBannerProps>) {
+export default function TopBanner({ onMenuClick, onStartTutorial }: Readonly<TopBannerProps>) {
   const firstName = studentProfile.name.split(" ")[0];
   const fullName = studentProfile.name;
   const pct = studentProfile.completionPercent;
@@ -50,39 +51,21 @@ export default function TopBanner({ onMenuClick }: Readonly<TopBannerProps>) {
 
         <div className="w-px h-6 bg-base-300 mx-1 hidden xl:block"></div>
 
-        <div
-          className="radial-progress text-primary flex-shrink-0 hidden lg:inline-grid"
-          style={
-            {
-              "--value": String(pct),
-              "--size": "2.6rem",
-              "--thickness": "3px",
-            } as React.CSSProperties
-          }
-          aria-valuenow={pct}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          role="progressbar"
-          aria-label={`Perfil completado al ${pct}%`}
-        >
-          <span className="text-[10px] font-bold text-base-content">{pct}%</span>
-        </div>
 
-        <div className="min-w-0 hidden md:block">
-          <p className="text-[9px] text-base-content/50 uppercase tracking-wider mb-0.5 font-bold">
-            Bienvenido de vuelta
-          </p>
-          <div className="flex items-center gap-3">
-            <h2 className="text-sm font-bold">Hola, {firstName}</h2>
-            <span className="text-xs text-base-content/60 border-l border-base-300 pl-3">
-              Tu perfil está al {pct}% — complétalo para destacar
-            </span>
-          </div>
-        </div>
       </div>
 
       {/* Lado derecho: Botones, Tema, Notificaciones y Perfil */}
       <div className="flex items-center gap-1.5 md:gap-2 shrink-0">
+        <button
+          onClick={onStartTutorial}
+          className="btn btn-sm btn-ghost text-violet-650 hover:text-violet-850 hover:bg-violet-50 dark:text-violet-400 dark:hover:bg-violet-950/20 font-bold px-2.5 flex items-center gap-1.5 cursor-pointer"
+        >
+          <Sparkles className="w-4 h-4 text-violet-500" />
+          <span>Tutorial</span>
+        </button>
+
+        <div className="w-px h-6 bg-base-300 mx-1 hidden sm:block"></div>
+
         <Link
           href="https://portal.utp.edu.pe"
           target="_blank"
